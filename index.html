@@ -70,6 +70,19 @@
     padding: 0.5rem 1rem; border-radius: 20px; transition: 0.3s;
   }
   nav a:hover { background: var(--durazno); color: white; }
+  .menu-toggle {
+    display: none; flex-direction: column; justify-content: center; gap: 5px;
+    width: 44px; height: 44px; padding: 10px; border: none; border-radius: 12px;
+    background: transparent; cursor: pointer; transition: 0.3s;
+  }
+  .menu-toggle:hover { background: rgba(255, 153, 102, 0.15); }
+  .menu-toggle span {
+    display: block; height: 3px; border-radius: 2px;
+    background: var(--durazno-oscuro); transition: 0.3s;
+  }
+  nav.open .menu-toggle span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+  nav.open .menu-toggle span:nth-child(2) { opacity: 0; }
+  nav.open .menu-toggle span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
 
   /* ========== HERO ========== */
   .hero {
@@ -417,7 +430,14 @@
   @media (max-width: 768px) {
     .hero h1 { font-size: 2.2rem; }
     #splash h1 { font-size: 2rem; }
-    nav ul { display: none; }
+    .menu-toggle { display: flex; }
+    nav ul {
+      display: none; position: absolute; top: 100%; left: 0; right: 0;
+      flex-direction: column; gap: 0.3rem; padding: 0.5rem 1rem 1rem;
+      background: var(--crema); box-shadow: 0 10px 15px var(--sombra);
+    }
+    nav.open ul { display: flex; animation: fadeIn 0.3s ease; }
+    nav ul a { display: block; padding: 0.8rem 1rem; }
     .timeline::before { left: 20px; }
     .estacion { width: calc(100% - 50px); margin-left: 50px !important; }
     .estacion::before { left: -40px !important; right: auto !important; }
@@ -474,7 +494,10 @@
     </svg>
     PECH-LINE
   </div>
-  <ul>
+  <button class="menu-toggle" id="menuToggle" aria-label="Abrir menú" aria-controls="menu" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+  <ul id="menu">
     <li><a href="#inicio">Inicio</a></li>
     <li><a href="#proyectos">Proyectos</a></li>
     <li><a href="#nosotros">Nosotros</a></li>
@@ -878,6 +901,23 @@
       document.querySelector(href).scrollIntoView({ behavior: 'smooth' });
     });
   });
+
+  // ========== MENÚ HAMBURGUESA ==========
+  const nav = document.querySelector('nav');
+  const menuToggle = document.getElementById('menuToggle');
+  function cerrarMenu() {
+    nav.classList.remove('open');
+    menuToggle.setAttribute('aria-expanded', 'false');
+    menuToggle.setAttribute('aria-label', 'Abrir menú');
+  }
+  menuToggle.addEventListener('click', () => {
+    const abierto = nav.classList.toggle('open');
+    menuToggle.setAttribute('aria-expanded', abierto);
+    menuToggle.setAttribute('aria-label', abierto ? 'Cerrar menú' : 'Abrir menú');
+  });
+  nav.querySelectorAll('ul a').forEach(a => a.addEventListener('click', cerrarMenu));
+  document.addEventListener('click', e => { if (!nav.contains(e.target)) cerrarMenu(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') cerrarMenu(); });
 </script>
 
 </body>
