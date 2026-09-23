@@ -161,34 +161,6 @@
   }
   .btn-sites:hover { transform: translateY(-3px) scale(1.05); box-shadow: 0 10px 25px var(--sombra); }
 
-  /* ========== MODAL IFRAME ========== */
-  .modal-overlay {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.85); z-index: 10000;
-    display: none; justify-content: center; align-items: center;
-    padding: 1rem; animation: fadeIn 0.3s ease;
-  }
-  .modal-overlay.active { display: flex; }
-  .modal-content {
-    background: white; width: 100%; max-width: 1200px; height: 90vh;
-    border-radius: 20px; overflow: hidden; position: relative;
-    display: flex; flex-direction: column;
-  }
-  .modal-header {
-    background: linear-gradient(135deg, var(--durazno), var(--durazno-oscuro));
-    color: white; padding: 1rem 1.5rem;
-    display: flex; justify-content: space-between; align-items: center;
-  }
-  .modal-header h3 { font-size: 1.2rem; }
-  .modal-close {
-    background: white; color: var(--durazno-oscuro); border: none;
-    width: 35px; height: 35px; border-radius: 50%; cursor: pointer;
-    font-size: 1.2rem; font-weight: bold; transition: 0.3s;
-  }
-  .modal-close:hover { transform: rotate(90deg); background: var(--crema); }
-  .modal-body { flex: 1; background: #f5f5f5; }
-  .modal-body iframe { width: 100%; height: 100%; border: none; }
-
   /* ========== PLANOS / GALERÍA ========== */
   .planos-grid {
     display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -446,7 +418,6 @@
     .hero h1 { font-size: 2.2rem; }
     #splash h1 { font-size: 2rem; }
     nav ul { display: none; }
-    .modal-content { height: 95vh; }
     .timeline::before { left: 20px; }
     .estacion { width: calc(100% - 50px); margin-left: 50px !important; }
     .estacion::before { left: -40px !important; right: auto !important; }
@@ -508,7 +479,7 @@
     <li><a href="#proyectos">Proyectos</a></li>
     <li><a href="#nosotros">Nosotros</a></li>
     <li><a href="#blog">Novedades</a></li>
-    <li><a href="#" onclick="abrirGoogleSites(); return false;" style="background:var(--durazno); color:white;">📚 Info Completa</a></li>
+    <li><a href="https://sites.google.com/tecsup.edu.pe/inc12a-grupo2/inicio" target="_blank" rel="noopener" style="background:var(--durazno); color:white;">📚 Info Completa</a></li>
   </ul>
 </nav>
 
@@ -522,7 +493,7 @@
 
   <div class="hero-buttons">
     <a href="#proyectos" class="btn-primary">🚀 Explorar Proyecto</a>
-    <button class="btn-secondary" onclick="abrirGoogleSites()">📚 Ver Info Completa</button>
+    <a href="https://sites.google.com/tecsup.edu.pe/inc12a-grupo2/inicio" target="_blank" rel="noopener" class="btn-secondary">📚 Ver Info Completa</a>
     <a href="#proyectos" class="btn-secondary" onclick="mostrar('descarga', document.querySelector('.submenu button:last-child'))">📥 Descargar PDF</a>
   </div>
 
@@ -555,8 +526,7 @@
       <h3>📚 Toda la información detallada</h3>
       <p>Accede a nuestro sitio completo en Google Sites con toda la documentación, especificaciones técnicas, proceso paso a paso y más.</p>
       <div class="sites-buttons">
-        <button class="btn-sites" onclick="abrirGoogleSites()">🌐 Ver en ventana emergente</button>
-        <a href="https://sites.google.com/tecsup.edu.pe/inc12a-grupo2/inicio" target="_blank" class="btn-sites" style="background: var(--hoja);">↗ Abrir en nueva pestaña</a>
+        <a href="https://sites.google.com/tecsup.edu.pe/inc12a-grupo2/inicio" target="_blank" rel="noopener" class="btn-sites">🌐 Abrir Google Sites ↗</a>
       </div>
     </div>
   </div>
@@ -770,19 +740,6 @@
 <!-- ========== BOTÓN SUBIR ========== -->
 <button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0, behavior:'smooth'})">↑</button>
 
-<!-- ========== MODAL GOOGLE SITES ========== -->
-<div class="modal-overlay" id="modalSites">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h3>📚 Información Completa - PECH-LINE</h3>
-      <button class="modal-close" onclick="cerrarModal()">✕</button>
-    </div>
-    <div class="modal-body">
-      <iframe id="sitesFrame" src="" title="Google Sites PECH-LINE"></iframe>
-    </div>
-  </div>
-</div>
-
 <!-- ========== LIGHTBOX PLANOS ========== -->
 <div class="lightbox" id="lightbox">
   <button class="lightbox-close" onclick="cerrarLightbox()">✕</button>
@@ -811,23 +768,6 @@
     document.getElementById(id).classList.add('active');
     btn.classList.add('active');
   }
-
-  // ========== MODAL GOOGLE SITES ==========
-  const URL_GOOGLE_SITES = "https://sites.google.com/tecsup.edu.pe/inc12a-grupo2/inicio";
-
-  function abrirGoogleSites() {
-    document.getElementById('sitesFrame').src = URL_GOOGLE_SITES;
-    document.getElementById('modalSites').classList.add('active');
-    document.body.style.overflow = 'hidden';
-  }
-  function cerrarModal() {
-    document.getElementById('modalSites').classList.remove('active');
-    document.getElementById('sitesFrame').src = '';
-    document.body.style.overflow = '';
-  }
-  document.getElementById('modalSites').addEventListener('click', e => {
-    if (e.target.id === 'modalSites') cerrarModal();
-  });
 
   // ========== PLANOS (GALERÍA) ==========
   const planos = [
@@ -883,7 +823,6 @@
     document.getElementById('lightboxDesc').textContent = p.desc;
   }
   document.addEventListener('keydown', e => {
-    if (e.key === 'Escape' && document.getElementById('modalSites').classList.contains('active')) cerrarModal();
     if (!document.getElementById('lightbox').classList.contains('active')) return;
     if (e.key === 'ArrowLeft') cambiarPlano(-1);
     if (e.key === 'ArrowRight') cambiarPlano(1);
