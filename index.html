@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PECH-LINE | Duraznos Enlatados de 4 Estaciones</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+  :root {
+    --durazno: #FF9966;
+    --durazno-claro: #FFB88C;
+    --durazno-oscuro: #E87A3E;
+    --crema: #FFF5E6;
+    --hoja: #7CB342;
+    --hoja-oscuro: #558B2F;
+    --texto: #3E2723;
+    --sombra: rgba(232, 122, 62, 0.2);
+  }
+  html { scroll-behavior: smooth; }
+  body { background: var(--crema); color: var(--texto); overflow-x: hidden; }
+
+  /* ========== SPLASH ========== */
+  #splash {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(135deg, #FFB88C 0%, #FF9966 50%, #E87A3E 100%);
+    z-index: 9999; display: flex; flex-direction: column;
+    justify-content: center; align-items: center;
+    transition: opacity 1s ease, visibility 1s ease;
+  }
+  #splash.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+  #splash h1 {
+    font-size: 3.5rem; color: white; margin-top: 2rem;
+    text-shadow: 3px 3px 0 var(--durazno-oscuro);
+    animation: bounceIn 1s ease 0.5s both;
+  }
+  #splash p { color: white; font-size: 1.3rem; margin-top: 1rem; animation: fadeIn 1s ease 1.2s both; }
+  #splash button {
+    margin-top: 2rem; padding: 1rem 2.5rem;
+    background: white; color: var(--durazno-oscuro);
+    border: none; border-radius: 50px; font-size: 1.1rem;
+    font-weight: bold; cursor: pointer;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+    animation: fadeIn 1s ease 1.8s both, pulse 2s infinite 2.5s;
+    transition: 0.3s;
+  }
+  #splash button:hover { transform: scale(1.1); }
+  @keyframes bounceIn { 0% { opacity:0; transform: scale(0.3);} 50% { transform: scale(1.1);} 100% { opacity:1; transform: scale(1);} }
+  @keyframes fadeIn { from { opacity:0;} to { opacity:1;} }
+  @keyframes pulse { 0%,100% { box-shadow: 0 5px 20px rgba(0,0,0,0.2);} 50% { box-shadow: 0 5px 30px rgba(255,255,255,0.6);} }
+
+  .durazno-container { animation: float 3s ease-in-out infinite; }
+  @keyframes float { 0%,100% { transform: translateY(0);} 50% { transform: translateY(-15px);} }
+  .mano { transform-origin: 180px 160px; animation: wave 1.5s ease-in-out infinite; }
+  @keyframes wave { 0%,100% { transform: rotate(0deg);} 25% { transform: rotate(-20deg);} 75% { transform: rotate(20deg);} }
+  .ojo { animation: blink 4s infinite; }
+  @keyframes blink { 0%, 90%, 100% { transform: scaleY(1);} 95% { transform: scaleY(0.1);} }
+
+  /* ========== NAVBAR ========== */
+  nav {
+    position: fixed; top: 0; width: 100%; z-index: 100;
+    background: rgba(255, 245, 230, 0.95); backdrop-filter: blur(10px);
+    padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center;
+    box-shadow: 0 2px 15px var(--sombra);
+  }
+  nav .logo { display: flex; align-items: center; gap: 0.5rem; font-weight: bold; font-size: 1.3rem; color: var(--durazno-oscuro); }
+  nav .logo svg { width: 40px; height: 40px; }
+  nav ul { display: flex; gap: 1rem; list-style: none; flex-wrap: wrap; }
+  nav a {
+    color: var(--texto); text-decoration: none; font-weight: 600;
+    padding: 0.5rem 1rem; border-radius: 20px; transition: 0.3s;
+  }
+  nav a:hover { background: var(--durazno); color: white; }
+
+  /* ========== HERO ========== */
+  .hero {
+    min-height: 100vh; padding: 8rem 2rem 4rem;
+    display: flex; flex-direction: column; align-items: center;
+    text-align: center; background: linear-gradient(180deg, var(--crema) 0%, #FFE4CC 100%);
+    position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: '🍑'; position: absolute; font-size: 15rem; opacity: 0.08;
+    top: 10%; right: -50px; animation: floatSlow 8s ease-in-out infinite;
+  }
+  @keyframes floatSlow { 0%,100% { transform: translateY(0) rotate(0deg);} 50% { transform: translateY(-30px) rotate(10deg);} }
+  .hero h1 { font-size: 3.5rem; color: var(--durazno-oscuro); margin-bottom: 1rem; line-height: 1.2; }
+  .hero h1 span { color: var(--hoja-oscuro); }
+  .hero .subtitle { font-size: 1.3rem; max-width: 700px; margin-bottom: 2rem; color: #5D4037; }
+  .hero-buttons { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; margin-top: 2rem; }
+  .btn-primary, .btn-secondary {
+    padding: 1rem 2rem; border-radius: 50px; font-weight: bold;
+    text-decoration: none; transition: 0.3s; display: inline-flex;
+    align-items: center; gap: 0.5rem; border: 2px solid transparent;
+    cursor: pointer; font-size: 1rem;
+  }
+  .btn-primary { background: var(--durazno); color: white; }
+  .btn-primary:hover { background: var(--durazno-oscuro); transform: translateY(-3px); box-shadow: 0 10px 25px var(--sombra); }
+  .btn-secondary { background: transparent; color: var(--durazno-oscuro); border-color: var(--durazno); }
+  .btn-secondary:hover { background: var(--durazno); color: white; transform: translateY(-3px); }
+
+  /* ========== ESTADÍSTICAS ========== */
+  .stats {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1.5rem; max-width: 1100px; margin: 3rem auto 0; width: 100%;
+  }
+  .stat-card {
+    background: white; padding: 2rem; border-radius: 20px;
+    box-shadow: 0 5px 20px var(--sombra); text-align: center;
+    transition: 0.3s;
+  }
+  .stat-card:hover { transform: translateY(-8px); }
+  .stat-number { font-size: 2.5rem; font-weight: bold; color: var(--durazno-oscuro); }
+  .stat-label { color: #795548; margin-top: 0.5rem; }
+
+  /* ========== SECCIONES ========== */
+  section { padding: 5rem 2rem; max-width: 1200px; margin: auto; }
+  section h2 {
+    font-size: 2.5rem; color: var(--durazno-oscuro); text-align: center;
+    margin-bottom: 1rem;
+  }
+  section h2::after {
+    content: ''; display: block; width: 80px; height: 4px;
+    background: var(--hoja); margin: 1rem auto; border-radius: 2px;
+  }
+  section .intro { text-align: center; max-width: 700px; margin: 0 auto 3rem; color: #5D4037; }
+
+  /* Reveal al hacer scroll */
+  .reveal { opacity: 0; transform: translateY(40px); transition: all 0.8s ease; }
+  .reveal.active { opacity: 1; transform: translateY(0); }
+
+  /* ========== SUBMENÚ PROYECTOS ========== */
+  .submenu {
+    display: flex; flex-wrap: wrap; justify-content: center;
+    gap: 0.8rem; margin-bottom: 3rem;
+  }
+  .submenu button {
+    padding: 0.7rem 1.5rem; background: white; color: var(--durazno-oscuro);
+    border: 2px solid var(--durazno); border-radius: 25px;
+    font-weight: 600; cursor: pointer; transition: 0.3s;
+  }
+  .submenu button:hover, .submenu button.active {
+    background: var(--durazno); color: white; transform: scale(1.05);
+  }
+  .subseccion { display: none; animation: fadeIn 0.5s ease; }
+  .subseccion.active { display: block; }
+
+  /* ========== GOOGLE SITES EMBED ========== */
+  .google-sites-box {
+    background: white; border-radius: 20px; padding: 2rem;
+    box-shadow: 0 5px 25px var(--sombra); text-align: center;
+    border: 3px dashed var(--durazno);
+  }
+  .google-sites-box h3 { color: var(--durazno-oscuro); margin-bottom: 1rem; font-size: 1.5rem; }
+  .google-sites-box p { margin-bottom: 1.5rem; color: #5D4037; }
+  .sites-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+  .btn-sites {
+    padding: 1rem 2rem; background: linear-gradient(135deg, var(--durazno), var(--durazno-oscuro));
+    color: white; border: none; border-radius: 50px; font-weight: bold;
+    cursor: pointer; transition: 0.3s; display: inline-flex; align-items: center; gap: 0.5rem;
+    text-decoration: none; font-size: 1rem;
+  }
+  .btn-sites:hover { transform: translateY(-3px) scale(1.05); box-shadow: 0 10px 25px var(--sombra); }
+
+  /* ========== MODAL IFRAME ========== */
+  .modal-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.85); z-index: 10000;
+    display: none; justify-content: center; align-items: center;
+    padding: 1rem; animation: fadeIn 0.3s ease;
+  }
+  .modal-overlay.active { display: flex; }
+  .modal-content {
+    background: white; width: 100%; max-width: 1200px; height: 90vh;
+    border-radius: 20px; overflow: hidden; position: relative;
+    display: flex; flex-direction: column;
+  }
+  .modal-header {
+    background: linear-gradient(135deg, var(--durazno), var(--durazno-oscuro));
+    color: white; padding: 1rem 1.5rem;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .modal-header h3 { font-size: 1.2rem; }
+  .modal-close {
+    background: white; color: var(--durazno-oscuro); border: none;
+    width: 35px; height: 35px; border-radius: 50%; cursor: pointer;
+    font-size: 1.2rem; font-weight: bold; transition: 0.3s;
+  }
+  .modal-close:hover { transform: rotate(90deg); background: var(--crema); }
+  .modal-body { flex: 1; background: #f5f5f5; }
+  .modal-body iframe { width: 100%; height: 100%; border: none; }
+
+  /* ========== PLANOS / GALERÍA ========== */
+  .planos-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+  }
+  .plano-card {
+    background: white; border-radius: 15px; overflow: hidden;
+    box-shadow: 0 5px 20px var(--sombra); cursor: pointer;
+    transition: 0.4s; position: relative;
+  }
+  .plano-card:hover { transform: translateY(-10px) scale(1.02); box-shadow: 0 15px 35px var(--sombra); }
+  .plano-img {
+    height: 200px; background: linear-gradient(135deg, #FFE4CC, #FFB88C);
+    display: flex; justify-content: center; align-items: center;
+    font-size: 4rem; position: relative; overflow: hidden;
+  }
+  .plano-img::after {
+    content: '🔍 Click para ampliar'; position: absolute; bottom: 0; left: 0;
+    width: 100%; background: rgba(232, 122, 62, 0.9); color: white;
+    padding: 0.5rem; text-align: center; font-size: 0.9rem;
+    transform: translateY(100%); transition: 0.3s;
+  }
+  .plano-card:hover .plano-img::after { transform: translateY(0); }
+  .plano-info { padding: 1rem; }
+  .plano-info h4 { color: var(--durazno-oscuro); margin-bottom: 0.3rem; }
+  .plano-info p { color: #795548; font-size: 0.9rem; }
+
+  /* ========== LIGHTBOX ========== */
+  .lightbox {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.95); z-index: 10001;
+    display: none; justify-content: center; align-items: center;
+    padding: 2rem; flex-direction: column;
+  }
+  .lightbox.active { display: flex; animation: fadeIn 0.3s ease; }
+  .lightbox-content {
+    max-width: 90%; max-height: 80vh; background: white;
+    border-radius: 15px; overflow: hidden; position: relative;
+    display: flex; flex-direction: column;
+  }
+  .lightbox-img {
+    width: 100%; min-height: 400px; max-height: 70vh;
+    background: linear-gradient(135deg, #FFE4CC, #FFB88C);
+    display: flex; justify-content: center; align-items: center;
+    font-size: 8rem;
+  }
+  .lightbox-info { padding: 1.5rem; background: white; text-align: center; }
+  .lightbox-info h3 { color: var(--durazno-oscuro); margin-bottom: 0.5rem; }
+  .lightbox-info p { color: #795548; }
+  .lightbox-close {
+    position: absolute; top: 15px; right: 15px;
+    background: white; color: var(--durazno-oscuro); border: none;
+    width: 40px; height: 40px; border-radius: 50%; cursor: pointer;
+    font-size: 1.5rem; font-weight: bold; z-index: 10;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+  }
+  .lightbox-nav {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    background: var(--durazno); color: white; border: none;
+    width: 50px; height: 50px; border-radius: 50%; cursor: pointer;
+    font-size: 1.5rem; font-weight: bold; transition: 0.3s;
+  }
+  .lightbox-nav:hover { background: var(--durazno-oscuro); transform: translateY(-50%) scale(1.1); }
+  .lightbox-prev { left: 20px; }
+  .lightbox-next { right: 20px; }
+
+  /* ========== DESCARGA PDF ========== */
+  .download-section {
+    background: linear-gradient(135deg, var(--durazno-oscuro), var(--hoja-oscuro));
+    color: white; padding: 3rem 2rem; border-radius: 25px;
+    text-align: center; margin: 3rem auto; max-width: 900px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+    position: relative; overflow: hidden;
+  }
+  .download-section::before {
+    content: '📄'; position: absolute; font-size: 15rem; opacity: 0.1;
+    right: -30px; top: -30px;
+  }
+  .download-section h3 { font-size: 2rem; margin-bottom: 1rem; }
+  .download-section p { margin-bottom: 2rem; opacity: 0.95; font-size: 1.1rem; }
+  .btn-download {
+    padding: 1.2rem 2.5rem; background: white; color: var(--durazno-oscuro);
+    border: none; border-radius: 50px; font-weight: bold; font-size: 1.1rem;
+    cursor: pointer; transition: 0.3s; display: inline-flex;
+    align-items: center; gap: 0.8rem; text-decoration: none;
+    position: relative; overflow: hidden;
+  }
+  .btn-download:hover {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+  }
+  .btn-download .icon-pdf {
+    background: #E53935; color: white; padding: 0.3rem 0.6rem;
+    border-radius: 8px; font-size: 0.9rem; font-weight: bold;
+  }
+  .download-info { margin-top: 1.5rem; font-size: 0.9rem; opacity: 0.85; }
+
+  /* ========== MATERIALES ========== */
+  .materiales-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+  }
+  .material-card {
+    background: white; padding: 1.5rem; border-radius: 15px;
+    text-align: center; box-shadow: 0 3px 15px var(--sombra);
+    transition: 0.3s; border-left: 5px solid var(--hoja);
+  }
+  .material-card:hover { transform: scale(1.05) rotate(-1deg); }
+  .material-card .emoji { font-size: 2.5rem; margin-bottom: 0.5rem; }
+  .material-card h4 { color: var(--hoja-oscuro); margin-bottom: 0.5rem; }
+
+  /* ========== ESTACIONES TIMELINE ========== */
+  .timeline { position: relative; max-width: 900px; margin: auto; padding: 2rem 0; }
+  .timeline::before {
+    content: ''; position: absolute; left: 50%; top: 0; bottom: 0;
+    width: 4px; background: var(--durazno); transform: translateX(-50%);
+  }
+  .estacion {
+    position: relative; margin-bottom: 3rem; width: 50%;
+    padding: 1.5rem; background: white; border-radius: 15px;
+    box-shadow: 0 5px 20px var(--sombra);
+  }
+  .estacion:nth-child(odd) { left: 0; margin-right: auto; }
+  .estacion:nth-child(even) { left: 50%; margin-left: auto; }
+  .estacion::before {
+    content: ''; position: absolute; top: 25px; width: 20px; height: 20px;
+    background: var(--hoja); border: 4px solid white; border-radius: 50%;
+    box-shadow: 0 0 0 3px var(--hoja);
+  }
+  .estacion:nth-child(odd)::before { right: -12px; }
+  .estacion:nth-child(even)::before { left: -12px; }
+  .estacion h3 { color: var(--durazno-oscuro); margin-bottom: 0.5rem; }
+  .estacion .num {
+    display: inline-block; background: var(--hoja); color: white;
+    width: 30px; height: 30px; border-radius: 50%;
+    text-align: center; line-height: 30px; margin-right: 0.5rem;
+  }
+
+  /* ========== VIDEO ========== */
+  .video-box {
+    background: #000; border-radius: 20px; overflow: hidden;
+    max-width: 800px; margin: auto; aspect-ratio: 16/9;
+    display: flex; justify-content: center; align-items: center;
+    color: white; font-size: 1.3rem; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  }
+
+  /* ========== GALERÍA ========== */
+  .galeria {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+  .galeria-item {
+    aspect-ratio: 1; background: linear-gradient(135deg, var(--durazno-claro), var(--durazno));
+    border-radius: 15px; display: flex; justify-content: center;
+    align-items: center; font-size: 3rem; cursor: pointer;
+    transition: 0.3s; box-shadow: 0 5px 15px var(--sombra);
+  }
+  .galeria-item:hover { transform: scale(1.05) rotate(2deg); }
+
+  /* ========== NOSOTROS ========== */
+  .info-box {
+    background: white; padding: 2rem; border-radius: 20px;
+    box-shadow: 0 5px 20px var(--sombra); margin-bottom: 2rem;
+    border-left: 5px solid var(--hoja); transition: 0.3s;
+  }
+  .info-box:hover { transform: translateX(5px); }
+  .info-box h3 { color: var(--hoja-oscuro); margin-bottom: 1rem; font-size: 1.5rem; }
+  .equipo {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1.5rem; margin-top: 2rem;
+  }
+  .miembro {
+    background: white; padding: 1.5rem; border-radius: 15px;
+    text-align: center; box-shadow: 0 3px 15px var(--sombra);
+    transition: 0.3s;
+  }
+  .miembro:hover { transform: translateY(-5px); }
+  .avatar {
+    width: 80px; height: 80px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--durazno), var(--hoja));
+    margin: 0 auto 1rem; display: flex; justify-content: center;
+    align-items: center; font-size: 2rem; color: white; font-weight: bold;
+  }
+  .miembro h4 { color: var(--durazno-oscuro); margin-bottom: 0.3rem; }
+  .miembro p { color: #795548; font-size: 0.9rem; }
+
+  /* ========== BLOG ========== */
+  .blog-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+  }
+  .post {
+    background: white; border-radius: 20px; overflow: hidden;
+    box-shadow: 0 5px 20px var(--sombra); transition: 0.3s;
+  }
+  .post:hover { transform: translateY(-8px); }
+  .post-img {
+    height: 180px; background: linear-gradient(135deg, var(--durazno-claro), var(--hoja));
+    display: flex; justify-content: center; align-items: center;
+    font-size: 4rem;
+  }
+  .post-content { padding: 1.5rem; }
+  .post .tag {
+    display: inline-block; background: var(--hoja); color: white;
+    padding: 0.2rem 0.8rem; border-radius: 10px; font-size: 0.8rem;
+    margin-bottom: 0.5rem;
+  }
+  .post h3 { color: var(--durazno-oscuro); margin-bottom: 0.5rem; }
+  .post .btn-leer {
+    display: inline-block; margin-top: 1rem; color: var(--durazno-oscuro);
+    font-weight: bold; text-decoration: none; transition: 0.3s;
+  }
+  .post .btn-leer:hover { color: var(--hoja-oscuro); }
+
+  .testimonio {
+    background: white; padding: 2rem; border-radius: 15px;
+    box-shadow: 0 3px 15px var(--sombra); margin-bottom: 1.5rem;
+    border-left: 5px solid var(--durazno); position: relative;
+  }
+  .testimonio::before {
+    content: '"'; position: absolute; top: -20px; left: 15px;
+    font-size: 5rem; color: var(--durazno-claro); font-family: Georgia;
+  }
+  .testimonio p { font-style: italic; margin-bottom: 1rem; }
+  .testimonio .autor { font-weight: bold; color: var(--hoja-oscuro); }
+
+  /* ========== FOOTER ========== */
+  footer {
+    background: var(--durazno-oscuro); color: white;
+    text-align: center; padding: 3rem 2rem; margin-top: 3rem;
+  }
+  footer p { margin: 0.3rem 0; }
+  footer .social { margin: 1rem 0; display: flex; gap: 1rem; justify-content: center; }
+  footer .social a {
+    width: 45px; height: 45px; background: rgba(255,255,255,0.2);
+    border-radius: 50%; display: flex; justify-content: center;
+    align-items: center; color: white; text-decoration: none;
+    font-size: 1.3rem; transition: 0.3s;
+  }
+  footer .social a:hover { background: white; color: var(--durazno-oscuro); transform: translateY(-3px); }
+
+  /* ========== BOTÓN FLOTANTE ========== */
+  .scroll-top {
+    position: fixed; bottom: 30px; right: 30px;
+    width: 55px; height: 55px; background: var(--durazno);
+    color: white; border: none; border-radius: 50%;
+    font-size: 1.5rem; cursor: pointer; z-index: 99;
+    box-shadow: 0 5px 20px var(--sombra);
+    opacity: 0; visibility: hidden; transition: 0.3s;
+  }
+  .scroll-top.visible { opacity: 1; visibility: visible; }
+  .scroll-top:hover { background: var(--durazno-oscuro); transform: translateY(-5px); }
+
+  @media (max-width: 768px) {
+    .hero h1 { font-size: 2.2rem; }
+    #splash h1 { font-size: 2rem; }
+    nav ul { display: none; }
+    .modal-content { height: 95vh; }
+    .timeline::before { left: 20px; }
+    .estacion { width: calc(100% - 50px); left: 50px !important; }
+    .estacion::before { left: -40px !important; right: auto !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ========== SPLASH ========== -->
+<div id="splash">
+  <div class="durazno-container">
+    <svg width="220" height="220" viewBox="0 0 220 220">
+      <ellipse cx="110" cy="25" rx="25" ry="12" fill="#7CB342" transform="rotate(-20 110 25)"/>
+      <ellipse cx="110" cy="25" rx="25" ry="12" fill="#558B2F" transform="rotate(20 110 25)" opacity="0.7"/>
+      <circle cx="110" cy="120" r="85" fill="#FF9966"/>
+      <circle cx="110" cy="120" r="85" fill="url(#grad)" opacity="0.5"/>
+      <defs>
+        <radialGradient id="grad">
+          <stop offset="0%" stop-color="#FFB88C"/>
+          <stop offset="100%" stop-color="#E87A3E"/>
+        </radialGradient>
+      </defs>
+      <path d="M 110 40 Q 100 120 110 200" stroke="#E87A3E" stroke-width="3" fill="none" opacity="0.5"/>
+      <circle cx="65" cy="135" r="12" fill="#FF6B9D" opacity="0.5"/>
+      <circle cx="155" cy="135" r="12" fill="#FF6B9D" opacity="0.5"/>
+      <g class="ojo" style="transform-origin: 85px 110px;">
+        <ellipse cx="85" cy="110" rx="8" ry="12" fill="#3E2723"/>
+        <circle cx="87" cy="106" r="3" fill="white"/>
+      </g>
+      <g class="ojo" style="transform-origin: 135px 110px;">
+        <ellipse cx="135" cy="110" rx="8" ry="12" fill="#3E2723"/>
+        <circle cx="137" cy="106" r="3" fill="white"/>
+      </g>
+      <path d="M 90 140 Q 110 160 130 140" stroke="#3E2723" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <g class="mano">
+        <circle cx="180" cy="160" r="18" fill="#FF9966"/>
+        <circle cx="175" cy="150" r="5" fill="#FF9966"/>
+        <circle cx="185" cy="148" r="5" fill="#FF9966"/>
+        <circle cx="192" cy="155" r="5" fill="#FF9966"/>
+      </g>
+    </svg>
+  </div>
+  <h1>¡Bienvenido a PECH-LINE!</h1>
+  <p>🍑 Duraznos enlatados de 4 estaciones 🍑</p>
+  <button onclick="cerrarSplash()">Entrar al sitio →</button>
+</div>
+
+<!-- ========== NAVBAR ========== -->
+<nav>
+  <div class="logo">
+    <svg viewBox="0 0 220 220" width="40" height="40">
+      <circle cx="110" cy="120" r="85" fill="#FF9966"/>
+      <ellipse cx="110" cy="25" rx="20" ry="10" fill="#7CB342"/>
+    </svg>
+    PECH-LINE
+  </div>
+  <ul>
+    <li><a href="#inicio">Inicio</a></li>
+    <li><a href="#proyectos">Proyectos</a></li>
+    <li><a href="#nosotros">Nosotros</a></li>
+    <li><a href="#blog">Novedades</a></li>
+    <li><a href="#" onclick="abrirGoogleSites(); return false;" style="background:var(--durazno); color:white;">📚 Info Completa</a></li>
+  </ul>
+</nav>
+
+<!-- ========== INICIO ========== -->
+<section id="inicio" class="hero">
+  <h1>Proceso de Producción de <span>Duraznos Enlatados</span></h1>
+  <p class="subtitle">
+    Descubre cómo transformamos los mejores duraznos en deliciosos enlatados durante las 4 estaciones del año.
+    Un proyecto educativo que combina tecnología, sabor y trabajo en equipo. 🍑
+  </p>
+
+  <div class="hero-buttons">
+    <a href="#proyectos" class="btn-primary">🚀 Explorar Proyecto</a>
+    <button class="btn-secondary" onclick="abrirGoogleSites()">📚 Ver Info Completa</button>
+    <a href="#descarga" class="btn-secondary">📥 Descargar PDF</a>
+  </div>
+
+  <div class="stats reveal">
+    <div class="stat-card"><div class="stat-number" data-target="13">0</div><div class="stat-label">Integrantes</div></div>
+    <div class="stat-card"><div class="stat-number" data-target="4">0</div><div class="stat-label">Estaciones</div></div>
+    <div class="stat-card"><div class="stat-number" data-target="12">0</div><div class="stat-label">Planos Técnicos</div></div>
+    <div class="stat-card"><div class="stat-number" data-target="100">0</div><div class="stat-label">% Dedicación</div></div>
+  </div>
+</section>
+
+<!-- ========== PROYECTOS ========== -->
+<section id="proyectos">
+  <h2 class="reveal">🛠️ Nuestro Proyecto</h2>
+  <p class="intro reveal">Explora cada aspecto de PECH-LINE. Haz clic en las pestañas para navegar.</p>
+
+  <div class="submenu reveal">
+    <button class="active" onclick="mostrar('info-completa', this)">📚 Info Completa</button>
+    <button onclick="mostrar('planos', this)">📐 Planos Técnicos</button>
+    <button onclick="mostrar('estaciones', this)">⚙️ Estaciones y Proceso</button>
+    <button onclick="mostrar('video', this)">🎬 Video Pitch</button>
+    <button onclick="mostrar('galeria', this)">📸 Galería</button>
+    <button onclick="mostrar('materiales', this)">📦 Materiales</button>
+    <button onclick="mostrar('descarga', this)">📥 Descargar PDF</button>
+  </div>
+
+  <!-- INFO COMPLETA (Google Sites) -->
+  <div id="info-completa" class="subseccion active">
+    <div class="google-sites-box reveal">
+      <h3>📚 Toda la información detallada</h3>
+      <p>Accede a nuestro sitio completo en Google Sites con toda la documentación, especificaciones técnicas, proceso paso a paso y más.</p>
+      <div class="sites-buttons">
+        <button class="btn-sites" onclick="abrirGoogleSites()">🌐 Ver en ventana emergente</button>
+        <a href="https://sites.google.com/tecsup.edu.pe/inc12a-grupo2/inicio" target="_blank" class="btn-sites" style="background: var(--hoja);">↗ Abrir en nueva pestaña</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- PLANOS -->
+  <div id="planos" class="subseccion">
+    <h3 style="text-align:center; color:var(--durazno-oscuro); margin-bottom:2rem;">📐 Planos Técnicos - Piezas del Sistema</h3>
+    <p style="text-align:center; margin-bottom:2rem; color:#5D4037;">
+      Haz clic en cualquier plano para ampliarlo. Navega con las flechas.
+    </p>
+    <div class="planos-grid" id="planosGrid">
+      <!-- Los planos se generan con JS -->
+    </div>
+  </div>
+
+  <!-- ESTACIONES -->
+  <div id="estaciones" class="subseccion">
+    <h3 style="text-align:center; color:var(--durazno-oscuro); margin-bottom:2rem;">Las 4 Estaciones del Proceso</h3>
+    <div class="timeline">
+      <div class="estacion">
+        <h3><span class="num">1</span>Recepción y Selección</h3>
+        <p>Llegada de la materia prima, inspección visual y selección de duraznos óptimos por calidad, tamaño y madurez.</p>
+      </div>
+      <div class="estacion">
+        <h3><span class="num">2</span>Lavado y Pelado</h3>
+        <p>Lavado con agua potable, pelado (manual o químico), descarozado y corte en mitades o rodajas según presentación.</p>
+      </div>
+      <div class="estacion">
+        <h3><span class="num">3</span>Enlatado y Sellado</h3>
+        <p>Llenado de latas con durazno y almíbar, exhaustado (eliminación de aire) y sellado hermético de la tapa.</p>
+      </div>
+      <div class="estacion">
+        <h3><span class="num">4</span>Pasteurización y Etiquetado</h3>
+        <p>Tratamiento térmico para conservación, enfriamiento rápido, control de calidad final, etiquetado y empaque.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- VIDEO -->
+  <div id="video" class="subseccion">
+    <h3 style="text-align:center; color:var(--durazno-oscuro); margin-bottom:2rem;">🎬 Video Pitch</h3>
+    <div class="video-box">
+      ▶️ [ Inserta aquí tu video de YouTube ]
+    </div>
+    <p style="text-align:center; margin-top:1.5rem; color:#795548;">
+      Conoce en detalle todo el proceso PECH-LINE en nuestro video presentación.
+    </p>
+  </div>
+
+  <!-- GALERÍA -->
+  <div id="galeria" class="subseccion">
+    <h3 style="text-align:center; color:var(--durazno-oscuro); margin-bottom:2rem;">📸 Galería del Proyecto</h3>
+    <div class="galeria">
+      <div class="galeria-item">🍑</div>
+      <div class="galeria-item">🥫</div>
+      <div class="galeria-item">👨‍🍳</div>
+      <div class="galeria-item">⚙️</div>
+      <div class="galeria-item">🔥</div>
+      <div class="galeria-item">📦</div>
+      <div class="galeria-item">👥</div>
+      <div class="galeria-item">🏭</div>
+    </div>
+    <p style="text-align:center; margin-top:1.5rem; color:#795548;">
+      Reemplaza los emojis por imágenes reales del proyecto.
+    </p>
+  </div>
+
+  <!-- MATERIALES -->
+  <div id="materiales" class="subseccion">
+    <h3 style="text-align:center; color:var(--durazno-oscuro); margin-bottom:2rem;">📦 Materiales e Insumos</h3>
+    <div class="materiales-grid">
+      <div class="material-card"><div class="emoji">🍑</div><h4>Duraznos</h4><p>Fruta fresca seleccionada de primera calidad.</p></div>
+      <div class="material-card"><div class="emoji">🥫</div><h4>Latas</h4><p>Envases metálicos herméticos de acero.</p></div>
+      <div class="material-card"><div class="emoji">💧</div><h4>Almíbar</h4><p>Solución de azúcar y agua para conservación.</p></div>
+      <div class="material-card"><div class="emoji">🏭</div><h4>Maquinaria</h4><p>Equipos de lavado, pelado y sellado.</p></div>
+      <div class="material-card"><div class="emoji">🔥</div><h4>Sistema Térmico</h4><p>Para pasteurización y esterilización.</p></div>
+      <div class="material-card"><div class="emoji">🏷️</div><h4>Etiquetas</h4><p>Identificación del producto final.</p></div>
+      <div class="material-card"><div class="emoji">📦</div><h4>Empaques</h4><p>Cajas para distribución y venta.</p></div>
+      <div class="material-card"><div class="emoji">🧪</div><h4>Control Calidad</h4><p>Instrumentos de medición y análisis.</p></div>
+    </div>
+  </div>
+
+  <!-- DESCARGA -->
+  <div id="descarga" class="subseccion">
+    <div class="download-section reveal">
+      <h3>📥 Descarga el Proyecto Completo</h3>
+      <p>Obtén toda la documentación técnica, planos, especificaciones y detalles del proceso PECH-LINE en un solo archivo PDF.</p>
+      <a href="PECH-LINE-Proyecto-Completo.pdf" download class="btn-download">
+        <span class="icon-pdf">PDF</span>
+        Descargar Proyecto Completo
+      </a>
+      <div class="download-info">
+        📄 Formato PDF · Incluye todos los planos y especificaciones
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== NOSOTROS ========== -->
+<section id="nosotros">
+  <h2 class="reveal">👥 Nosotros</h2>
+  <p class="intro reveal">Somos un equipo de 13 estudiantes apasionados por la industria alimentaria.</p>
+
+  <div class="info-box reveal">
+    <h3>🎯 Nuestra Misión</h3>
+    <p>Producir duraznos enlatados de la más alta calidad, aplicando procesos eficientes y sostenibles,
+    garantizando seguridad alimentaria y ofreciendo un producto delicioso durante las 4 estaciones del año.</p>
+  </div>
+
+  <div class="info-box reveal">
+    <h3>👁️ Nuestra Visión</h3>
+    <p>Ser referentes en el proceso educativo de producción de conservas de frutas,
+    destacando por la innovación, el trabajo en equipo y la calidad de nuestros productos.</p>
+  </div>
+
+  <div class="info-box reveal">
+    <h3>📖 Nuestra Historia</h3>
+    <p>PECH-LINE nació como un proyecto académico con el objetivo de aprender y aplicar
+    los principios de la industria conservera. A lo largo del proceso, hemos trabajado
+    en cada etapa: desde la selección de la fruta hasta el empaque final.</p>
+  </div>
+
+  <div class="info-box reveal">
+    <h3>🎯 Objetivo General</h3>
+    <p>Diseñar e implementar un proceso de producción de duraznos enlatados que funcione
+    eficientemente durante las 4 estaciones, asegurando calidad, inocuidad y rentabilidad.</p>
+  </div>
+
+  <h3 style="text-align:center; color:var(--durazno-oscuro); margin:3rem 0 1rem;" class="reveal">💫 Nuestro Equipo (13 integrantes)</h3>
+  <div class="equipo">
+    <div class="miembro reveal"><div class="avatar">1</div><h4>Integrante 1</h4><p>Coordinador</p></div>
+    <div class="miembro reveal"><div class="avatar">2</div><h4>Integrante 2</h4><p>Producción</p></div>
+    <div class="miembro reveal"><div class="avatar">3</div><h4>Integrante 3</h4><p>Calidad</p></div>
+    <div class="miembro reveal"><div class="avatar">4</div><h4>Integrante 4</h4><p>Logística</p></div>
+    <div class="miembro reveal"><div class="avatar">5</div><h4>Integrante 5</h4><p>Diseño</p></div>
+    <div class="miembro reveal"><div class="avatar">6</div><h4>Integrante 6</h4><p>Marketing</p></div>
+    <div class="miembro reveal"><div class="avatar">7</div><h4>Integrante 7</h4><p>Finanzas</p></div>
+    <div class="miembro reveal"><div class="avatar">8</div><h4>Integrante 8</h4><p>Seguridad</p></div>
+    <div class="miembro reveal"><div class="avatar">9</div><h4>Integrante 9</h4><p>Mantenimiento</p></div>
+    <div class="miembro reveal"><div class="avatar">10</div><h4>Integrante 10</h4><p>Documentación</p></div>
+    <div class="miembro reveal"><div class="avatar">11</div><h4>Integrante 11</h4><p>Investigación</p></div>
+    <div class="miembro reveal"><div class="avatar">12</div><h4>Integrante 12</h4><p>Comunicación</p></div>
+    <div class="miembro reveal"><div class="avatar">13</div><h4>Integrante 13</h4><p>Apoyo General</p></div>
+  </div>
+</section>
+
+<!-- ========== BLOG ========== -->
+<section id="blog">
+  <h2 class="reveal">📰 Novedades y Blog</h2>
+  <p class="intro reveal">Tutoriales, guías, testimonios y todo lo nuevo sobre PECH-LINE.</p>
+
+  <h3 style="color:var(--durazno-oscuro); margin-bottom:1.5rem;" class="reveal">📚 Tutoriales y Guías</h3>
+  <div class="blog-grid">
+    <div class="post reveal">
+      <div class="post-img">🍑</div>
+      <div class="post-content">
+        <span class="tag">Tutorial</span>
+        <h3>Cómo seleccionar los mejores duraznos</h3>
+        <p>Aprende a identificar la fruta óptima para enlatado según color, textura y madurez.</p>
+        <a href="#" class="btn-leer">Leer más →</a>
+      </div>
+    </div>
+    <div class="post reveal">
+      <div class="post-img">🥫</div>
+      <div class="post-content">
+        <span class="tag">Guía</span>
+        <h3>Preparación del almíbar perfecto</h3>
+        <p>Proporciones, temperaturas y tiempos para un almíbar de calidad profesional.</p>
+        <a href="#" class="btn-leer">Leer más →</a>
+      </div>
+    </div>
+    <div class="post reveal">
+      <div class="post-img">🔥</div>
+      <div class="post-content">
+        <span class="tag">Tutorial</span>
+        <h3>Pasteurización paso a paso</h3>
+        <p>Todo sobre el tratamiento térmico para garantizar la inocuidad del producto.</p>
+        <a href="#" class="btn-leer">Leer más →</a>
+      </div>
+    </div>
+  </div>
+
+  <h3 style="color:var(--durazno-oscuro); margin:3rem 0 1.5rem;" class="reveal">💬 Testimonios</h3>
+  <div class="testimonio reveal">
+    <p>Trabajar en PECH-LINE me enseñó mucho sobre trabajo en equipo y procesos industriales. ¡Una experiencia increíble!</p>
+    <div class="autor">— Integrante del equipo</div>
+  </div>
+  <div class="testimonio reveal">
+    <p>Los duraznos enlatados tienen un sabor espectacular. Se nota la calidad del proceso.</p>
+    <div class="autor">— Cliente / Profesor</div>
+  </div>
+  <div class="testimonio reveal">
+    <p>Me encantó aprender sobre conservación de alimentos. ¡Quiero seguir en la industria!</p>
+    <div class="autor">— Estudiante participante</div>
+  </div>
+</section>
+
+<!-- ========== FOOTER ========== -->
+<footer>
+  <h3>🍑 PECH-LINE</h3>
+  <p>Duraznos enlatados de 4 estaciones</p>
+  <div class="social">
+    <a href="#" title="Facebook">📘</a>
+    <a href="#" title="Instagram">📷</a>
+    <a href="#" title="YouTube">▶️</a>
+    <a href="#" title="Email">✉️</a>
+  </div>
+  <p style="margin-top:1rem; opacity:0.8;">© 2026 Proyecto Educativo | Hecho con 💛 por 13 estudiantes</p>
+</footer>
+
+<!-- ========== BOTÓN SUBIR ========== -->
+<button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0, behavior:'smooth'})">↑</button>
+
+<!-- ========== MODAL GOOGLE SITES ========== -->
+<div class="modal-overlay" id="modalSites">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>📚 Información Completa - PECH-LINE</h3>
+      <button class="modal-close" onclick="cerrarModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <iframe id="sitesFrame" src="" title="Google Sites PECH-LINE"></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- ========== LIGHTBOX PLANOS ========== -->
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close" onclick="cerrarLightbox()">✕</button>
+  <button class="lightbox-nav lightbox-prev" onclick="cambiarPlano(-1)">‹</button>
+  <button class="lightbox-nav lightbox-next" onclick="cambiarPlano(1)">›</button>
+  <div class="lightbox-content">
+    <div class="lightbox-img" id="lightboxImg">📐</div>
+    <div class="lightbox-info">
+      <h3 id="lightboxTitle">Título del plano</h3>
+      <p id="lightboxDesc">Descripción del plano</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ========== SPLASH ==========
+  function cerrarSplash() {
+    document.getElementById('splash').classList.add('hidden');
+  }
+  setTimeout(cerrarSplash, 8000);
+
+  // ========== SUBMENÚ ==========
+  function mostrar(id, btn) {
+    document.querySelectorAll('.subseccion').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.submenu button').forEach(b => b.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  // ========== MODAL GOOGLE SITES ==========
+  const URL_GOOGLE_SITES = "https://sites.google.com/tecsup.edu.pe/inc12a-grupo2/inicio";
+
+  function abrirGoogleSites() {
+    document.getElementById('sitesFrame').src = URL_GOOGLE_SITES;
+    document.getElementById('modalSites').classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+  function cerrarModal() {
+    document.getElementById('modalSites').classList.remove('active');
+    document.getElementById('sitesFrame').src = '';
+    document.body.style.overflow = '';
+  }
+  document.getElementById('modalSites').addEventListener('click', e => {
+    if (e.target.id === 'modalSites') cerrarModal();
+  });
+
+  // ========== PLANOS (GALERÍA) ==========
+  const planos = [
+    { emoji: '⚙️', titulo: 'Polea Motriz', desc: 'Plano técnico de la polea principal del sistema' },
+    { emoji: '🔩', titulo: 'Rodillos Portantes', desc: 'Especificaciones de los rodillos de soporte' },
+    { emoji: '🔁', titulo: 'Banda Transportadora', desc: 'Dimensiones y material de la faja' },
+    { emoji: '🛞', titulo: 'Polea de Tensado', desc: 'Sistema de tensión de la banda' },
+    { emoji: '🔌', titulo: 'Motor Eléctrico', desc: 'Especificaciones del motor de accionamiento' },
+    { emoji: '🛡️', titulo: 'Guardas de Seguridad', desc: 'Protecciones y sistemas de seguridad' },
+    { emoji: '📏', titulo: 'Estructura General', desc: 'Marco metálico de soporte completo' },
+    { emoji: '🔧', titulo: 'Sistema de Limpieza', desc: 'Rasquetas y limpiadores de banda' },
+    { emoji: '⚡', titulo: 'Diagrama Eléctrico', desc: 'Esquema de conexiones eléctricas' },
+    { emoji: '🎯', titulo: 'Alineación de Rodillos', desc: 'Detalle de alineación y montaje' },
+    { emoji: '📐', titulo: 'Plano de Conjunto', desc: 'Vista general del sistema completo' },
+    { emoji: '🔍', titulo: 'Detalle de Uniones', desc: 'Uniones y empalmes de la banda' }
+  ];
+
+  function renderPlanos() {
+    const grid = document.getElementById('planosGrid');
+    grid.innerHTML = planos.map((p, i) => `
+      <div class="plano-card reveal" onclick="abrirLightbox(${i})">
+        <div class="plano-img">${p.emoji}</div>
+        <div class="plano-info">
+          <h4>${p.titulo}</h4>
+          <p>${p.desc}</p>
+        </div>
+      </div>
+    `).join('');
+    initReveal();
+  }
+  renderPlanos();
+
+  // ========== LIGHTBOX ==========
+  let planoActual = 0;
+  function abrirLightbox(i) {
+    planoActual = i;
+    actualizarLightbox();
+    document.getElementById('lightbox').classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+  function cerrarLightbox() {
+    document.getElementById('lightbox').classList.remove('active');
+    document.body.style.overflow = '';
+  }
+  function cambiarPlano(dir) {
+    planoActual = (planoActual + dir + planos.length) % planos.length;
+    actualizarLightbox();
+  }
+  function actualizarLightbox() {
+    const p = planos[planoActual];
+    document.getElementById('lightboxImg').textContent = p.emoji;
+    document.getElementById('lightboxTitle').textContent = p.titulo;
+    document.getElementById('lightboxDesc').textContent = p.desc;
+  }
+  document.addEventListener('keydown', e => {
+    if (!document.getElementById('lightbox').classList.contains('active')) return;
+    if (e.key === 'ArrowLeft') cambiarPlano(-1);
+    if (e.key === 'ArrowRight') cambiarPlano(1);
+    if (e.key === 'Escape') cerrarLightbox();
+  });
+
+  // ========== SCROLL REVEAL ==========
+  function initReveal() {
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('active');
+        }
+      });
+    }, { threshold: 0.1 });
+    reveals.forEach(el => observer.observe(el));
+  }
+  initReveal();
+
+  // ========== CONTADORES ANIMADOS ==========
+  const statObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const el = entry.target;
+        const target = +el.dataset.target;
+        let count = 0;
+        const step = target / 40;
+        const timer = setInterval(() => {
+          count += step;
+          if (count >= target) { count = target; clearInterval(timer); }
+          el.textContent = Math.floor(count);
+        }, 30);
+        statObserver.unobserve(el);
+      }
+    });
+  }, { threshold: 0.5 });
+  document.querySelectorAll('.stat-number').forEach(el => statObserver.observe(el));
+
+  // ========== BOTÓN SUBIR ==========
+  window.addEventListener('scroll', () => {
+    const btn = document.getElementById('scrollTop');
+    if (window.scrollY > 500) btn.classList.add('visible');
+    else btn.classList.remove('visible');
+  });
+
+  // ========== SCROLL SUAVE ==========
+  document.querySelectorAll('nav a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const href = a.getAttribute('href');
+      if (href === '#') return;
+      e.preventDefault();
+      document.querySelector(href).scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+</script>
+
+</body>
+</html>
