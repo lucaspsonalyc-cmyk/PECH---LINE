@@ -3,82 +3,135 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PECH-LINE | Duraznos Enlatados de 4 Estaciones</title>
+<title>Dos Caballos | Línea de conservas de durazno — Proyecto académico</title>
+<meta name="description" content="Proyecto académico de Tecsup (INC12A – Grupo 2): análisis de la línea de producción de conservas de durazno en almíbar de Dos Caballos y diseño de una faja transportadora automatizada.">
+<link rel="icon" href="img/logo-180.png">
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
   :root {
-    --durazno: #FF9966;
-    --durazno-claro: #FFB88C;
-    --durazno-oscuro: #E87A3E;
-    --crema: #FFF5E6;
-    --hoja: #7CB342;
-    --hoja-oscuro: #558B2F;
-    --texto: #3E2723;
-    --sombra: rgba(232, 122, 62, 0.2);
+    --verde-oscuro: #0d2b1c;
+    --verde: #164a2c;
+    --verde-claro: #1f6b3a;
+    --dorado: #c9a24b;
+    --dorado-claro: #e6cd8f;
+    --vino-oscuro: #6e1723;
+    --vino: #8f2130;
+    --crema: #f7f1e2;
+    --fondo: #fffcf5;
+    --texto: #1f2a22;
+    --texto-suave: #4a5a4f;
+    --sombra: rgba(13, 43, 28, 0.12);
+    --textura: repeating-linear-gradient(45deg, rgba(201, 162, 75, 0.12) 0 2px, transparent 2px 16px);
   }
-  html { scroll-behavior: smooth; }
-  body { background: var(--crema); color: var(--texto); overflow-x: hidden; }
+  html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+  body {
+    font-family: Arial, Helvetica, sans-serif; background: var(--fondo);
+    color: var(--texto); overflow-x: hidden; line-height: 1.55;
+  }
+  body.bloqueado { overflow: hidden; }
+  h1, h2, h3, h4 { font-family: Georgia, 'Times New Roman', serif; }
+  img { max-width: 100%; display: block; }
 
-  /* ========== SPLASH ========== */
+  /* ========== BOTONES ========== */
+  .btn {
+    padding: 0.9rem 1.8rem; border-radius: 50px; font-weight: bold; font-size: 1rem;
+    font-family: Arial, Helvetica, sans-serif; text-decoration: none; cursor: pointer;
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    border: 2px solid transparent; transition: 0.3s;
+  }
+  .btn-verde { background: var(--verde); color: var(--crema); }
+  .btn-verde:hover { background: var(--verde-claro); transform: translateY(-3px); box-shadow: 0 10px 25px var(--sombra); }
+  .btn-borde { background: transparent; color: var(--verde); border-color: var(--dorado); }
+  .btn-borde:hover { background: var(--dorado); color: var(--verde-oscuro); transform: translateY(-3px); }
+  .btn-dorado { background: var(--dorado); color: var(--verde-oscuro); }
+  .btn-dorado:hover { background: var(--dorado-claro); transform: translateY(-3px); box-shadow: 0 10px 25px var(--sombra); }
+  .botones-centro { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+  /* ========== SPLASH: DOS CABALLOS ========== */
   #splash {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: linear-gradient(135deg, #FFB88C 0%, #FF9966 50%, #E87A3E 100%);
-    z-index: 9999; display: flex; flex-direction: column;
-    justify-content: center; align-items: center;
+    position: fixed; inset: 0; z-index: 9999; overflow: hidden;
+    background: radial-gradient(circle at 50% 40%, var(--verde-claro) 0%, var(--verde) 35%, var(--verde-oscuro) 75%);
     transition: opacity 1s ease, visibility 1s ease;
   }
-  #splash.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
-  #splash h1 {
-    font-size: 3.5rem; color: white; margin-top: 2rem;
-    text-shadow: 3px 3px 0 var(--durazno-oscuro);
-    animation: bounceIn 1s ease 0.5s both;
+  #splash::before { content: ''; position: absolute; inset: 0; background: var(--textura); }
+  #splash.oculto { opacity: 0; visibility: hidden; pointer-events: none; }
+  .escena { position: absolute; inset: 0; }
+  .suelo {
+    position: absolute; left: 0; right: 0; bottom: 22%; height: 3px;
+    background: linear-gradient(90deg, transparent, var(--dorado), transparent); opacity: 0.6;
+    transition: opacity 0.8s;
   }
-  #splash p { color: white; font-size: 1.3rem; margin-top: 1rem; animation: fadeIn 1s ease 1.2s both; }
-  #splash button {
-    margin-top: 2rem; padding: 1rem 2.5rem;
-    background: white; color: var(--durazno-oscuro);
-    border: none; border-radius: 50px; font-size: 1.1rem;
-    font-weight: bold; cursor: pointer;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
-    animation: fadeIn 1s ease 1.8s both, pulse 2s infinite 2.5s;
-    transition: 0.3s;
+  .caballo {
+    --w: min(30vw, 240px);
+    position: absolute; bottom: calc(22% - var(--w) * 0.1); width: var(--w);
+    transition: left 2.8s linear, right 2.8s linear, transform 0.6s ease, opacity 0.8s ease;
   }
-  #splash button:hover { transform: scale(1.1); }
-  @keyframes bounceIn { 0% { opacity:0; transform: scale(0.3);} 50% { transform: scale(1.1);} 100% { opacity:1; transform: scale(1);} }
-  @keyframes fadeIn { from { opacity:0;} to { opacity:1;} }
-  @keyframes pulse { 0%,100% { box-shadow: 0 5px 20px rgba(0,0,0,0.2);} 50% { box-shadow: 0 5px 30px rgba(255,255,255,0.6);} }
-
-  .durazno-container { animation: float 3s ease-in-out infinite; }
-  @keyframes float { 0%,100% { transform: translateY(0);} 50% { transform: translateY(-15px);} }
-  .mano { transform-origin: 180px 160px; animation: wave 1.5s ease-in-out infinite; }
-  @keyframes wave { 0%,100% { transform: rotate(0deg);} 25% { transform: rotate(-20deg);} 75% { transform: rotate(20deg);} }
-  .ojo { animation: blink 4s infinite; }
-  @keyframes blink { 0%, 90%, 100% { transform: scaleY(1);} 95% { transform: scaleY(0.1);} }
+  .caballo svg { width: 100%; height: auto; display: block; overflow: visible; }
+  .caballo.izq { left: calc(-1 * var(--w) - 5vw); transform-origin: 29% 88%; }
+  .caballo.der { right: calc(-1 * var(--w) - 5vw); transform-origin: 71% 88%; }
+  .caballo.der svg { transform: scaleX(-1); }
+  .escena.entrar .izq { left: calc(50% - var(--w) - 6vw); }
+  .escena.entrar .der { right: calc(50% - var(--w) - 6vw); }
+  .escena.centro .izq { left: calc(50% - var(--w) + 1vw); transition: left 1s linear, transform 0.6s ease, opacity 0.8s ease; }
+  .escena.centro .der { right: calc(50% - var(--w) + 1vw); transition: right 1s linear, transform 0.6s ease, opacity 0.8s ease; }
+  .pata { transform-box: fill-box; transform-origin: 50% 0; }
+  .escena.caminando .pata { animation: paso 0.7s ease-in-out infinite; }
+  .escena.caminando .pata.b { animation-delay: -0.35s; }
+  .escena.caminando .trote { animation: trote 0.35s ease-in-out infinite alternate; }
+  .escena.saludo .caballo.izq { transform: rotate(-26deg); }
+  .escena.saludo .caballo.der { transform: rotate(26deg); }
+  .escena.saludo .pata.del { animation: saludo 0.45s ease-in-out infinite alternate; }
+  .escena.saludo .pata.del.b { animation-delay: -0.2s; }
+  .escena.logo .caballo { opacity: 0; }
+  .escena.logo .suelo { opacity: 0; }
+  @keyframes paso { 0%, 100% { transform: rotate(20deg); } 50% { transform: rotate(-20deg); } }
+  @keyframes trote { from { transform: translateY(0); } to { transform: translateY(-4px); } }
+  @keyframes saludo { from { transform: rotate(-55deg); } to { transform: rotate(5deg); } }
+  .splash-marca {
+    position: absolute; left: 50%; top: 48%; text-align: center; width: min(80vw, 340px);
+    transform: translate(-50%, -50%) scale(0.6); opacity: 0;
+    transition: opacity 1.2s ease, transform 1.2s ease;
+  }
+  .splash-marca img { width: min(56vw, 280px); margin: 0 auto; filter: drop-shadow(0 10px 25px rgba(0,0,0,0.35)); }
+  .splash-marca p { color: var(--crema); margin-top: 1rem; font-family: Georgia, serif; font-size: 1.2rem; }
+  .splash-marca small { display: block; color: var(--dorado-claro); font-family: Arial, sans-serif; font-size: 0.85rem; margin-top: 0.3rem; letter-spacing: 1px; }
+  .escena.logo .splash-marca { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  .saltar {
+    position: absolute; right: 20px; bottom: 20px; z-index: 2;
+    background: transparent; color: var(--crema); border: 1px solid var(--dorado);
+    padding: 0.5rem 1.1rem; border-radius: 30px; cursor: pointer; font-size: 0.9rem;
+  }
+  .saltar:hover { background: var(--dorado); color: var(--verde-oscuro); }
 
   /* ========== NAVBAR ========== */
   nav {
     position: fixed; top: 0; width: 100%; z-index: 100;
-    background: rgba(255, 245, 230, 0.95); backdrop-filter: blur(10px);
-    padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center;
-    box-shadow: 0 2px 15px var(--sombra);
+    background: rgba(255, 252, 245, 0.96); backdrop-filter: blur(10px);
+    padding: 0.7rem 2rem; display: flex; justify-content: space-between; align-items: center;
+    border-bottom: 2px solid var(--dorado); box-shadow: 0 2px 15px var(--sombra);
   }
-  nav .logo { display: flex; align-items: center; gap: 0.5rem; font-weight: bold; font-size: 1.3rem; color: var(--durazno-oscuro); }
-  nav .logo svg { width: 40px; height: 40px; }
-  nav ul { display: flex; gap: 1rem; list-style: none; flex-wrap: wrap; }
+  nav .logo {
+    display: flex; align-items: center; gap: 0.6rem; text-decoration: none;
+    font-family: Georgia, serif; font-weight: bold; font-size: 1.3rem; color: var(--verde);
+  }
+  nav .logo img { height: 46px; width: auto; }
+  nav ul { display: flex; gap: 0.6rem; list-style: none; flex-wrap: wrap; }
   nav a {
-    color: var(--texto); text-decoration: none; font-weight: 600;
+    color: var(--verde); text-decoration: none; font-weight: 600;
     padding: 0.5rem 1rem; border-radius: 20px; transition: 0.3s;
   }
-  nav a:hover { background: var(--durazno); color: white; }
+  nav ul a:hover { background: var(--verde); color: var(--crema); }
+  nav ul a.nav-destacado { background: var(--verde); color: var(--crema); }
+  nav ul a.nav-destacado:hover { background: var(--verde-claro); }
   .menu-toggle {
     display: none; flex-direction: column; justify-content: center; gap: 5px;
     width: 44px; height: 44px; padding: 10px; border: none; border-radius: 12px;
     background: transparent; cursor: pointer; transition: 0.3s;
   }
-  .menu-toggle:hover { background: rgba(255, 153, 102, 0.15); }
+  .menu-toggle:hover { background: rgba(201, 162, 75, 0.2); }
   .menu-toggle span {
     display: block; height: 3px; border-radius: 2px;
-    background: var(--durazno-oscuro); transition: 0.3s;
+    background: var(--verde); transition: 0.3s;
   }
   nav.open .menu-toggle span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
   nav.open .menu-toggle span:nth-child(2) { opacity: 0; }
@@ -86,414 +139,484 @@
 
   /* ========== HERO ========== */
   .hero {
-    min-height: 100vh; padding: 8rem 2rem 4rem;
-    display: flex; flex-direction: column; align-items: center;
-    text-align: center; background: linear-gradient(180deg, var(--crema) 0%, #FFE4CC 100%);
-    position: relative; overflow: hidden; max-width: none;
+    min-height: 100vh; padding: 7.5rem 2rem 4rem; max-width: none;
+    display: flex; flex-direction: column; align-items: center; text-align: center;
+    background: var(--textura), linear-gradient(180deg, var(--fondo) 0%, #f3ead3 100%);
   }
-  .hero::before {
-    content: '🍑'; position: absolute; font-size: 15rem; opacity: 0.08;
-    top: 10%; right: -50px; animation: floatSlow 8s ease-in-out infinite;
+  .aviso {
+    display: inline-block; background: var(--vino); color: var(--crema);
+    padding: 0.4rem 1rem; border-radius: 30px; font-size: 0.85rem; margin-bottom: 1.5rem;
   }
-  @keyframes floatSlow { 0%,100% { transform: translateY(0) rotate(0deg);} 50% { transform: translateY(-30px) rotate(10deg);} }
-  .hero h1 { font-size: 3.5rem; color: var(--durazno-oscuro); margin-bottom: 1rem; line-height: 1.2; }
-  .hero h1 span { color: var(--hoja-oscuro); }
-  .hero .subtitle { font-size: 1.3rem; max-width: 700px; margin-bottom: 2rem; color: #5D4037; }
-  .hero-buttons { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; margin-top: 2rem; }
-  .btn-primary, .btn-secondary {
-    padding: 1rem 2rem; border-radius: 50px; font-weight: bold;
-    text-decoration: none; transition: 0.3s; display: inline-flex;
-    align-items: center; gap: 0.5rem; border: 2px solid transparent;
-    cursor: pointer; font-size: 1rem;
-  }
-  .btn-primary { background: var(--durazno); color: white; }
-  .btn-primary:hover { background: var(--durazno-oscuro); transform: translateY(-3px); box-shadow: 0 10px 25px var(--sombra); }
-  .btn-secondary { background: transparent; color: var(--durazno-oscuro); border-color: var(--durazno); }
-  .btn-secondary:hover { background: var(--durazno); color: white; transform: translateY(-3px); }
+  .hero-logo { width: min(220px, 50vw); margin-bottom: 1rem; filter: drop-shadow(0 8px 18px var(--sombra)); }
+  .hero h1 { font-size: 3.2rem; color: var(--verde); margin-bottom: 1rem; line-height: 1.2; }
+  .hero h1 span { color: var(--vino); }
+  .hero .subtitle { font-size: 1.2rem; max-width: 720px; color: var(--texto-suave); }
+  .hero .botones-centro { margin-top: 2rem; }
 
   /* ========== ESTADÍSTICAS ========== */
   .stats {
     display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
     gap: 1.5rem; max-width: 1100px; margin: 3rem auto 0; width: 100%;
   }
-  .stat-card {
-    background: white; padding: 2rem; border-radius: 20px;
-    box-shadow: 0 5px 20px var(--sombra); text-align: center;
-    transition: 0.3s;
+  .stat-card, .mini-stat {
+    background: var(--crema); border: 1px solid var(--dorado); border-radius: 18px;
+    box-shadow: 0 6px 20px var(--sombra); text-align: center; transition: 0.3s;
   }
-  .stat-card:hover { transform: translateY(-8px); }
-  .stat-number { font-size: 2.5rem; font-weight: bold; color: var(--durazno-oscuro); }
-  .stat-label { color: #795548; margin-top: 0.5rem; }
+  .stat-card { padding: 1.8rem; }
+  .stat-card:hover, .mini-stat:hover { transform: translateY(-6px); }
+  .stat-number { font-family: Georgia, serif; font-size: 2.6rem; font-weight: bold; color: var(--verde); }
+  .stat-label { color: var(--texto-suave); margin-top: 0.3rem; }
 
   /* ========== SECCIONES ========== */
   section { padding: 5rem 2rem; max-width: 1200px; margin: auto; }
-  section h2 {
-    font-size: 2.5rem; color: var(--durazno-oscuro); text-align: center;
-    margin-bottom: 1rem;
+  section h2 { font-size: 2.5rem; color: var(--verde); text-align: center; margin-bottom: 1rem; }
+  section h2::after, .sub-titulo::after {
+    content: ''; display: block; width: 80px; height: 3px;
+    background: var(--dorado); margin: 0.9rem auto 0; border-radius: 2px;
   }
-  section h2::after {
-    content: ''; display: block; width: 80px; height: 4px;
-    background: var(--hoja); margin: 1rem auto; border-radius: 2px;
+  section .intro { text-align: center; max-width: 700px; margin: 1rem auto 3rem; color: var(--texto-suave); }
+  .sub-titulo { font-size: 1.9rem; color: var(--verde); text-align: center; margin-bottom: 0.8rem; }
+  .sub-kicker { text-align: center; color: var(--vino); font-family: Georgia, serif; font-size: 1.2rem; margin-bottom: 0.4rem; }
+  .sub-intro { text-align: center; max-width: 680px; margin: 0 auto 2.5rem; color: var(--texto-suave); }
+  .bloque-titulo { font-size: 1.8rem; color: var(--verde); text-align: center; margin: 4.5rem 0 1.8rem; }
+  .bloque-titulo:first-of-type { margin-top: 0; }
+  .tarjeta {
+    background: var(--crema); border: 1px solid var(--dorado); border-radius: 16px;
+    box-shadow: 0 6px 20px var(--sombra);
   }
-  section .intro { text-align: center; max-width: 700px; margin: 0 auto 3rem; color: #5D4037; }
 
-  /* Reveal al hacer scroll */
-  .reveal { opacity: 0; transform: translateY(40px); transition: all 0.8s ease; }
+  .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.8s ease, transform 0.8s ease; }
   .reveal.active { opacity: 1; transform: translateY(0); }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
   /* ========== SUBMENÚ PROYECTOS ========== */
-  .submenu {
-    display: flex; flex-wrap: wrap; justify-content: center;
-    gap: 0.8rem; margin-bottom: 3rem;
-  }
+  .submenu { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.8rem; margin-bottom: 3rem; }
   .submenu button {
-    padding: 0.7rem 1.5rem; background: white; color: var(--durazno-oscuro);
-    border: 2px solid var(--durazno); border-radius: 25px;
-    font-weight: 600; cursor: pointer; transition: 0.3s;
+    padding: 0.7rem 1.4rem; background: var(--crema); color: var(--verde);
+    border: 2px solid var(--dorado); border-radius: 25px; font-size: 0.95rem;
+    font-family: Georgia, serif; font-weight: bold; cursor: pointer; transition: 0.3s;
   }
-  .submenu button:hover, .submenu button.active {
-    background: var(--durazno); color: white; transform: scale(1.05);
-  }
+  .submenu button:hover { background: var(--verde-claro); color: var(--crema); }
+  .submenu button.active { background: var(--verde); color: var(--crema); border-color: var(--verde); }
   .subseccion { display: none; animation: fadeIn 0.5s ease; }
   .subseccion.active { display: block; }
 
-  /* ========== GOOGLE SITES EMBED ========== */
-  .google-sites-box {
-    background: white; border-radius: 20px; padding: 2rem;
-    box-shadow: 0 5px 25px var(--sombra); text-align: center;
-    border: 3px dashed var(--durazno);
-  }
-  .google-sites-box h3 { color: var(--durazno-oscuro); margin-bottom: 1rem; font-size: 1.5rem; }
-  .google-sites-box p { margin-bottom: 1.5rem; color: #5D4037; }
-  .sites-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
-  .btn-sites {
-    padding: 1rem 2rem; background: linear-gradient(135deg, var(--durazno), var(--durazno-oscuro));
-    color: white; border: none; border-radius: 50px; font-weight: bold;
-    cursor: pointer; transition: 0.3s; display: inline-flex; align-items: center; gap: 0.5rem;
-    text-decoration: none; font-size: 1rem;
-  }
-  .btn-sites:hover { transform: translateY(-3px) scale(1.05); box-shadow: 0 10px 25px var(--sombra); }
+  /* ========== INFO COMPLETA ========== */
+  .info-sites { padding: 2.5rem 2rem; text-align: center; border-style: dashed; border-width: 2px; }
+  .info-sites h3 { color: var(--verde); font-size: 1.6rem; margin-bottom: 1rem; }
+  .info-sites p { color: var(--texto-suave); max-width: 640px; margin: 0 auto 1.8rem; }
 
-  /* ========== PLANOS / GALERÍA ========== */
-  .planos-grid {
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 1.5rem;
+  /* ========== PLANOS TÉCNICOS ========== */
+  .planos-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.8rem; }
+  .plano-card { overflow: hidden; display: flex; flex-direction: column; transition: transform 0.35s, box-shadow 0.35s; }
+  .plano-card:hover { transform: translateY(-8px); box-shadow: 0 16px 35px rgba(13, 43, 28, 0.2); }
+  .plano-img { background: white; aspect-ratio: 1.414; border-bottom: 1px solid var(--dorado); cursor: zoom-in; }
+  .plano-img img { width: 100%; height: 100%; object-fit: contain; }
+  .plano-info { padding: 1.3rem 1.5rem 1.5rem; display: flex; flex-direction: column; gap: 0.4rem; flex: 1; }
+  .plano-num { font-size: 0.8rem; font-weight: bold; letter-spacing: 2px; color: var(--vino); }
+  .plano-info h4 { color: var(--verde); font-size: 1.3rem; }
+  .plano-info p { color: var(--texto-suave); font-size: 0.95rem; flex: 1; }
+  .btn-ver {
+    align-self: flex-start; margin-top: 0.6rem; padding: 0.6rem 1.4rem; border-radius: 30px;
+    background: transparent; color: var(--verde); border: 2px solid var(--dorado);
+    font-weight: bold; cursor: pointer; transition: 0.3s; font-size: 0.95rem;
   }
-  .plano-card {
-    background: white; border-radius: 15px; overflow: hidden;
-    box-shadow: 0 5px 20px var(--sombra); cursor: pointer;
-    transition: 0.4s; position: relative;
-  }
-  .plano-card:hover { transform: translateY(-10px) scale(1.02); box-shadow: 0 15px 35px var(--sombra); }
-  .plano-img {
-    height: 200px; background: linear-gradient(135deg, #FFE4CC, #FFB88C);
-    display: flex; justify-content: center; align-items: center;
-    font-size: 4rem; position: relative; overflow: hidden;
-  }
-  .plano-img::after {
-    content: '🔍 Click para ampliar'; position: absolute; bottom: 0; left: 0;
-    width: 100%; background: rgba(232, 122, 62, 0.9); color: white;
-    padding: 0.5rem; text-align: center; font-size: 0.9rem;
-    transform: translateY(100%); transition: 0.3s;
-  }
-  .plano-card:hover .plano-img::after { transform: translateY(0); }
-  .plano-info { padding: 1rem; }
-  .plano-info h4 { color: var(--durazno-oscuro); margin-bottom: 0.3rem; }
-  .plano-info p { color: #795548; font-size: 0.9rem; }
+  .plano-card:hover .btn-ver, .btn-ver:hover { background: var(--dorado); color: var(--verde-oscuro); }
+  .descargar-todo { text-align: center; margin-top: 2.5rem; }
 
-  /* ========== LIGHTBOX ========== */
-  .lightbox {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.95); z-index: 10001;
-    display: none; justify-content: center; align-items: center;
-    padding: 2rem; flex-direction: column;
+  /* ========== MODALES ========== */
+  .modal {
+    position: fixed; inset: 0; z-index: 10000; display: none;
+    justify-content: center; align-items: center; padding: 1rem;
   }
-  .lightbox.active { display: flex; animation: fadeIn 0.3s ease; }
-  .lightbox-content {
-    max-width: 90%; max-height: 80vh; background: white;
-    border-radius: 15px; overflow: hidden; position: relative;
-    display: flex; flex-direction: column;
+  .modal.activo { display: flex; animation: fadeIn 0.3s ease; }
+  .modal-plano { background: rgba(110, 23, 35, 0.88); }
+  .modal-galeria { background: rgba(13, 43, 28, 0.7); }
+  .modal-caja {
+    background: var(--crema); border: 1px solid var(--dorado); border-radius: 18px;
+    width: 100%; max-width: 1000px; max-height: 94vh; overflow: auto; position: relative;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
   }
-  .lightbox-img {
-    width: 100%; min-height: 400px; max-height: 70vh;
-    background: linear-gradient(135deg, #FFE4CC, #FFB88C);
-    display: flex; justify-content: center; align-items: center;
-    font-size: 8rem;
+  .modal-plano .modal-img { background: white; }
+  .modal-plano .modal-img img { width: 100%; max-height: 64vh; object-fit: contain; }
+  .modal-info { padding: 1.3rem 1.6rem 1.6rem; text-align: center; }
+  .modal-info h3 { color: var(--verde); font-size: 1.5rem; margin: 0.2rem 0 0.4rem; }
+  .modal-info p { color: var(--texto-suave); max-width: 640px; margin: 0 auto; }
+  .modal-acciones { display: flex; gap: 0.7rem; justify-content: center; flex-wrap: wrap; margin-top: 1.2rem; }
+  .modal-acciones .btn { padding: 0.6rem 1.3rem; font-size: 0.95rem; }
+  .btn-cerrar { background: var(--vino); color: var(--crema); }
+  .btn-cerrar:hover { background: var(--vino-oscuro); }
+  .modal-x {
+    position: absolute; top: 12px; right: 12px; z-index: 2;
+    width: 42px; height: 42px; border-radius: 50%; border: 2px solid var(--dorado);
+    background: var(--crema); color: var(--verde); font-size: 1.2rem; font-weight: bold;
+    cursor: pointer; transition: 0.3s;
   }
-  .lightbox-info { padding: 1.5rem; background: white; text-align: center; }
-  .lightbox-info h3 { color: var(--durazno-oscuro); margin-bottom: 0.5rem; }
-  .lightbox-info p { color: #795548; }
-  .lightbox-close {
-    position: absolute; top: 15px; right: 15px;
-    background: white; color: var(--durazno-oscuro); border: none;
-    width: 40px; height: 40px; border-radius: 50%; cursor: pointer;
-    font-size: 1.5rem; font-weight: bold; z-index: 10;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-  }
-  .lightbox-nav {
-    position: absolute; top: 50%; transform: translateY(-50%);
-    background: var(--durazno); color: white; border: none;
-    width: 50px; height: 50px; border-radius: 50%; cursor: pointer;
-    font-size: 1.5rem; font-weight: bold; transition: 0.3s;
-  }
-  .lightbox-nav:hover { background: var(--durazno-oscuro); transform: translateY(-50%) scale(1.1); }
-  .lightbox-prev { left: 20px; }
-  .lightbox-next { right: 20px; }
+  .modal-x:hover { background: var(--verde); color: var(--crema); transform: rotate(90deg); }
 
-  /* ========== DESCARGA PDF ========== */
-  .download-section {
-    background: linear-gradient(135deg, var(--durazno-oscuro), var(--hoja-oscuro));
-    color: white; padding: 3rem 2rem; border-radius: 25px;
-    text-align: center; margin: 3rem auto; max-width: 900px;
-    box-shadow: 0 15px 40px rgba(0,0,0,0.2);
-    position: relative; overflow: hidden;
+  /* ========== ESTACIONES (FAJA INTERACTIVA) ========== */
+  .faja-wrap { position: relative; max-width: 900px; margin: 0 auto; padding-top: 0.5rem; }
+  .estaciones-fila { display: grid; grid-template-columns: repeat(4, 1fr); position: relative; z-index: 2; }
+  .estacion-btn {
+    background: none; border: none; cursor: pointer; display: flex; flex-direction: column;
+    align-items: center; gap: 0; font-family: inherit; color: var(--verde);
   }
-  .download-section::before {
-    content: '📄'; position: absolute; font-size: 15rem; opacity: 0.1;
-    right: -30px; top: -30px;
+  .estacion-btn .circulo {
+    width: 84px; height: 84px; border-radius: 50%; display: flex; justify-content: center; align-items: center;
+    background: var(--crema); border: 3px solid var(--dorado); font-size: 2.2rem;
+    box-shadow: 0 6px 18px var(--sombra); transition: 0.3s;
   }
-  .download-section h3 { font-size: 2rem; margin-bottom: 1rem; }
-  .download-section p { margin-bottom: 2rem; opacity: 0.95; font-size: 1.1rem; }
-  .btn-download {
-    padding: 1.2rem 2.5rem; background: white; color: var(--durazno-oscuro);
-    border: none; border-radius: 50px; font-weight: bold; font-size: 1.1rem;
-    cursor: pointer; transition: 0.3s; display: inline-flex;
-    align-items: center; gap: 0.8rem; text-decoration: none;
-    position: relative; overflow: hidden;
+  .estacion-btn:hover .circulo { background: #e3efe6; border-color: var(--verde-claro); transform: translateY(-4px); }
+  .estacion-btn.actual .circulo { box-shadow: 0 0 0 6px rgba(201, 162, 75, 0.35), 0 6px 18px var(--sombra); }
+  .estacion-btn.abierta .circulo { background: var(--verde); border-color: var(--dorado); }
+  .estacion-btn .est-nombre {
+    margin-top: 70px; font-family: Georgia, serif; font-weight: bold; font-size: 0.95rem;
+    text-align: center; line-height: 1.25; padding: 0 0.3rem;
   }
-  .btn-download:hover {
-    transform: translateY(-5px) scale(1.05);
-    box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+  .estacion-btn .est-num { display: block; font-family: Arial, sans-serif; font-size: 0.75rem; color: var(--vino); letter-spacing: 1px; }
+  .faja {
+    position: absolute; left: 4%; right: 4%; top: 136px; height: 20px; z-index: 1;
+    border-radius: 10px; background-color: var(--dorado);
+    background-image: repeating-linear-gradient(-45deg, rgba(13, 43, 28, 0.35) 0 3px, transparent 3px 12px);
+    background-size: 34px 34px; box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.15), 0 4px 10px var(--sombra);
+    animation: faja-mueve 1.2s linear infinite;
   }
-  .btn-download .icon-pdf {
-    background: #E53935; color: white; padding: 0.3rem 0.6rem;
-    border-radius: 8px; font-size: 0.9rem; font-weight: bold;
+  .faja::before, .faja::after {
+    content: ''; position: absolute; top: -4px; width: 28px; height: 28px; border-radius: 50%;
+    background: var(--verde); border: 3px solid var(--dorado-claro);
   }
-  .download-info { margin-top: 1.5rem; font-size: 0.9rem; opacity: 0.85; }
-
-  /* ========== MATERIALES ========== */
-  .materiales-grid {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1.5rem;
+  .faja::before { left: -14px; }
+  .faja::after { right: -14px; }
+  @keyframes faja-mueve { from { background-position: 0 0; } to { background-position: 34px 0; } }
+  .durazno-viajero {
+    position: absolute; top: 102px; left: 12.5%; z-index: 3; font-size: 2rem; line-height: 1;
+    transform: translateX(-50%); transition: left 1.4s ease-in-out, opacity 0.3s;
+    filter: drop-shadow(0 3px 3px rgba(0, 0, 0, 0.25)); pointer-events: none;
   }
-  .material-card {
-    background: white; padding: 1.5rem; border-radius: 15px;
-    text-align: center; box-shadow: 0 3px 15px var(--sombra);
-    transition: 0.3s; border-left: 5px solid var(--hoja);
+  .btn-siguiente { display: block; margin: 1.8rem auto 0; }
+  .panel-estacion {
+    display: grid; grid-template-columns: 45% 1fr; gap: 1.8rem; align-items: center;
+    margin: 2rem auto 0; max-width: 900px; padding: 1.5rem; position: relative;
+    animation: desplegar 0.4s ease;
   }
-  .material-card:hover { transform: scale(1.05) rotate(-1deg); }
-  .material-card .emoji { font-size: 2.5rem; margin-bottom: 0.5rem; }
-  .material-card h4 { color: var(--hoja-oscuro); margin-bottom: 0.5rem; }
-
-  /* ========== ESTACIONES TIMELINE ========== */
-  .timeline { position: relative; max-width: 900px; margin: auto; padding: 2rem 0; }
-  .timeline::before {
-    content: ''; position: absolute; left: 50%; top: 0; bottom: 0;
-    width: 4px; background: var(--durazno); transform: translateX(-50%);
+  .panel-estacion[hidden] { display: none; }
+  @keyframes desplegar { from { opacity: 0; transform: translateY(-15px) scaleY(0.95); } to { opacity: 1; transform: none; } }
+  .panel-img img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 12px; border: 1px solid var(--dorado); }
+  .img-pendiente {
+    display: none; aspect-ratio: 4 / 3; border-radius: 12px; border: 2px dashed var(--dorado);
+    background: var(--crema); color: var(--verde); font-weight: bold;
+    justify-content: center; align-items: center; text-align: center; font-size: 1rem;
   }
-  .estacion {
-    position: relative; margin-bottom: 3rem; width: 50%;
-    padding: 1.5rem; background: white; border-radius: 15px;
-    box-shadow: 0 5px 20px var(--sombra);
+  .sin-imagen img { display: none; }
+  .sin-imagen .img-pendiente { display: flex; }
+  .panel-texto h4 { color: var(--verde); font-size: 1.5rem; margin-bottom: 0.3rem; }
+  .panel-texto .est-num { color: var(--vino); font-size: 0.8rem; font-weight: bold; letter-spacing: 2px; }
+  .panel-texto p { color: var(--texto); margin: 0.7rem 0 1rem; }
+  .tag-tiempo {
+    display: inline-block; background: var(--vino); color: var(--crema);
+    padding: 0.35rem 0.9rem; border-radius: 20px; font-size: 0.85rem; font-weight: bold;
   }
-  .estacion:nth-child(odd) { margin-right: auto; }
-  .estacion:nth-child(even) { margin-left: auto; }
-  .estacion::before {
-    content: ''; position: absolute; top: 25px; width: 20px; height: 20px;
-    background: var(--hoja); border: 4px solid white; border-radius: 50%;
-    box-shadow: 0 0 0 3px var(--hoja);
+  .panel-estacion .modal-x { top: 10px; right: 10px; width: 36px; height: 36px; font-size: 1rem; }
+  .cierre-proceso {
+    max-width: 900px; margin: 2.5rem auto 0; padding: 1.6rem 1.8rem; border-radius: 16px;
+    background: var(--textura), var(--verde); color: var(--crema); border: 1px solid var(--dorado);
+    display: flex; gap: 1rem; align-items: center; font-size: 1.05rem;
   }
-  .estacion:nth-child(odd)::before { right: -12px; }
-  .estacion:nth-child(even)::before { left: -12px; }
-  .estacion h3 { color: var(--durazno-oscuro); margin-bottom: 0.5rem; }
-  .estacion .num {
-    display: inline-block; background: var(--hoja); color: white;
-    width: 30px; height: 30px; border-radius: 50%;
-    text-align: center; line-height: 30px; margin-right: 0.5rem;
-  }
+  .cierre-proceso .icono { font-size: 2rem; }
 
   /* ========== VIDEO ========== */
   .video-box {
-    background: #000; border-radius: 20px; overflow: hidden;
-    max-width: 800px; margin: auto; aspect-ratio: 16/9;
-    display: flex; justify-content: center; align-items: center;
-    color: white; font-size: 1.3rem; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    max-width: 820px; margin: 0 auto; aspect-ratio: 16 / 9; background: var(--verde-oscuro);
+    border: 3px solid var(--dorado); border-radius: 20px; overflow: hidden;
+    box-shadow: 0 12px 30px rgba(13, 43, 28, 0.25);
   }
+  .video-box iframe { width: 100%; height: 100%; border: 0; display: block; }
+  .video-texto { text-align: center; margin: 1.5rem auto 0; color: var(--texto-suave); max-width: 640px; }
+  .mini-stats {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1rem; max-width: 820px; margin: 2rem auto 0;
+  }
+  .mini-stat { padding: 1.2rem 0.8rem; }
+  .mini-stat .stat-number { font-size: 2rem; }
+  .mini-stat .stat-label { font-size: 0.9rem; }
 
   /* ========== GALERÍA ========== */
-  .galeria {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem;
-  }
+  .galeria { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1.3rem; }
   .galeria-item {
-    aspect-ratio: 1; background: linear-gradient(135deg, var(--durazno-claro), var(--durazno));
-    border-radius: 15px; display: flex; justify-content: center;
-    align-items: center; font-size: 3rem; cursor: pointer;
-    transition: 0.3s; box-shadow: 0 5px 15px var(--sombra);
+    background: none; border: none; cursor: pointer; text-align: center; font-family: inherit;
+    display: flex; flex-direction: column; justify-content: flex-start; transition: transform 0.3s;
   }
-  .galeria-item:hover { transform: scale(1.05) rotate(2deg); }
+  .galeria-item:hover { transform: translateY(-6px); }
+  .galeria-media { border-radius: 14px; overflow: hidden; box-shadow: 0 5px 15px var(--sombra); }
+  .galeria-media img { width: 100%; aspect-ratio: 1; object-fit: cover; }
+  .galeria-media .img-pendiente { aspect-ratio: 1; border-radius: 14px; }
+  .galeria-item h4 { color: var(--verde); font-size: 1rem; margin-top: 0.6rem; }
+  .modal-galeria .modal-caja { max-width: 760px; padding: 1.2rem; }
+  .modal-galeria .modal-img img { width: 100%; max-height: 62vh; object-fit: contain; border-radius: 12px; background: white; }
+  .modal-galeria .img-pendiente { aspect-ratio: 16 / 10; font-size: 1.3rem; }
+  .galeria-texto {
+    margin-top: 1rem; background: var(--crema); border: 1px solid var(--dorado); border-radius: 12px;
+    padding: 1rem 1.2rem; color: var(--verde); font-family: Arial, sans-serif;
+  }
+  .galeria-texto h3 { font-size: 1.3rem; margin-bottom: 0.3rem; }
 
-  /* ========== NOSOTROS ========== */
-  .info-box {
-    background: white; padding: 2rem; border-radius: 20px;
-    box-shadow: 0 5px 20px var(--sombra); margin-bottom: 2rem;
-    border-left: 5px solid var(--hoja); transition: 0.3s;
-  }
-  .info-box:hover { transform: translateX(5px); }
-  .info-box h3 { color: var(--hoja-oscuro); margin-bottom: 1rem; font-size: 1.5rem; }
-  .equipo {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 1.5rem; margin-top: 2rem;
-  }
-  .miembro {
-    background: white; padding: 1.5rem; border-radius: 15px;
-    text-align: center; box-shadow: 0 3px 15px var(--sombra);
-    transition: 0.3s;
-  }
-  .miembro:hover { transform: translateY(-5px); }
-  .avatar {
-    width: 80px; height: 80px; border-radius: 50%;
-    background: linear-gradient(135deg, var(--durazno), var(--hoja));
-    margin: 0 auto 1rem; display: flex; justify-content: center;
-    align-items: center; font-size: 2rem; color: white; font-weight: bold;
-  }
-  .miembro h4 { color: var(--durazno-oscuro); margin-bottom: 0.3rem; }
-  .miembro p { color: #795548; font-size: 0.9rem; }
+  /* ========== MATERIALES ========== */
+  .materiales-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; }
+  .material-card { padding: 1.5rem; text-align: center; transition: 0.3s; }
+  .material-card:hover { transform: translateY(-6px); background: #eef3e8; }
+  .material-card .emoji { font-size: 2.5rem; margin-bottom: 0.5rem; }
+  .material-card h4 { color: var(--verde); margin-bottom: 0.4rem; font-size: 1.15rem; }
+  .material-card p { color: var(--texto-suave); font-size: 0.95rem; }
 
-  /* ========== BLOG ========== */
-  .blog-grid {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2rem;
+  /* ========== NOSOTROS: TARJETA VOLTEABLE ========== */
+  .flip { perspective: 1400px; max-width: 620px; height: 400px; margin: 0 auto; cursor: pointer; outline: none; }
+  .flip-inner { position: relative; width: 100%; height: 100%; transition: transform 0.8s cubic-bezier(0.4, 0.2, 0.2, 1); transform-style: preserve-3d; }
+  .flip.volteada .flip-inner { transform: rotateY(180deg); }
+  @media (hover: hover) { .flip:hover .flip-inner { transform: rotateY(180deg); } }
+  .flip:focus-visible .flip-inner { box-shadow: 0 0 0 4px var(--dorado); border-radius: 22px; }
+  .flip-cara {
+    position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden;
+    border-radius: 22px; border: 2px solid var(--dorado); overflow: hidden;
+    box-shadow: 0 22px 45px rgba(13, 43, 28, 0.35);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 2rem; text-align: center;
   }
-  .post {
-    background: white; border-radius: 20px; overflow: hidden;
-    box-shadow: 0 5px 20px var(--sombra); transition: 0.3s;
+  .flip-frente { background: var(--textura), radial-gradient(circle at 50% 30%, var(--verde-claro), var(--verde) 45%, var(--verde-oscuro)); }
+  .flip-frase { font-family: Georgia, serif; color: var(--crema); font-size: 1.6rem; line-height: 1.3; margin-bottom: 1.2rem; }
+  .flip-frente img { width: 200px; filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.35)); }
+  .flip-pista { color: var(--dorado-claro); font-size: 0.85rem; margin-top: 1rem; }
+  .flip-reverso {
+    transform: rotateY(180deg); color: var(--crema);
+    background: var(--textura), linear-gradient(160deg, var(--vino) 0%, var(--vino-oscuro) 100%);
   }
+  .flip-reverso::before {
+    content: ''; position: absolute; inset: 0; background: url(img/logo.webp) center / 60% no-repeat;
+    opacity: 0.1; pointer-events: none;
+  }
+  .kicker { color: var(--dorado); font-weight: bold; letter-spacing: 3px; font-size: 0.8rem; position: relative; }
+  .flip-reverso h4 { font-size: 1.6rem; margin: 0.5rem 0 0.9rem; position: relative; }
+  .flip-reverso p { position: relative; max-width: 480px; line-height: 1.6; }
+  .cinta {
+    position: relative; margin-top: 1.4rem; background: var(--dorado); color: var(--vino-oscuro);
+    padding: 0.35rem 1.2rem; font-weight: bold; font-size: 0.8rem; letter-spacing: 2px;
+    clip-path: polygon(0 0, 100% 0, 96% 50%, 100% 100%, 0 100%, 4% 50%);
+  }
+
+  /* ========== NOSOTROS: OBJETIVO GENERAL ========== */
+  .objetivo {
+    background: var(--textura), var(--verde); border: 2px solid var(--dorado); border-radius: 22px;
+    padding: 2.2rem; color: var(--crema); max-width: 980px; margin: 0 auto;
+  }
+  .objetivo-cabecera { display: flex; gap: 1.5rem; align-items: center; }
+  .diana {
+    flex-shrink: 0; width: 90px; height: 90px; border-radius: 50%; display: flex; justify-content: center; align-items: center;
+    font-size: 2.6rem; background: var(--verde-oscuro); border: 3px solid var(--dorado);
+  }
+  .objetivo blockquote { font-family: Georgia, serif; font-size: 1.3rem; line-height: 1.5; }
+  .objetivo blockquote mark { background: none; color: var(--dorado-claro); font-weight: bold; }
+  .pasos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 2rem; counter-reset: paso; }
+  .paso {
+    background: var(--crema); color: var(--verde); border-radius: 14px; padding: 1.2rem;
+    border-top: 5px solid var(--vino); transition: 0.3s;
+  }
+  .paso:hover { transform: translateY(-5px); }
+  .paso .icono { font-size: 1.8rem; }
+  .paso h4 { font-size: 1.2rem; margin: 0.3rem 0; }
+  .paso p { color: var(--texto-suave); font-size: 0.95rem; }
+
+  /* ========== NOSOTROS: HISTORIA (CAMINO DE LA CONSERVA) ========== */
+  .historia { position: relative; max-width: 1100px; margin: 0 auto; padding-bottom: 1rem; }
+  .historia-camino { position: absolute; left: 0; top: 0; width: 100%; height: 200px; z-index: 0; }
+  .historia-camino .banda { fill: none; stroke: #5d6d7e; stroke-width: 22; stroke-linecap: round; }
+  .historia-camino .linea { fill: none; stroke: #3d6a9e; stroke-width: 4; stroke-dasharray: 14 12; animation: avanza 1.5s linear infinite; }
+  @keyframes avanza { to { stroke-dashoffset: -26; } }
+  .hitos { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.2rem; position: relative; z-index: 1; }
+  .hito { display: flex; flex-direction: column; align-items: center; text-align: center; }
+  .hito:nth-child(even) { margin-top: 80px; }
+  .hito-icono {
+    width: 80px; height: 80px; border-radius: 50%; display: flex; justify-content: center; align-items: center;
+    font-size: 2.2rem; background: var(--verde-oscuro); border: 4px solid var(--dorado);
+    box-shadow: 0 6px 16px var(--sombra); transition: 0.3s;
+  }
+  .hito-tarjeta { margin-top: 1rem; padding: 1.2rem; transition: 0.3s; height: 100%; }
+  .hito:hover .hito-icono { transform: scale(1.1) rotate(-5deg); }
+  .hito:hover .hito-tarjeta { transform: translateY(-5px); box-shadow: 0 14px 30px rgba(13, 43, 28, 0.2); }
+  .hito-num { font-size: 0.75rem; font-weight: bold; letter-spacing: 2px; color: var(--vino); }
+  .hito h4 { color: var(--verde); font-size: 1.15rem; margin: 0.2rem 0 0.5rem; }
+  .hito p { color: var(--texto-suave); font-size: 0.92rem; }
+  .hito-etiqueta {
+    display: inline-block; margin-top: 0.8rem; background: var(--vino-oscuro); color: var(--dorado-claro);
+    padding: 0.25rem 0.7rem; border-radius: 6px; font-size: 0.72rem; font-weight: bold; letter-spacing: 1px;
+  }
+
+  /* ========== NOSOTROS: MISIÓN Y VISIÓN ========== */
+  .mv {
+    background: var(--textura), var(--verde-oscuro); border-radius: 28px; padding: 1.2rem;
+    max-width: 1000px; margin: 0 auto; box-shadow: 0 20px 45px rgba(13, 43, 28, 0.3);
+  }
+  .mv-marco { border: 3px solid var(--dorado); border-radius: 220px / 140px; padding: 2rem 3.5rem 3rem; }
+  .mv-emblema { width: 150px; margin: 0 auto 1.5rem; filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.4)); }
+  .mv-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  .mv-caja { background: var(--crema); border-radius: 16px; padding: 1.5rem; text-align: center; transition: 0.3s; }
+  .mv-caja:hover { transform: translateY(-5px); }
+  .mv-caja.mision { border: 3px solid var(--vino-oscuro); }
+  .mv-caja.vision { border: 3px solid var(--dorado-claro); }
+  .mv-caja h4 { font-size: 1.5rem; letter-spacing: 3px; margin-bottom: 0.6rem; }
+  .mv-caja.mision h4 { color: var(--vino-oscuro); }
+  .mv-caja.vision h4 { color: var(--verde); }
+  .mv-iconos { display: flex; justify-content: center; gap: 0.8rem; font-size: 1.8rem; margin-bottom: 0.8rem; }
+  .mv-iconos .sello {
+    font-size: 0.7rem; font-weight: bold; color: var(--crema); background: var(--verde);
+    border: 2px solid var(--dorado); border-radius: 50%; width: 44px; height: 44px;
+    display: flex; justify-content: center; align-items: center;
+  }
+  .mv-caja p { color: var(--texto); }
+
+  /* ========== NOSOTROS: EQUIPO ========== */
+  .equipo { display: grid; grid-template-columns: repeat(auto-fill, minmax(175px, 1fr)); gap: 1.5rem; }
+  .miembro { padding: 1.4rem 1rem; text-align: center; transition: 0.3s; }
+  .miembro:hover { transform: translateY(-6px); box-shadow: 0 14px 30px rgba(13, 43, 28, 0.2); }
+  .miembro img {
+    width: 120px; height: 120px; border-radius: 50%; object-fit: cover; object-position: top;
+    margin: 0 auto 1rem; border: 4px solid var(--dorado); box-shadow: 0 0 0 4px var(--verde); transition: 0.3s;
+  }
+  .miembro:hover img { box-shadow: 0 0 0 4px var(--vino); }
+  .miembro h4 { color: var(--verde); font-size: 1.05rem; line-height: 1.25; }
+  .miembro p { color: var(--texto-suave); font-size: 0.88rem; margin-top: 0.2rem; }
+
+  /* ========== NOVEDADES ========== */
+  .blog-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
+  .post { overflow: hidden; transition: 0.3s; }
   .post:hover { transform: translateY(-8px); }
   .post-img {
-    height: 180px; background: linear-gradient(135deg, var(--durazno-claro), var(--hoja));
-    display: flex; justify-content: center; align-items: center;
-    font-size: 4rem;
+    height: 170px; display: flex; justify-content: center; align-items: center; font-size: 4rem;
+    background: var(--textura), linear-gradient(135deg, var(--verde), var(--verde-claro));
   }
   .post-content { padding: 1.5rem; }
   .post .tag {
-    display: inline-block; background: var(--hoja); color: white;
-    padding: 0.2rem 0.8rem; border-radius: 10px; font-size: 0.8rem;
-    margin-bottom: 0.5rem;
+    display: inline-block; background: var(--vino); color: var(--crema);
+    padding: 0.2rem 0.8rem; border-radius: 10px; font-size: 0.8rem; margin-bottom: 0.5rem;
   }
-  .post h3 { color: var(--durazno-oscuro); margin-bottom: 0.5rem; }
-  .post .btn-leer {
-    display: inline-block; margin-top: 1rem; color: var(--durazno-oscuro);
-    font-weight: bold; text-decoration: none; transition: 0.3s;
-  }
-  .post .btn-leer:hover { color: var(--hoja-oscuro); }
-
+  .post h3 { color: var(--verde); margin-bottom: 0.5rem; }
+  .post p { color: var(--texto-suave); }
+  .post .btn-leer { display: inline-block; margin-top: 1rem; color: var(--vino); font-weight: bold; text-decoration: none; }
+  .post .btn-leer:hover { color: var(--verde-claro); }
+  .novedades-sub { color: var(--verde); margin: 3rem 0 1.5rem; }
   .testimonio {
-    background: white; padding: 2rem; border-radius: 15px;
-    box-shadow: 0 3px 15px var(--sombra); margin-bottom: 1.5rem;
-    border-left: 5px solid var(--durazno); position: relative;
+    padding: 2rem; margin-bottom: 1.5rem; border-left: 5px solid var(--dorado); position: relative;
   }
   .testimonio::before {
     content: '"'; position: absolute; top: -20px; left: 15px;
-    font-size: 5rem; color: var(--durazno-claro); font-family: Georgia;
+    font-size: 5rem; color: var(--dorado); font-family: Georgia, serif;
   }
   .testimonio p { font-style: italic; margin-bottom: 1rem; }
-  .testimonio .autor { font-weight: bold; color: var(--hoja-oscuro); }
+  .testimonio .autor { font-weight: bold; color: var(--verde); }
 
   /* ========== FOOTER ========== */
   footer {
-    background: var(--durazno-oscuro); color: white;
-    text-align: center; padding: 3rem 2rem; margin-top: 3rem;
+    background: var(--textura), var(--verde-oscuro); color: var(--crema);
+    text-align: center; padding: 3rem 2rem; margin-top: 3rem; border-top: 3px solid var(--dorado);
   }
+  footer img { width: 90px; margin: 0 auto 0.8rem; }
+  footer h3 { color: var(--dorado-claro); font-size: 1.5rem; }
   footer p { margin: 0.3rem 0; }
+  footer .legal { margin-top: 1rem; opacity: 0.75; font-size: 0.85rem; max-width: 700px; margin-left: auto; margin-right: auto; }
   footer .social { margin: 1rem 0; display: flex; gap: 1rem; justify-content: center; }
   footer .social a {
-    width: 45px; height: 45px; background: rgba(255,255,255,0.2);
-    border-radius: 50%; display: flex; justify-content: center;
-    align-items: center; color: white; text-decoration: none;
+    width: 45px; height: 45px; border: 1px solid var(--dorado); border-radius: 50%;
+    display: flex; justify-content: center; align-items: center; text-decoration: none;
     font-size: 1.3rem; transition: 0.3s;
   }
-  footer .social a:hover { background: white; color: var(--durazno-oscuro); transform: translateY(-3px); }
+  footer .social a:hover { background: var(--dorado); transform: translateY(-3px); }
 
-  /* ========== BOTÓN FLOTANTE ========== */
+  /* ========== BOTÓN SUBIR ========== */
   .scroll-top {
-    position: fixed; bottom: 30px; right: 30px;
-    width: 55px; height: 55px; background: var(--durazno);
-    color: white; border: none; border-radius: 50%;
-    font-size: 1.5rem; cursor: pointer; z-index: 99;
-    box-shadow: 0 5px 20px var(--sombra);
+    position: fixed; bottom: 30px; right: 30px; width: 55px; height: 55px;
+    background: var(--verde); color: var(--crema); border: 2px solid var(--dorado); border-radius: 50%;
+    font-size: 1.5rem; cursor: pointer; z-index: 99; box-shadow: 0 5px 20px var(--sombra);
     opacity: 0; visibility: hidden; transition: 0.3s;
   }
   .scroll-top.visible { opacity: 1; visibility: visible; }
-  .scroll-top:hover { background: var(--durazno-oscuro); transform: translateY(-5px); }
+  .scroll-top:hover { background: var(--verde-claro); transform: translateY(-5px); }
 
+  /* ========== RESPONSIVE ========== */
+  @media (max-width: 900px) {
+    .hitos { grid-template-columns: 1fr; gap: 1.5rem; padding-left: 20px; }
+    .historia-camino { display: none; }
+    .historia::before {
+      content: ''; position: absolute; left: 49px; top: 20px; bottom: 20px; width: 16px; border-radius: 8px;
+      background: repeating-linear-gradient(180deg, #5d6d7e 0 14px, #3d6a9e 14px 20px);
+    }
+    .hito, .hito:nth-child(even) { flex-direction: row; align-items: flex-start; gap: 1rem; margin-top: 0; text-align: left; }
+    .hito-icono { width: 64px; height: 64px; font-size: 1.8rem; }
+    .hito-tarjeta { margin-top: 0; flex: 1; }
+    .mv-marco { border-radius: 40px; padding: 1.8rem 1.2rem 2rem; }
+  }
   @media (max-width: 768px) {
-    .hero h1 { font-size: 2.2rem; }
-    #splash h1 { font-size: 2rem; }
+    .hero h1 { font-size: 2.1rem; }
+    section h2 { font-size: 2rem; }
     .menu-toggle { display: flex; }
+    nav { padding: 0.6rem 1rem; }
     nav ul {
       display: none; position: absolute; top: 100%; left: 0; right: 0;
       flex-direction: column; gap: 0.3rem; padding: 0.5rem 1rem 1rem;
-      background: var(--crema); box-shadow: 0 10px 15px var(--sombra);
+      background: var(--fondo); box-shadow: 0 10px 15px var(--sombra); border-bottom: 2px solid var(--dorado);
     }
     nav.open ul { display: flex; animation: fadeIn 0.3s ease; }
     nav ul a { display: block; padding: 0.8rem 1rem; }
-    .timeline::before { left: 20px; }
-    .estacion { width: calc(100% - 50px); margin-left: 50px !important; }
-    .estacion::before { left: -40px !important; right: auto !important; }
+    .planos-grid { grid-template-columns: 1fr; }
+    .estacion-btn .circulo { width: 58px; height: 58px; font-size: 1.6rem; }
+    .estacion-btn .est-nombre { margin-top: 56px; font-size: 0.78rem; }
+    .faja { top: 102px; height: 16px; }
+    .faja::before, .faja::after { width: 22px; height: 22px; }
+    .faja::before { left: -11px; }
+    .faja::after { right: -11px; }
+    .durazno-viajero { top: 76px; font-size: 1.6rem; }
+    .panel-estacion { grid-template-columns: 1fr; padding: 1.2rem; }
+    .cierre-proceso { flex-direction: column; text-align: center; }
+    .flip { height: 470px; }
+    .flip-reverso p { font-size: 0.95rem; }
+    .objetivo { padding: 1.5rem; }
+    .objetivo-cabecera { flex-direction: column; text-align: center; }
+    .objetivo blockquote { font-size: 1.1rem; }
+    .pasos { grid-template-columns: 1fr; }
+    .mv-grid { grid-template-columns: 1fr; }
+    .equipo { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+    .miembro { padding: 1rem 0.5rem; }
+    .miembro img { width: 96px; height: 96px; }
+    .miembro h4 { font-size: 0.95rem; }
+    .galeria { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+    .scroll-top { right: 16px; bottom: 16px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .caballo, .suelo { display: none; }
+    .faja, .historia-camino .linea { animation: none; }
   }
 </style>
 </head>
-<body>
+<body class="bloqueado">
 
-<!-- ========== SPLASH ========== -->
-<div id="splash">
-  <div class="durazno-container">
-    <svg width="220" height="220" viewBox="0 0 220 220">
-      <ellipse cx="110" cy="25" rx="25" ry="12" fill="#7CB342" transform="rotate(-20 110 25)"/>
-      <ellipse cx="110" cy="25" rx="25" ry="12" fill="#558B2F" transform="rotate(20 110 25)" opacity="0.7"/>
-      <circle cx="110" cy="120" r="85" fill="#FF9966"/>
-      <circle cx="110" cy="120" r="85" fill="url(#grad)" opacity="0.5"/>
-      <defs>
-        <radialGradient id="grad">
-          <stop offset="0%" stop-color="#FFB88C"/>
-          <stop offset="100%" stop-color="#E87A3E"/>
-        </radialGradient>
-      </defs>
-      <path d="M 110 40 Q 100 120 110 200" stroke="#E87A3E" stroke-width="3" fill="none" opacity="0.5"/>
-      <circle cx="65" cy="135" r="12" fill="#FF6B9D" opacity="0.5"/>
-      <circle cx="155" cy="135" r="12" fill="#FF6B9D" opacity="0.5"/>
-      <g class="ojo" style="transform-origin: 85px 110px;">
-        <ellipse cx="85" cy="110" rx="8" ry="12" fill="#3E2723"/>
-        <circle cx="87" cy="106" r="3" fill="white"/>
-      </g>
-      <g class="ojo" style="transform-origin: 135px 110px;">
-        <ellipse cx="135" cy="110" rx="8" ry="12" fill="#3E2723"/>
-        <circle cx="137" cy="106" r="3" fill="white"/>
-      </g>
-      <path d="M 90 140 Q 110 160 130 140" stroke="#3E2723" stroke-width="4" fill="none" stroke-linecap="round"/>
-      <g class="mano">
-        <circle cx="180" cy="160" r="18" fill="#FF9966"/>
-        <circle cx="175" cy="150" r="5" fill="#FF9966"/>
-        <circle cx="185" cy="148" r="5" fill="#FF9966"/>
-        <circle cx="192" cy="155" r="5" fill="#FF9966"/>
-      </g>
-    </svg>
+<!-- ========== SPLASH: DOS CABALLOS ========== -->
+<div id="splash" role="dialog" aria-label="Bienvenida a Dos Caballos">
+  <div class="escena" id="escena">
+    <div class="suelo"></div>
+    <div class="caballo izq" id="caballoIzq"></div>
+    <div class="caballo der" id="caballoDer"></div>
+    <div class="splash-marca">
+      <img src="img/logo.webp" alt="Logo Dos Caballos">
+      <p>¡Bienvenidos!</p>
+      <small>PROYECTO ACADÉMICO · TECSUP</small>
+    </div>
   </div>
-  <h1>¡Bienvenido a PECH-LINE!</h1>
-  <p>🍑 Duraznos enlatados de 4 estaciones 🍑</p>
-  <button onclick="cerrarSplash()">Entrar al sitio →</button>
+  <button class="saltar" onclick="cerrarSplash()">Saltar intro ⏭</button>
 </div>
 
 <!-- ========== NAVBAR ========== -->
 <nav>
-  <div class="logo">
-    <svg viewBox="0 0 220 220" width="40" height="40">
-      <circle cx="110" cy="120" r="85" fill="#FF9966"/>
-      <ellipse cx="110" cy="25" rx="20" ry="10" fill="#7CB342"/>
-    </svg>
-    PECH-LINE
-  </div>
+  <a class="logo" href="#inicio">
+    <img src="img/logo-180.png" alt="">
+    Dos Caballos
+  </a>
   <button class="menu-toggle" id="menuToggle" aria-label="Abrir menú" aria-controls="menu" aria-expanded="false">
     <span></span><span></span><span></span>
   </button>
@@ -502,147 +625,137 @@
     <li><a href="#proyectos">Proyectos</a></li>
     <li><a href="#nosotros">Nosotros</a></li>
     <li><a href="#blog">Novedades</a></li>
-    <li><a href="https://sites.google.com/tecsup.edu.pe/inc12a-grupo2/inicio" target="_blank" rel="noopener" style="background:var(--durazno); color:white;">📚 Info Completa</a></li>
+    <li><a href="https://sites.google.com/tecsup.edu.pe/inc12a-grupo2/inicio" target="_blank" rel="noopener" class="nav-destacado">📚 Info Completa</a></li>
   </ul>
 </nav>
 
 <!-- ========== INICIO ========== -->
 <section id="inicio" class="hero">
-  <h1>Proceso de Producción de <span>Duraznos Enlatados</span></h1>
+  <span class="aviso">🎓 Proyecto académico · Tecsup INC12A – Grupo 2 · No es el sitio oficial de Dos Caballos</span>
+  <img class="hero-logo" src="img/logo.webp" alt="Logo Dos Caballos">
+  <h1>Línea de producción de <span>duraznos en almíbar</span></h1>
   <p class="subtitle">
-    Descubre cómo transformamos los mejores duraznos en deliciosos enlatados durante las 4 estaciones del año.
-    Un proyecto educativo que combina tecnología, sabor y trabajo en equipo. 🍑
+    Analizamos la línea de producción de conservas de durazno en almíbar de Dos Caballos
+    y diseñamos una faja transportadora automatizada para el proceso de descarozado. 🍑
   </p>
 
-  <div class="hero-buttons">
-    <a href="#proyectos" class="btn-primary">🚀 Explorar Proyecto</a>
-    <a href="https://sites.google.com/tecsup.edu.pe/inc12a-grupo2/inicio" target="_blank" rel="noopener" class="btn-secondary">📚 Ver Info Completa</a>
-    <a href="#proyectos" class="btn-secondary" onclick="mostrar('descarga', document.querySelector('.submenu button:last-child'))">📥 Descargar PDF</a>
+  <div class="botones-centro">
+    <a href="#proyectos" class="btn btn-verde">🚀 Explorar Proyecto</a>
+    <a href="https://sites.google.com/tecsup.edu.pe/inc12a-grupo2/inicio" target="_blank" rel="noopener" class="btn btn-borde">📚 Ver Info Completa</a>
+    <a href="#nosotros" class="btn btn-borde">👥 Conoce al equipo</a>
   </div>
 
   <div class="stats reveal">
-    <div class="stat-card"><div class="stat-number" data-target="13">0</div><div class="stat-label">Integrantes</div></div>
+    <div class="stat-card"><div class="stat-number" data-target="12">0</div><div class="stat-label">Integrantes</div></div>
     <div class="stat-card"><div class="stat-number" data-target="4">0</div><div class="stat-label">Estaciones</div></div>
-    <div class="stat-card"><div class="stat-number" data-target="12">0</div><div class="stat-label">Planos Técnicos</div></div>
-    <div class="stat-card"><div class="stat-number" data-target="100">0</div><div class="stat-label">% Dedicación</div></div>
+    <div class="stat-card"><div class="stat-number" data-target="10">0</div><div class="stat-label">Planos técnicos</div></div>
+    <div class="stat-card"><div class="stat-number" data-target="25">0</div><div class="stat-label">Pruebas registradas</div></div>
   </div>
 </section>
 
 <!-- ========== PROYECTOS ========== -->
 <section id="proyectos">
   <h2 class="reveal">🛠️ Nuestro Proyecto</h2>
-  <p class="intro reveal">Explora cada aspecto de PECH-LINE. Haz clic en las pestañas para navegar.</p>
+  <p class="intro reveal">Conoce los trabajos y procesos desarrollados para la faja transportadora. Haz clic en las pestañas para navegar.</p>
 
   <div class="submenu reveal">
-    <button class="active" onclick="mostrar('info-completa', this)">📚 Info Completa</button>
-    <button onclick="mostrar('planos', this)">📐 Planos Técnicos</button>
-    <button onclick="mostrar('estaciones', this)">⚙️ Estaciones y Proceso</button>
-    <button onclick="mostrar('video', this)">🎬 Video Pitch</button>
-    <button onclick="mostrar('galeria', this)">📸 Galería</button>
-    <button onclick="mostrar('materiales', this)">📦 Materiales</button>
-    <button onclick="mostrar('descarga', this)">📥 Descargar PDF</button>
+    <button class="active" data-tab="planos">📐 Planos Técnicos</button>
+    <button data-tab="estaciones">⚙️ Estaciones y Proceso</button>
+    <button data-tab="video">🎬 Video Pitch</button>
+    <button data-tab="galeria">📸 Galería</button>
+    <button data-tab="materiales">📦 Materiales</button>
+    <button data-tab="info-completa">📚 Info Completa</button>
   </div>
 
-  <!-- INFO COMPLETA (Google Sites) -->
-  <div id="info-completa" class="subseccion active">
-    <div class="google-sites-box reveal">
-      <h3>📚 Toda la información detallada</h3>
-      <p>Accede a nuestro sitio completo en Google Sites con toda la documentación, especificaciones técnicas, proceso paso a paso y más.</p>
-      <div class="sites-buttons">
-        <a href="https://sites.google.com/tecsup.edu.pe/inc12a-grupo2/inicio" target="_blank" rel="noopener" class="btn-sites">🌐 Abrir Google Sites ↗</a>
-      </div>
+  <!-- PLANOS TÉCNICOS -->
+  <div id="planos" class="subseccion active">
+    <h3 class="sub-titulo">PLANOS TÉCNICOS</h3>
+    <p class="sub-kicker">Faja Transportadora</p>
+    <p class="sub-intro">Conoce los principales componentes y planos técnicos que conforman nuestra faja transportadora.</p>
+    <div class="planos-grid" id="planosGrid"></div>
+    <div class="descargar-todo">
+      <a href="Dos-Caballos-Planos-Tecnicos.pdf" download class="btn btn-dorado">⬇ Descargar los 10 planos (PDF)</a>
     </div>
   </div>
 
-  <!-- PLANOS -->
-  <div id="planos" class="subseccion">
-    <h3 style="text-align:center; color:var(--durazno-oscuro); margin-bottom:2rem;">📐 Planos Técnicos - Piezas del Sistema</h3>
-    <p style="text-align:center; margin-bottom:2rem; color:#5D4037;">
-      Haz clic en cualquier plano para ampliarlo. Navega con las flechas.
-    </p>
-    <div class="planos-grid" id="planosGrid">
-      <!-- Los planos se generan con JS -->
-    </div>
-  </div>
-
-  <!-- ESTACIONES -->
+  <!-- ESTACIONES Y PROCESO -->
   <div id="estaciones" class="subseccion">
-    <h3 style="text-align:center; color:var(--durazno-oscuro); margin-bottom:2rem;">Las 4 Estaciones del Proceso</h3>
-    <div class="timeline">
-      <div class="estacion">
-        <h3><span class="num">1</span>Recepción y Selección</h3>
-        <p>Llegada de la materia prima, inspección visual y selección de duraznos óptimos por calidad, tamaño y madurez.</p>
+    <h3 class="sub-titulo">Las 4 Estaciones del Proceso de Descarozado</h3>
+    <p class="sub-intro">Sigue el recorrido del durazno por la faja. Haz clic en cada estación para ver qué ocurre en esa etapa.</p>
+    <div class="faja-wrap">
+      <div class="faja" aria-hidden="true"></div>
+      <span class="durazno-viajero" id="duraznoViajero" aria-hidden="true">🍑</span>
+      <div class="estaciones-fila" id="estacionesFila"></div>
+    </div>
+    <button class="btn btn-borde btn-siguiente" id="btnSiguiente">Siguiente estación ›</button>
+
+    <div class="panel-estacion tarjeta" id="panelEstacion" hidden>
+      <button class="modal-x" id="panelCerrar" aria-label="Cerrar estación">✕</button>
+      <div class="panel-img" id="panelImg">
+        <img id="panelImgTag" alt="">
+        <div class="img-pendiente">📷 Subir imagen</div>
       </div>
-      <div class="estacion">
-        <h3><span class="num">2</span>Lavado y Pelado</h3>
-        <p>Lavado con agua potable, pelado (manual o químico), descarozado y corte en mitades o rodajas según presentación.</p>
+      <div class="panel-texto">
+        <span class="est-num" id="panelNum"></span>
+        <h4 id="panelTitulo"></h4>
+        <p id="panelDesc"></p>
+        <span class="tag-tiempo" id="panelTiempo"></span>
       </div>
-      <div class="estacion">
-        <h3><span class="num">3</span>Enlatado y Sellado</h3>
-        <p>Llenado de latas con durazno y almíbar, exhaustado (eliminación de aire) y sellado hermético de la tapa.</p>
-      </div>
-      <div class="estacion">
-        <h3><span class="num">4</span>Pasteurización y Etiquetado</h3>
-        <p>Tratamiento térmico para conservación, enfriamiento rápido, control de calidad final, etiquetado y empaque.</p>
-      </div>
+    </div>
+
+    <div class="cierre-proceso">
+      <span class="icono">🤖</span>
+      <p>Todo el proceso se controla mediante un sistema automatizado con Arduino: sensores infrarrojos detectan el paso del producto en cada estación, detienen la faja transportadora el tiempo necesario y la reactivan automáticamente hacia la siguiente etapa.</p>
     </div>
   </div>
 
-  <!-- VIDEO -->
+  <!-- VIDEO PITCH -->
   <div id="video" class="subseccion">
-    <h3 style="text-align:center; color:var(--durazno-oscuro); margin-bottom:2rem;">🎬 Video Pitch</h3>
+    <h3 class="sub-titulo">Video Pitch</h3>
     <div class="video-box">
-      ▶️ [ Inserta aquí tu video de YouTube ]
+      <iframe src="https://www.youtube-nocookie.com/embed/S8RxMJvEdBI" title="Video pitch Dos Caballos" loading="lazy"
+        allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
     </div>
-    <p style="text-align:center; margin-top:1.5rem; color:#795548;">
-      Conoce en detalle todo el proceso PECH-LINE en nuestro video presentación.
-    </p>
+    <p class="video-texto">Conoce en detalle todo el proceso de Dos Caballos en nuestro video presentación.</p>
+    <div class="mini-stats">
+      <div class="mini-stat"><div class="stat-number">51 s</div><div class="stat-label">Duración del ciclo completo</div></div>
+      <div class="mini-stat"><div class="stat-number">4</div><div class="stat-label">Estaciones automatizadas</div></div>
+      <div class="mini-stat"><div class="stat-number">25</div><div class="stat-label">Pruebas registradas</div></div>
+      <div class="mini-stat"><div class="stat-number">70.6%</div><div class="stat-label">Tiempo en valor agregado</div></div>
+    </div>
   </div>
 
   <!-- GALERÍA -->
   <div id="galeria" class="subseccion">
-    <h3 style="text-align:center; color:var(--durazno-oscuro); margin-bottom:2rem;">📸 Galería del Proyecto</h3>
-    <div class="galeria">
-      <div class="galeria-item">🍑</div>
-      <div class="galeria-item">🥫</div>
-      <div class="galeria-item">👨‍🍳</div>
-      <div class="galeria-item">⚙️</div>
-      <div class="galeria-item">🔥</div>
-      <div class="galeria-item">📦</div>
-      <div class="galeria-item">👥</div>
-      <div class="galeria-item">🏭</div>
-    </div>
-    <p style="text-align:center; margin-top:1.5rem; color:#795548;">
-      Reemplaza los emojis por imágenes reales del proyecto.
-    </p>
+    <h3 class="sub-titulo">Galería del Proyecto</h3>
+    <p class="sub-intro">Haz clic en una foto para verla en grande.</p>
+    <div class="galeria" id="galeriaGrid"></div>
   </div>
 
   <!-- MATERIALES -->
   <div id="materiales" class="subseccion">
-    <h3 style="text-align:center; color:var(--durazno-oscuro); margin-bottom:2rem;">📦 Materiales e Insumos</h3>
+    <h3 class="sub-titulo">Materiales e Insumos</h3>
     <div class="materiales-grid">
-      <div class="material-card"><div class="emoji">🍑</div><h4>Duraznos</h4><p>Fruta fresca seleccionada de primera calidad.</p></div>
-      <div class="material-card"><div class="emoji">🥫</div><h4>Latas</h4><p>Envases metálicos herméticos de acero.</p></div>
-      <div class="material-card"><div class="emoji">💧</div><h4>Almíbar</h4><p>Solución de azúcar y agua para conservación.</p></div>
-      <div class="material-card"><div class="emoji">🏭</div><h4>Maquinaria</h4><p>Equipos de lavado, pelado y sellado.</p></div>
-      <div class="material-card"><div class="emoji">🔥</div><h4>Sistema Térmico</h4><p>Para pasteurización y esterilización.</p></div>
-      <div class="material-card"><div class="emoji">🏷️</div><h4>Etiquetas</h4><p>Identificación del producto final.</p></div>
-      <div class="material-card"><div class="emoji">📦</div><h4>Empaques</h4><p>Cajas para distribución y venta.</p></div>
-      <div class="material-card"><div class="emoji">🧪</div><h4>Control Calidad</h4><p>Instrumentos de medición y análisis.</p></div>
+      <div class="material-card tarjeta"><div class="emoji">🍑</div><h4>Duraznos</h4><p>Fruta fresca seleccionada de primera calidad.</p></div>
+      <div class="material-card tarjeta"><div class="emoji">🥫</div><h4>Latas</h4><p>Envases metálicos herméticos de acero.</p></div>
+      <div class="material-card tarjeta"><div class="emoji">💧</div><h4>Almíbar</h4><p>Solución de azúcar y agua para conservación.</p></div>
+      <div class="material-card tarjeta"><div class="emoji">🏭</div><h4>Maquinaria</h4><p>Equipos de lavado, pelado y sellado.</p></div>
+      <div class="material-card tarjeta"><div class="emoji">🔥</div><h4>Sistema Térmico</h4><p>Para pasteurización y esterilización.</p></div>
+      <div class="material-card tarjeta"><div class="emoji">🏷️</div><h4>Etiquetas</h4><p>Identificación del producto final.</p></div>
+      <div class="material-card tarjeta"><div class="emoji">📦</div><h4>Empaques</h4><p>Cajas para distribución y venta.</p></div>
+      <div class="material-card tarjeta"><div class="emoji">🧪</div><h4>Control Calidad</h4><p>Instrumentos de medición y análisis.</p></div>
     </div>
   </div>
 
-  <!-- DESCARGA -->
-  <div id="descarga" class="subseccion">
-    <div class="download-section reveal">
-      <h3>📥 Descarga el Proyecto Completo</h3>
-      <p>Obtén toda la documentación técnica, planos, especificaciones y detalles del proceso PECH-LINE en un solo archivo PDF.</p>
-      <a href="PECH-LINE-Proyecto-Completo.pdf" download class="btn-download">
-        <span class="icon-pdf">PDF</span>
-        Descargar Proyecto Completo
-      </a>
-      <div class="download-info">
-        📄 Formato PDF · Incluye todos los planos y especificaciones
+  <!-- INFO COMPLETA -->
+  <div id="info-completa" class="subseccion">
+    <div class="tarjeta info-sites">
+      <h3>📚 Toda la información detallada</h3>
+      <p>Accede a nuestro sitio completo en Google Sites con toda la documentación, especificaciones técnicas, proceso paso a paso y más.</p>
+      <div class="botones-centro">
+        <a href="https://sites.google.com/tecsup.edu.pe/inc12a-grupo2/inicio" target="_blank" rel="noopener" class="btn btn-verde">🌐 Abrir Google Sites ↗</a>
+        <a href="Dos-Caballos-Planos-Tecnicos.pdf" download class="btn btn-dorado">⬇ Descargar planos técnicos (PDF)</a>
       </div>
     </div>
   </div>
@@ -651,59 +764,124 @@
 <!-- ========== NOSOTROS ========== -->
 <section id="nosotros">
   <h2 class="reveal">👥 Nosotros</h2>
-  <p class="intro reveal">Somos un equipo de 13 estudiantes apasionados por la industria alimentaria.</p>
+  <p class="intro reveal">Conoce quiénes somos, qué buscamos y al equipo detrás del proyecto.</p>
 
-  <div class="info-box reveal">
-    <h3>🎯 Nuestra Misión</h3>
-    <p>Producir duraznos enlatados de la más alta calidad, aplicando procesos eficientes y sostenibles,
-    garantizando seguridad alimentaria y ofreciendo un producto delicioso durante las 4 estaciones del año.</p>
+  <!-- QUIÉNES SOMOS -->
+  <h3 class="bloque-titulo reveal">Quiénes somos</h3>
+  <div class="flip reveal" id="flipCard" tabindex="0" role="button" aria-pressed="false" aria-label="Tarjeta Quiénes somos: voltear">
+    <div class="flip-inner">
+      <div class="flip-cara flip-frente">
+        <p class="flip-frase">Del campo a la lata,<br>paso a paso.</p>
+        <img src="img/logo.webp" alt="Logo Dos Caballos">
+        <span class="flip-pista">Pasa el cursor o toca la tarjeta para voltearla ↻</span>
+      </div>
+      <div class="flip-cara flip-reverso">
+        <span class="kicker">QUIÉNES SOMOS</span>
+        <h4>Equipo INC12A – Grupo 2</h4>
+        <p>Somos un equipo de 12 estudiantes de Tecsup que analiza la línea de producción de conservas de durazno en almíbar de Dos Caballos. Diseñamos una faja transportadora automatizada con Arduino para el proceso de descarozado, aplicando lo aprendido a un caso real de la industria alimentaria.</p>
+        <span class="cinta">PROYECTO ACADÉMICO APLICADO</span>
+      </div>
+    </div>
   </div>
 
-  <div class="info-box reveal">
-    <h3>👁️ Nuestra Visión</h3>
-    <p>Ser referentes en el proceso educativo de producción de conservas de frutas,
-    destacando por la innovación, el trabajo en equipo y la calidad de nuestros productos.</p>
+  <!-- OBJETIVO GENERAL -->
+  <h3 class="bloque-titulo reveal">Objetivo General</h3>
+  <div class="objetivo reveal">
+    <div class="objetivo-cabecera">
+      <div class="diana">🎯</div>
+      <blockquote>
+        El presente proyecto tiene como objetivo <mark>analizar una línea de producción</mark> de conservas de durazno en almíbar,
+        mediante un <mark>plan de trabajo</mark> que permita <mark>comprender su funcionamiento</mark>.
+      </blockquote>
+    </div>
+    <div class="pasos">
+      <div class="paso"><div class="icono">🔎</div><h4>1. Analizar</h4><p>La línea de producción de conservas de durazno en almíbar.</p></div>
+      <div class="paso"><div class="icono">🗂️</div><h4>2. Planificar</h4><p>Un plan de trabajo ordenado, etapa por etapa.</p></div>
+      <div class="paso"><div class="icono">💡</div><h4>3. Comprender</h4><p>Cómo funciona el proceso de principio a fin.</p></div>
+    </div>
   </div>
 
-  <div class="info-box reveal">
-    <h3>📖 Nuestra Historia</h3>
-    <p>PECH-LINE nació como un proyecto académico con el objetivo de aprender y aplicar
-    los principios de la industria conservera. A lo largo del proceso, hemos trabajado
-    en cada etapa: desde la selección de la fruta hasta el empaque final.</p>
+  <!-- NUESTRA HISTORIA -->
+  <h3 class="bloque-titulo reveal">Nuestra Historia · Empresa Dos Caballos</h3>
+  <p class="sub-intro reveal">El camino de la conserva: un proceso en movimiento.</p>
+  <div class="historia reveal">
+    <svg class="historia-camino" viewBox="0 0 1000 200" preserveAspectRatio="none" aria-hidden="true">
+      <path class="banda" vector-effect="non-scaling-stroke" d="M0,40 L125,40 C250,40 250,120 375,120 C500,120 500,40 625,40 C750,40 750,120 875,120 L1000,120"/>
+      <path class="linea" vector-effect="non-scaling-stroke" d="M0,40 L125,40 C250,40 250,120 375,120 C500,120 500,40 625,40 C750,40 750,120 875,120 L1000,120"/>
+    </svg>
+    <div class="hitos">
+      <div class="hito">
+        <div class="hito-icono">🚚</div>
+        <div class="hito-tarjeta tarjeta">
+          <span class="hito-num">ESTACIÓN 1</span>
+          <h4>Origen y Tradición</h4>
+          <p>Fundada por la familia Soler en el Valle del Maule. Todo empieza en el campo, con duraznos amarillos frescos que llegan directo de los huertos.</p>
+          <span class="hito-etiqueta">FAMILIA SOLER · VALLE DEL MAULE</span>
+        </div>
+      </div>
+      <div class="hito">
+        <div class="hito-icono">🧪</div>
+        <div class="hito-tarjeta tarjeta">
+          <span class="hito-num">ESTACIÓN 2</span>
+          <h4>Calidad e Inocuidad</h4>
+          <p>La certificación HACCP respalda los controles de calidad e inocuidad aplicados en cada etapa del proceso.</p>
+          <span class="hito-etiqueta">CERTIFICACIÓN HACCP</span>
+        </div>
+      </div>
+      <div class="hito">
+        <div class="hito-icono">⚙️</div>
+        <div class="hito-tarjeta tarjeta">
+          <span class="hito-num">ESTACIÓN 3</span>
+          <h4>Maquinaria y Operarios</h4>
+          <p>Máquinas semiautomatizadas de corte y descarozado trabajan junto a operarios que inspeccionan la fruta en cada estación.</p>
+          <span class="hito-etiqueta">CORTE Y DESCAROZADO</span>
+        </div>
+      </div>
+      <div class="hito">
+        <div class="hito-icono">🥫</div>
+        <div class="hito-tarjeta tarjeta">
+          <span class="hito-num">ESTACIÓN 4</span>
+          <h4>Líder en Conservas de Durazno</h4>
+          <p>Latas terminadas con la icónica etiqueta rojo vino de los dos caballos, listas para el mercado y la exportación.</p>
+          <span class="hito-etiqueta">PRODUCTO FINAL</span>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <div class="info-box reveal">
-    <h3>🎯 Objetivo General</h3>
-    <p>Diseñar e implementar un proceso de producción de duraznos enlatados que funcione
-    eficientemente durante las 4 estaciones, asegurando calidad, inocuidad y rentabilidad.</p>
+  <!-- MISIÓN Y VISIÓN -->
+  <h3 class="bloque-titulo reveal">Nuestra Misión y Nuestra Visión</h3>
+  <div class="mv reveal">
+    <div class="mv-marco">
+      <img class="mv-emblema" src="img/logo.webp" alt="Emblema Dos Caballos">
+      <div class="mv-grid">
+        <div class="mv-caja mision">
+          <div class="mv-iconos" aria-hidden="true"><span>⚙️</span><span class="sello">HACCP</span><span>🍑</span></div>
+          <h4>MISIÓN</h4>
+          <p>Producir conservas de durazno en almíbar de la más alta calidad, aplicando procesos eficientes, seguros y sostenibles que garanticen la inocuidad alimentaria.</p>
+        </div>
+        <div class="mv-caja vision">
+          <div class="mv-iconos" aria-hidden="true"><span>🚀</span><span>🌎</span><span>🥫</span></div>
+          <h4>VISIÓN</h4>
+          <p>Ser referentes en la producción y exportación de conservas de durazno, destacando por la innovación, la calidad y el trabajo en equipo.</p>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <h3 style="text-align:center; color:var(--durazno-oscuro); margin:3rem 0 1rem;" class="reveal">💫 Nuestro Equipo (13 integrantes)</h3>
-  <div class="equipo">
-    <div class="miembro reveal"><div class="avatar">1</div><h4>Integrante 1</h4><p>Coordinador</p></div>
-    <div class="miembro reveal"><div class="avatar">2</div><h4>Integrante 2</h4><p>Producción</p></div>
-    <div class="miembro reveal"><div class="avatar">3</div><h4>Integrante 3</h4><p>Calidad</p></div>
-    <div class="miembro reveal"><div class="avatar">4</div><h4>Integrante 4</h4><p>Logística</p></div>
-    <div class="miembro reveal"><div class="avatar">5</div><h4>Integrante 5</h4><p>Diseño</p></div>
-    <div class="miembro reveal"><div class="avatar">6</div><h4>Integrante 6</h4><p>Marketing</p></div>
-    <div class="miembro reveal"><div class="avatar">7</div><h4>Integrante 7</h4><p>Finanzas</p></div>
-    <div class="miembro reveal"><div class="avatar">8</div><h4>Integrante 8</h4><p>Seguridad</p></div>
-    <div class="miembro reveal"><div class="avatar">9</div><h4>Integrante 9</h4><p>Mantenimiento</p></div>
-    <div class="miembro reveal"><div class="avatar">10</div><h4>Integrante 10</h4><p>Documentación</p></div>
-    <div class="miembro reveal"><div class="avatar">11</div><h4>Integrante 11</h4><p>Investigación</p></div>
-    <div class="miembro reveal"><div class="avatar">12</div><h4>Integrante 12</h4><p>Comunicación</p></div>
-    <div class="miembro reveal"><div class="avatar">13</div><h4>Integrante 13</h4><p>Apoyo General</p></div>
-  </div>
+  <!-- EQUIPO -->
+  <h3 class="bloque-titulo reveal">Nuestro Equipo · 12 integrantes</h3>
+  <div class="equipo" id="equipoGrid"></div>
 </section>
 
-<!-- ========== BLOG ========== -->
+<!-- ========== NOVEDADES ========== -->
 <section id="blog">
   <h2 class="reveal">📰 Novedades y Blog</h2>
-  <p class="intro reveal">Tutoriales, guías, testimonios y todo lo nuevo sobre PECH-LINE.</p>
+  <p class="intro reveal">Tutoriales, guías, testimonios y todo lo nuevo sobre el proyecto.</p>
 
-  <h3 style="color:var(--durazno-oscuro); margin-bottom:1.5rem;" class="reveal">📚 Tutoriales y Guías</h3>
+  <h3 class="novedades-sub reveal">📚 Tutoriales y Guías</h3>
   <div class="blog-grid">
-    <div class="post reveal">
+    <div class="post tarjeta reveal">
       <div class="post-img">🍑</div>
       <div class="post-content">
         <span class="tag">Tutorial</span>
@@ -712,7 +890,7 @@
         <a href="#" class="btn-leer">Leer más →</a>
       </div>
     </div>
-    <div class="post reveal">
+    <div class="post tarjeta reveal">
       <div class="post-img">🥫</div>
       <div class="post-content">
         <span class="tag">Guía</span>
@@ -721,7 +899,7 @@
         <a href="#" class="btn-leer">Leer más →</a>
       </div>
     </div>
-    <div class="post reveal">
+    <div class="post tarjeta reveal">
       <div class="post-img">🔥</div>
       <div class="post-content">
         <span class="tag">Tutorial</span>
@@ -732,16 +910,16 @@
     </div>
   </div>
 
-  <h3 style="color:var(--durazno-oscuro); margin:3rem 0 1.5rem;" class="reveal">💬 Testimonios</h3>
-  <div class="testimonio reveal">
-    <p>Trabajar en PECH-LINE me enseñó mucho sobre trabajo en equipo y procesos industriales. ¡Una experiencia increíble!</p>
+  <h3 class="novedades-sub reveal">💬 Testimonios</h3>
+  <div class="testimonio tarjeta reveal">
+    <p>Trabajar en este proyecto me enseñó mucho sobre trabajo en equipo y procesos industriales. ¡Una experiencia increíble!</p>
     <div class="autor">— Integrante del equipo</div>
   </div>
-  <div class="testimonio reveal">
+  <div class="testimonio tarjeta reveal">
     <p>Los duraznos enlatados tienen un sabor espectacular. Se nota la calidad del proceso.</p>
     <div class="autor">— Cliente / Profesor</div>
   </div>
-  <div class="testimonio reveal">
+  <div class="testimonio tarjeta reveal">
     <p>Me encantó aprender sobre conservación de alimentos. ¡Quiero seguir en la industria!</p>
     <div class="autor">— Estudiante participante</div>
   </div>
@@ -749,122 +927,350 @@
 
 <!-- ========== FOOTER ========== -->
 <footer>
-  <h3>🍑 PECH-LINE</h3>
-  <p>Duraznos enlatados de 4 estaciones</p>
+  <img src="img/logo.webp" alt="Logo Dos Caballos">
+  <h3>Dos Caballos</h3>
+  <p>Línea de producción de conservas de durazno en almíbar</p>
   <div class="social">
     <a href="#" title="Facebook">📘</a>
     <a href="#" title="Instagram">📷</a>
     <a href="#" title="YouTube">▶️</a>
     <a href="#" title="Email">✉️</a>
   </div>
-  <p style="margin-top:1rem; opacity:0.8;">© 2026 Proyecto Educativo | Hecho con 💛 por 13 estudiantes</p>
+  <p class="legal">© 2026 Proyecto académico · Tecsup INC12A – Grupo 2. Este no es el sitio oficial de Dos Caballos;
+    la marca y el logo pertenecen a sus respectivos dueños y se usan solo con fines educativos.</p>
 </footer>
 
-<!-- ========== BOTÓN SUBIR ========== -->
-<button class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0, behavior:'smooth'})">↑</button>
+<button class="scroll-top" id="scrollTop" aria-label="Volver arriba" onclick="window.scrollTo({top:0, behavior:'smooth'})">↑</button>
 
-<!-- ========== LIGHTBOX PLANOS ========== -->
-<div class="lightbox" id="lightbox">
-  <button class="lightbox-close" onclick="cerrarLightbox()">✕</button>
-  <button class="lightbox-nav lightbox-prev" onclick="cambiarPlano(-1)">‹</button>
-  <button class="lightbox-nav lightbox-next" onclick="cambiarPlano(1)">›</button>
-  <div class="lightbox-content">
-    <div class="lightbox-img" id="lightboxImg">📐</div>
-    <div class="lightbox-info">
-      <h3 id="lightboxTitle">Título del plano</h3>
-      <p id="lightboxDesc">Descripción del plano</p>
+<!-- ========== MODAL PLANOS ========== -->
+<div class="modal modal-plano" id="modalPlano" role="dialog" aria-modal="true" aria-labelledby="planoTitulo">
+  <div class="modal-caja">
+    <div class="modal-img"><img id="planoImg" alt=""></div>
+    <div class="modal-info">
+      <span class="plano-num" id="planoNum"></span>
+      <h3 id="planoTitulo"></h3>
+      <p id="planoDesc"></p>
+      <div class="modal-acciones">
+        <button class="btn btn-borde" onclick="cambiarPlano(-1)" aria-label="Plano anterior">‹ Anterior</button>
+        <a class="btn btn-dorado" id="planoDescargar" download>⬇ Descargar plano</a>
+        <button class="btn btn-cerrar" onclick="cerrarPlano()">Cerrar</button>
+        <button class="btn btn-borde" onclick="cambiarPlano(1)" aria-label="Plano siguiente">Siguiente ›</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== MODAL GALERÍA ========== -->
+<div class="modal modal-galeria" id="modalGaleria" role="dialog" aria-modal="true" aria-labelledby="galeriaTitulo">
+  <div class="modal-caja">
+    <button class="modal-x" onclick="cerrarGaleria()" aria-label="Cerrar">✕</button>
+    <div class="modal-img" id="galeriaMedia">
+      <img id="galeriaImg" alt="">
+      <div class="img-pendiente">📷 Imagen pendiente</div>
+    </div>
+    <div class="galeria-texto">
+      <h3 id="galeriaTitulo"></h3>
+      <p id="galeriaDesc"></p>
     </div>
   </div>
 </div>
 
 <script>
-  // ========== SPLASH ==========
-  function cerrarSplash() {
-    document.getElementById('splash').classList.add('hidden');
+  const reducirMovimiento = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // ========== SPLASH: DOS CABALLOS ==========
+  function caballoSVG(cuerpo, sombra, crin) {
+    const pata = (x, cls, color) => `
+      <g class="pata ${cls}">
+        <rect x="${x}" y="100" width="12" height="52" rx="6" fill="${color}"/>
+        <rect x="${x - 2}" y="148" width="16" height="10" rx="3" fill="#0d2b1c"/>
+      </g>`;
+    return `<svg viewBox="0 0 220 180" aria-hidden="true"><g class="trote">
+      ${pata(62, 'tras b', sombra)}${pata(138, 'del b', sombra)}
+      <path d="M50 80 C28 84 22 112 30 140 C40 122 46 104 60 92 Z" fill="${crin}"/>
+      <ellipse cx="100" cy="90" rx="58" ry="27" fill="${cuerpo}"/>
+      <path d="M120 84 C128 60 138 42 150 26 L174 30 C172 56 168 80 156 106 Z" fill="${cuerpo}"/>
+      <path d="M150 28 Q160 12 178 18 L206 46 Q212 56 202 60 L186 58 Q172 56 162 46 Z" fill="${cuerpo}"/>
+      <path d="M158 22 L162 4 L171 19 Z" fill="${cuerpo}"/>
+      <path d="M150 20 C140 36 128 58 116 84 L127 89 C136 66 148 44 162 26 Z" fill="${crin}"/>
+      <path d="M156 20 C160 26 164 30 170 30 C166 24 162 20 156 20 Z" fill="${crin}"/>
+      <circle cx="181" cy="34" r="3.2" fill="#0d2b1c"/>
+      <circle cx="203" cy="52" r="1.6" fill="#0d2b1c" opacity=".6"/>
+      ${pata(76, 'tras a', cuerpo)}${pata(150, 'del a', cuerpo)}
+    </g></svg>`;
   }
-  setTimeout(cerrarSplash, 8000);
+  document.getElementById('caballoIzq').innerHTML = caballoSVG('#f7f1e2', '#ddd0b0', '#c9a24b');
+  document.getElementById('caballoDer').innerHTML = caballoSVG('#8f2130', '#6e1723', '#e6cd8f');
+
+  const escena = document.getElementById('escena');
+  const timersSplash = [];
+  function paso(ms, fn) { timersSplash.push(setTimeout(fn, ms)); }
+  function cerrarSplash() {
+    timersSplash.forEach(clearTimeout);
+    document.getElementById('splash').classList.add('oculto');
+    document.body.classList.remove('bloqueado');
+  }
+  if (reducirMovimiento) {
+    escena.classList.add('logo');
+    paso(2500, cerrarSplash);
+  } else {
+    paso(100, () => escena.classList.add('entrar', 'caminando'));       // entran caminando
+    paso(2900, () => { escena.classList.remove('caminando'); escena.classList.add('saludo'); }); // se levantan y saludan
+    paso(4700, () => escena.classList.remove('saludo'));                  // bajan las patas
+    paso(5300, () => escena.classList.add('centro', 'caminando'));        // caminan al centro
+    paso(6300, () => { escena.classList.remove('caminando'); escena.classList.add('logo'); }); // aparece el logo
+    paso(8600, cerrarSplash);
+  }
 
   // ========== SUBMENÚ ==========
-  function mostrar(id, btn) {
-    document.querySelectorAll('.subseccion').forEach(s => s.classList.remove('active'));
-    document.querySelectorAll('.submenu button').forEach(b => b.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
-    btn.classList.add('active');
+  function mostrar(id) {
+    document.querySelectorAll('.subseccion').forEach(s => s.classList.toggle('active', s.id === id));
+    document.querySelectorAll('.submenu button').forEach(b => b.classList.toggle('active', b.dataset.tab === id));
   }
+  document.querySelectorAll('.submenu button').forEach(b => b.addEventListener('click', () => mostrar(b.dataset.tab)));
 
-  // ========== PLANOS (GALERÍA) ==========
+  function bloquear(si) { document.body.classList.toggle('bloqueado', si); }
+
+  // ========== PLANOS TÉCNICOS ==========
   const planos = [
-    { emoji: '⚙️', titulo: 'Polea Motriz', desc: 'Plano técnico de la polea principal del sistema' },
-    { emoji: '🔩', titulo: 'Rodillos Portantes', desc: 'Especificaciones de los rodillos de soporte' },
-    { emoji: '🔁', titulo: 'Banda Transportadora', desc: 'Dimensiones y material de la faja' },
-    { emoji: '🛞', titulo: 'Polea de Tensado', desc: 'Sistema de tensión de la banda' },
-    { emoji: '🔌', titulo: 'Motor Eléctrico', desc: 'Especificaciones del motor de accionamiento' },
-    { emoji: '🛡️', titulo: 'Guardas de Seguridad', desc: 'Protecciones y sistemas de seguridad' },
-    { emoji: '📏', titulo: 'Estructura General', desc: 'Marco metálico de soporte completo' },
-    { emoji: '🔧', titulo: 'Sistema de Limpieza', desc: 'Rasquetas y limpiadores de banda' },
-    { emoji: '⚡', titulo: 'Diagrama Eléctrico', desc: 'Esquema de conexiones eléctricas' },
-    { emoji: '🎯', titulo: 'Alineación de Rodillos', desc: 'Detalle de alineación y montaje' },
-    { emoji: '📐', titulo: 'Plano de Conjunto', desc: 'Vista general del sistema completo' },
-    { emoji: '🔍', titulo: 'Detalle de Uniones', desc: 'Uniones y empalmes de la banda' }
+    { titulo: 'Faja Transportadora', desc: 'Estructura principal que permite transportar la fruta de una estación a otra durante el proceso.' },
+    { titulo: 'Faja', desc: 'Superficie encargada de transportar la fruta a lo largo de la faja transportadora.' },
+    { titulo: 'Base Lateral', desc: 'Pieza lateral que forma parte de la estructura y sirve como base de soporte para la faja.' },
+    { titulo: 'Soporte para la Faja', desc: 'Elemento que sostiene y mantiene estable la faja durante su funcionamiento.' },
+    { titulo: 'Soporte para el Motor', desc: 'Pieza encargada de sostener y mantener fijo el motor de la faja transportadora.' },
+    { titulo: 'Rueda', desc: 'Componente que permite el movimiento y desplazamiento de la faja transportadora.' },
+    { titulo: 'TT Motor Dual Shaft v2', desc: 'Motor utilizado para generar el movimiento necesario para el funcionamiento de la faja.' },
+    { titulo: 'Soporte de Sensor', desc: 'Pieza destinada a sostener y mantener ubicado el sensor dentro de la faja transportadora.' },
+    { titulo: 'Adhesivo', desc: 'Elemento utilizado como parte de la identificación o fijación dentro del conjunto de la faja transportadora.' },
+    { titulo: 'Anti Desviador de Faja', desc: 'Elemento que ayuda a mantener la faja en su posición y evita que se desvíe durante su funcionamiento.' }
   ];
+  const numPlano = i => String(i + 1).padStart(2, '0');
 
-  function renderPlanos() {
-    const grid = document.getElementById('planosGrid');
-    grid.innerHTML = planos.map((p, i) => `
-      <div class="plano-card reveal" onclick="abrirLightbox(${i})">
-        <div class="plano-img">${p.emoji}</div>
-        <div class="plano-info">
-          <h4>${p.titulo}</h4>
-          <p>${p.desc}</p>
-        </div>
+  document.getElementById('planosGrid').innerHTML = planos.map((p, i) => `
+    <article class="plano-card tarjeta reveal">
+      <div class="plano-img" onclick="abrirPlano(${i})">
+        <img src="img/planos/plano-${numPlano(i)}-mini.jpg" alt="Plano ${numPlano(i)} — ${p.titulo}" loading="lazy">
       </div>
-    `).join('');
-    initReveal();
-  }
-  renderPlanos();
+      <div class="plano-info">
+        <span class="plano-num">PLANO ${numPlano(i)}</span>
+        <h4>${p.titulo}</h4>
+        <p>${p.desc}</p>
+        <button class="btn-ver" onclick="abrirPlano(${i})">Ver plano</button>
+      </div>
+    </article>`).join('');
 
-  // ========== LIGHTBOX ==========
   let planoActual = 0;
-  function abrirLightbox(i) {
+  function abrirPlano(i) {
     planoActual = i;
-    actualizarLightbox();
-    document.getElementById('lightbox').classList.add('active');
-    document.body.style.overflow = 'hidden';
+    actualizarPlano();
+    document.getElementById('modalPlano').classList.add('activo');
+    bloquear(true);
   }
-  function cerrarLightbox() {
-    document.getElementById('lightbox').classList.remove('active');
-    document.body.style.overflow = '';
+  function cerrarPlano() {
+    document.getElementById('modalPlano').classList.remove('activo');
+    bloquear(false);
   }
   function cambiarPlano(dir) {
     planoActual = (planoActual + dir + planos.length) % planos.length;
-    actualizarLightbox();
+    actualizarPlano();
   }
-  function actualizarLightbox() {
-    const p = planos[planoActual];
-    document.getElementById('lightboxImg').textContent = p.emoji;
-    document.getElementById('lightboxTitle').textContent = p.titulo;
-    document.getElementById('lightboxDesc').textContent = p.desc;
+  function actualizarPlano() {
+    const p = planos[planoActual], n = numPlano(planoActual);
+    const img = document.getElementById('planoImg');
+    img.src = `img/planos/plano-${n}.jpg`;
+    img.alt = `Plano ${n} — ${p.titulo}`;
+    document.getElementById('planoNum').textContent = `PLANO ${n}`;
+    document.getElementById('planoTitulo').textContent = p.titulo;
+    document.getElementById('planoDesc').textContent = p.desc;
+    const a = document.getElementById('planoDescargar');
+    a.href = `img/planos/plano-${n}.jpg`;
+    a.setAttribute('download', `Plano-${n}-${p.titulo.replace(/\s+/g, '-')}.jpg`);
   }
+  document.getElementById('modalPlano').addEventListener('click', e => { if (e.target.id === 'modalPlano') cerrarPlano(); });
+
+  // ========== ESTACIONES Y PROCESO ==========
+  const estaciones = [
+    { icono: '🔍', corto: 'Selección', nombre: 'Selección de fruta apta', tiempo: 'Variable',
+      texto: 'Se clasifica el durazno según su madurez, tamaño y estado sanitario. Solo la fruta que cumple los criterios de calidad continúa al siguiente paso.' },
+    { icono: '✂️', corto: 'Corte', nombre: 'Corte y extracción de carozo', tiempo: 'Fijo',
+      texto: 'La descarozadora realiza un corte simétrico desde el pedúnculo hasta el ápice con una guillotina metálica, mientras un cucharín giratorio retira el carozo, obteniendo dos mitades limpias.' },
+    { icono: '✅', corto: 'Revisión', nombre: 'Revisión de restos', tiempo: 'Variable',
+      texto: 'Las mitades avanzan sobre una cinta de inspección donde se retira manualmente cualquier resto de carozo adherido a la pulpa.' },
+    { icono: '🔥', corto: 'Pelado', nombre: 'Pelado térmico', tiempo: 'Fijo',
+      texto: 'Una solución de soda cáustica caliente (cercana a 100°C) disuelve y desprende la piel de la pulpa sin dañarla. Al finalizar, se realiza una inspección final antes de continuar al envasado.' }
+  ];
+  // Para cambiar una foto, reemplaza img/estaciones/estacion-N.jpg (N = 1 a 4).
+  const fila = document.getElementById('estacionesFila');
+  fila.innerHTML = estaciones.map((e, i) => `
+    <button class="estacion-btn" data-i="${i}" aria-expanded="false" aria-controls="panelEstacion">
+      <span class="circulo">${e.icono}</span>
+      <span class="est-nombre"><span class="est-num">0${i + 1}</span>${e.corto}</span>
+    </button>`).join('');
+  const botonesEst = [...fila.querySelectorAll('.estacion-btn')];
+  const panel = document.getElementById('panelEstacion');
+  const panelImg = document.getElementById('panelImg');
+  const panelImgTag = document.getElementById('panelImgTag');
+  panelImgTag.addEventListener('error', () => panelImg.classList.add('sin-imagen'));
+  panelImgTag.addEventListener('load', () => panelImg.classList.remove('sin-imagen'));
+  let estacionAbierta = -1;
+
+  function abrirEstacion(i) {
+    if (estacionAbierta === i) return cerrarEstacion();
+    estacionAbierta = i;
+    const e = estaciones[i];
+    panelImg.classList.remove('sin-imagen');
+    panelImgTag.src = `img/estaciones/estacion-${i + 1}.jpg`;
+    panelImgTag.alt = e.nombre;
+    document.getElementById('panelNum').textContent = `ESTACIÓN 0${i + 1}`;
+    document.getElementById('panelTitulo').textContent = e.nombre;
+    document.getElementById('panelDesc').textContent = e.texto;
+    document.getElementById('panelTiempo').textContent = `Tiempo de operación: ${e.tiempo}`;
+    botonesEst.forEach((b, j) => { b.classList.toggle('abierta', j === i); b.setAttribute('aria-expanded', j === i); });
+    panel.hidden = false;
+    panel.style.animation = 'none'; panel.offsetHeight; panel.style.animation = '';
+  }
+  function cerrarEstacion() {
+    estacionAbierta = -1;
+    panel.hidden = true;
+    botonesEst.forEach(b => { b.classList.remove('abierta'); b.setAttribute('aria-expanded', 'false'); });
+  }
+  botonesEst.forEach((b, i) => b.addEventListener('click', () => abrirEstacion(i)));
+  document.getElementById('panelCerrar').addEventListener('click', cerrarEstacion);
+
+  // Durazno que recorre la faja
+  const durazno = document.getElementById('duraznoViajero');
+  let posDurazno = 0, timerDurazno;
+  function colocarDurazno(i) {
+    posDurazno = i;
+    durazno.style.left = `${12.5 + i * 25}%`;
+    botonesEst.forEach((b, j) => b.classList.toggle('actual', j === i));
+  }
+  function avanzarDurazno() {
+    const sig = (posDurazno + 1) % estaciones.length;
+    if (sig === 0) {
+      // al final de la faja: desaparece y vuelve a empezar
+      durazno.style.opacity = 0;
+      setTimeout(() => {
+        durazno.style.transition = 'none';
+        colocarDurazno(0);
+        durazno.offsetHeight;
+        durazno.style.transition = '';
+        durazno.style.opacity = 1;
+      }, 350);
+    } else {
+      colocarDurazno(sig);
+    }
+  }
+  function reiniciarLoop() {
+    clearInterval(timerDurazno);
+    if (!reducirMovimiento) timerDurazno = setInterval(avanzarDurazno, 3000);
+  }
+  document.getElementById('btnSiguiente').addEventListener('click', () => { avanzarDurazno(); reiniciarLoop(); });
+  colocarDurazno(0);
+  reiniciarLoop();
+
+  // ========== GALERÍA ==========
+  // Para agregar fotos: sube img/galeria/01.jpg … 12.jpg y edita aquí el título y el texto de cada una.
+  const galeria = [
+    { titulo: 'Diseño de la faja', texto: 'Descripción pendiente.' },
+    { titulo: 'Armado de la estructura', texto: 'Descripción pendiente.' },
+    { titulo: 'Motor y ruedas', texto: 'Descripción pendiente.' },
+    { titulo: 'Sensores infrarrojos', texto: 'Descripción pendiente.' },
+    { titulo: 'Programación en Arduino', texto: 'Descripción pendiente.' },
+    { titulo: 'Pruebas de la faja', texto: 'Descripción pendiente.' },
+    { titulo: 'Estación de selección', texto: 'Descripción pendiente.' },
+    { titulo: 'Estación de corte', texto: 'Descripción pendiente.' },
+    { titulo: 'Estación de revisión', texto: 'Descripción pendiente.' },
+    { titulo: 'Estación de pelado', texto: 'Descripción pendiente.' },
+    { titulo: 'Trabajo en equipo', texto: 'Descripción pendiente.' },
+    { titulo: 'Presentación final', texto: 'Descripción pendiente.' }
+  ];
+  const rutaGaleria = i => `img/galeria/${String(i + 1).padStart(2, '0')}.jpg`;
+  const galeriaGrid = document.getElementById('galeriaGrid');
+  galeriaGrid.innerHTML = galeria.map((g, i) => `
+    <button class="galeria-item" data-i="${i}">
+      <div class="galeria-media">
+        <img src="${rutaGaleria(i)}" alt="${g.titulo}" loading="lazy">
+        <div class="img-pendiente">📷 Imagen pendiente</div>
+      </div>
+      <h4>${g.titulo}</h4>
+    </button>`).join('');
+  galeriaGrid.querySelectorAll('.galeria-item').forEach(item => {
+    const media = item.querySelector('.galeria-media');
+    item.querySelector('img').addEventListener('error', () => media.classList.add('sin-imagen'));
+    item.addEventListener('click', () => abrirGaleria(+item.dataset.i, media.classList.contains('sin-imagen')));
+  });
+  function abrirGaleria(i, sinImagen) {
+    const g = galeria[i];
+    const media = document.getElementById('galeriaMedia');
+    const img = document.getElementById('galeriaImg');
+    media.classList.toggle('sin-imagen', sinImagen);
+    if (!sinImagen) { img.src = rutaGaleria(i); img.alt = g.titulo; }
+    document.getElementById('galeriaTitulo').textContent = g.titulo;
+    document.getElementById('galeriaDesc').textContent = g.texto;
+    document.getElementById('modalGaleria').classList.add('activo');
+    bloquear(true);
+  }
+  function cerrarGaleria() {
+    document.getElementById('modalGaleria').classList.remove('activo');
+    bloquear(false);
+  }
+  document.getElementById('modalGaleria').addEventListener('click', e => { if (e.target.id === 'modalGaleria') cerrarGaleria(); });
+
+  // ========== NOSOTROS: TARJETA VOLTEABLE ==========
+  const flip = document.getElementById('flipCard');
+  const puedeHover = window.matchMedia('(hover: hover)').matches;
+  function voltear() {
+    const v = flip.classList.toggle('volteada');
+    flip.setAttribute('aria-pressed', v);
+  }
+  flip.addEventListener('click', () => { if (!puedeHover) voltear(); });
+  flip.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); voltear(); } });
+
+  // ========== NOSOTROS: EQUIPO (orden alfabético) ==========
+  const equipo = [
+    { foto: 'caqui', apellidos: 'Caqui Broncano', nombres: 'Angelina Yoli' },
+    { foto: 'carampoma', apellidos: 'Carampoma Yahuana', nombres: 'Pablo Jesús' },
+    { foto: 'chavez', apellidos: 'Chavez Santiago', nombres: 'Alinder' },
+    { foto: 'chirhuana', apellidos: 'Chirhuana Carbajal', nombres: 'Jhon' },
+    { foto: 'cisneros', apellidos: 'Cisneros Livia', nombres: 'Luis Miguel' },
+    { foto: 'lucas', apellidos: 'Lucas Pillaca', nombres: 'Sonaly Clarita' },
+    { foto: 'meneses', apellidos: 'Meneses Condori', nombres: 'Charlyn' },
+    { foto: 'morales', apellidos: 'Morales Morales', nombres: 'Pool' },
+    { foto: 'orihuela', apellidos: 'Orihuela Perez', nombres: 'Angela Mariel' },
+    { foto: 'ramos', apellidos: 'Ramos Escarrache', nombres: 'Ruth' },
+    { foto: 'soto', apellidos: 'Soto Hualpa', nombres: 'Rosa Marina' },
+    { foto: 'vilchez', apellidos: 'Vilchez Castillo', nombres: 'Anthony Williams' }
+  ];
+  document.getElementById('equipoGrid').innerHTML = equipo.map(m => `
+    <div class="miembro tarjeta reveal">
+      <img src="img/equipo/${m.foto}.jpg" alt="${m.nombres} ${m.apellidos}" loading="lazy">
+      <h4>${m.nombres}</h4>
+      <p>${m.apellidos}</p>
+    </div>`).join('');
+
+  // ========== TECLADO (modales) ==========
   document.addEventListener('keydown', e => {
-    if (!document.getElementById('lightbox').classList.contains('active')) return;
+    if (document.getElementById('modalGaleria').classList.contains('activo')) {
+      if (e.key === 'Escape') cerrarGaleria();
+      return;
+    }
+    if (!document.getElementById('modalPlano').classList.contains('activo')) return;
     if (e.key === 'ArrowLeft') cambiarPlano(-1);
     if (e.key === 'ArrowRight') cambiarPlano(1);
-    if (e.key === 'Escape') cerrarLightbox();
+    if (e.key === 'Escape') cerrarPlano();
   });
 
   // ========== SCROLL REVEAL ==========
-  function initReveal() {
-    const reveals = document.querySelectorAll('.reveal');
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('active');
-        }
-      });
-    }, { threshold: 0.1 });
-    reveals.forEach(el => observer.observe(el));
-  }
-  initReveal();
+  const revealObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('active');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
   // ========== CONTADORES ANIMADOS ==========
   const statObserver = new IntersectionObserver(entries => {
@@ -883,13 +1289,11 @@
       }
     });
   }, { threshold: 0.5 });
-  document.querySelectorAll('.stat-number').forEach(el => statObserver.observe(el));
+  document.querySelectorAll('.stat-number[data-target]').forEach(el => statObserver.observe(el));
 
   // ========== BOTÓN SUBIR ==========
   window.addEventListener('scroll', () => {
-    const btn = document.getElementById('scrollTop');
-    if (window.scrollY > 500) btn.classList.add('visible');
-    else btn.classList.remove('visible');
+    document.getElementById('scrollTop').classList.toggle('visible', window.scrollY > 500);
   });
 
   // ========== SCROLL SUAVE ==========
