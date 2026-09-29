@@ -32,6 +32,11 @@
   h1, h2, h3, h4 { font-family: Georgia, 'Times New Roman', serif; }
   img { max-width: 100%; display: block; }
 
+  /* ========== FONDO DE LA PÁGINA ========== */
+  .fondo { position: fixed; inset: 0; z-index: -1; overflow: hidden; background: var(--verde-oscuro); }
+  .fondo::after { content: ''; position: absolute; inset: 0; background: url(img/fondo.webp) center 62% / cover no-repeat; }
+  .fondo i { position: absolute; inset: 0; z-index: 1; background: rgba(255, 252, 245, 0.08); }
+
   /* ========== BOTONES ========== */
   .btn {
     padding: 0.9rem 1.8rem; border-radius: 50px; font-weight: bold; font-size: 1rem;
@@ -139,15 +144,16 @@
 
   /* ========== HERO ========== */
   .hero {
-    min-height: 100vh; padding: 7.5rem 2rem 4rem; max-width: none;
+    min-height: calc(100vh - 7rem); margin-top: 6rem; padding: 3rem 2rem 4rem; max-width: 1100px;
     display: flex; flex-direction: column; align-items: center; text-align: center;
-    background: var(--textura), linear-gradient(180deg, var(--fondo) 0%, #f3ead3 100%);
+    background: var(--textura), rgba(255, 252, 245, 0.6);
   }
   .aviso {
     display: inline-block; background: var(--vino); color: var(--crema);
     padding: 0.4rem 1rem; border-radius: 30px; font-size: 0.85rem; margin-bottom: 1.5rem;
   }
   .hero-logo { width: min(220px, 50vw); margin-bottom: 1rem; filter: drop-shadow(0 8px 18px var(--sombra)); }
+  .hero h1, .hero .subtitle { text-shadow: 0 0 14px rgba(255, 252, 245, 0.95), 0 0 4px rgba(255, 252, 245, 0.9); }
   .hero h1 { font-size: 3.2rem; color: var(--verde); margin-bottom: 1rem; line-height: 1.2; }
   .hero h1 span { color: var(--vino); }
   .hero .subtitle { font-size: 1.2rem; max-width: 720px; color: var(--texto-suave); }
@@ -168,7 +174,11 @@
   .stat-label { color: var(--texto-suave); margin-top: 0.3rem; }
 
   /* ========== SECCIONES ========== */
-  section { padding: 5rem 2rem; max-width: 1200px; margin: auto; }
+  section {
+    padding: 4rem 2rem; max-width: 1100px; margin: 1.5rem auto;
+    background: rgba(255, 252, 245, 0.8); border: 1px solid rgba(201, 162, 75, 0.55); border-radius: 28px;
+    box-shadow: 0 12px 40px rgba(13, 43, 28, 0.25); -webkit-backdrop-filter: blur(2px); backdrop-filter: blur(2px);
+  }
   section h2 { font-size: 2.5rem; color: var(--verde); text-align: center; margin-bottom: 1rem; }
   section h2::after, .sub-titulo::after {
     content: ''; display: block; width: 80px; height: 3px;
@@ -354,6 +364,12 @@
   .modal-galeria .modal-caja { max-width: 760px; padding: 1.2rem; }
   .modal-galeria .modal-img img { width: 100%; max-height: 62vh; object-fit: contain; border-radius: 12px; background: white; }
   .modal-galeria .img-pendiente { aspect-ratio: 16 / 10; font-size: 1.3rem; }
+  .modal-nav {
+    position: absolute; top: 34%; z-index: 2; width: 44px; height: 44px; border-radius: 50%; border: 2px solid var(--dorado);
+    background: rgba(247, 241, 226, 0.95); color: var(--verde); font-size: 1.6rem; line-height: 1; cursor: pointer; transition: 0.3s;
+  }
+  .modal-nav:hover { background: var(--verde); color: var(--crema); }
+  .modal-nav.prev { left: 14px; } .modal-nav.next { right: 14px; }
   .galeria-texto {
     margin-top: 1rem; background: var(--crema); border: 1px solid var(--dorado); border-radius: 12px;
     padding: 1rem 1.2rem; color: var(--verde); font-family: Arial, sans-serif;
@@ -361,12 +377,20 @@
   .galeria-texto h3 { font-size: 1.3rem; margin-bottom: 0.3rem; }
 
   /* ========== MATERIALES ========== */
-  .materiales-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; }
-  .material-card { padding: 1.5rem; text-align: center; transition: 0.3s; }
-  .material-card:hover { transform: translateY(-6px); background: #eef3e8; }
-  .material-card .emoji { font-size: 2.5rem; margin-bottom: 0.5rem; }
-  .material-card h4 { color: var(--verde); margin-bottom: 0.4rem; font-size: 1.15rem; }
-  .material-card p { color: var(--texto-suave); font-size: 0.95rem; }
+  .mat-grupo { color: var(--verde); font-size: 1.5rem; text-align: center; margin: 2.6rem 0 1.4rem; }
+  .mat-grupo:first-of-type { margin-top: 0; }
+  .mat-grupo::after { content: ''; display: block; width: 60px; height: 3px; background: var(--dorado); margin: 0.7rem auto 0; border-radius: 2px; }
+  .mat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 1.3rem; }
+  .mat-card {
+    padding: 0; overflow: hidden; cursor: pointer; text-align: center; font-family: inherit; color: inherit;
+    display: flex; flex-direction: column; transition: transform 0.3s, box-shadow 0.3s;
+  }
+  .mat-card:hover, .mat-card:focus-visible { transform: translateY(-6px); box-shadow: 0 14px 30px rgba(13, 43, 28, 0.2); outline: none; }
+  .mat-img { background: white; aspect-ratio: 1; display: flex; justify-content: center; align-items: center; border-bottom: 1px solid var(--dorado); padding: 0.6rem; }
+  .mat-img img { max-width: 100%; max-height: 100%; object-fit: contain; }
+  .mat-info { padding: 0.8rem 0.9rem 1rem; }
+  .mat-num { font-size: 0.72rem; font-weight: bold; letter-spacing: 2px; color: var(--vino); }
+  .mat-info h4 { color: var(--verde); font-size: 1.05rem; margin-top: 0.15rem; }
 
   /* ========== NOSOTROS: TARJETA VOLTEABLE ========== */
   .flip { perspective: 1400px; max-width: 620px; height: 400px; margin: 0 auto; cursor: pointer; outline: none; }
@@ -474,43 +498,365 @@
 
   /* ========== NOSOTROS: EQUIPO ========== */
   .equipo { display: grid; grid-template-columns: repeat(auto-fill, minmax(175px, 1fr)); gap: 1.5rem; }
-  .miembro { padding: 1.4rem 1rem; text-align: center; transition: 0.3s; }
+  .miembro { padding: 1.4rem 1rem; text-align: center; transition: 0.3s; position: relative; }
   .miembro:hover { transform: translateY(-6px); box-shadow: 0 14px 30px rgba(13, 43, 28, 0.2); }
-  .miembro img {
+  .miembro.activo { z-index: 6; }
+  .foto-btn { background: none; border: none; padding: 0; cursor: pointer; display: block; margin: 0 auto 1rem; border-radius: 50%; position: relative; }
+  .foto-btn:focus-visible { outline: 3px solid var(--vino); outline-offset: 4px; }
+  .foto-btn img {
     width: 120px; height: 120px; border-radius: 50%; object-fit: cover; object-position: top;
-    margin: 0 auto 1rem; border: 4px solid var(--dorado); box-shadow: 0 0 0 4px var(--verde); transition: 0.3s;
+    border: 4px solid var(--dorado); box-shadow: 0 0 0 4px var(--verde); transition: 0.3s;
   }
-  .miembro:hover img { box-shadow: 0 0 0 4px var(--vino); }
+  .foto-btn:hover img { box-shadow: 0 0 0 4px var(--vino); transform: scale(1.04); }
+  .foto-pista {
+    position: absolute; right: -4px; bottom: -2px; width: 30px; height: 30px; border-radius: 50%;
+    background: var(--crema); border: 2px solid var(--dorado); font-size: 0.95rem; display: flex; align-items: center; justify-content: center;
+    animation: latido 2.4s ease-in-out infinite;
+  }
+  @keyframes latido { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.18); } }
   .miembro h4 { color: var(--verde); font-size: 1.05rem; line-height: 1.25; }
   .miembro p { color: var(--texto-suave); font-size: 0.88rem; margin-top: 0.2rem; }
 
+  /* escenas animadas al tocar la foto */
+  .escena-emoji {
+    position: absolute; left: 50%; top: -34px; width: 190px; height: 165px; margin-left: -95px; z-index: 8;
+    background: radial-gradient(circle at 50% 35%, #fffdf6, var(--crema)); border: 2px solid var(--dorado);
+    border-radius: 26px; overflow: hidden; box-shadow: 0 16px 36px rgba(13, 43, 28, 0.35); cursor: pointer;
+    animation: aparece 0.35s cubic-bezier(0.2, 1.5, 0.4, 1);
+  }
+  .escena-emoji.saliendo { animation: desaparece 0.3s forwards; }
+  @keyframes aparece { from { opacity: 0; transform: scale(0.4) translateY(30px); } to { opacity: 1; transform: none; } }
+  @keyframes desaparece { to { opacity: 0; transform: scale(0.6) translateY(20px); } }
+  .escena-emoji .e { position: absolute; line-height: 1; user-select: none; }
+  .escena-emoji .cara { left: 50%; top: 28px; margin-left: -28px; font-size: 3.4rem; z-index: 2; }
+  .escena-emoji .suelo-e { position: absolute; left: 0; right: 0; bottom: 0; height: 26px; background: repeating-linear-gradient(90deg, #e6cd8f 0 18px, #dcbf78 18px 36px); }
+  .escena-emoji .texto-e { font-family: Georgia, serif; font-weight: bold; color: var(--vino); font-size: 1rem; }
+
+  /* 1 Meneses: se ríe tocándose el estómago */
+  .esc-meneses .cara { animation: risa 0.28s ease-in-out infinite alternate; top: 16px; }
+  .esc-meneses .barriga { left: 50%; top: 74px; width: 76px; height: 62px; margin-left: -38px; border-radius: 50%; background: radial-gradient(circle at 40% 30%, #ffe27a, #f1b81d); animation: bote 0.28s ease-in-out infinite alternate; }
+  .esc-meneses .mano { top: 88px; font-size: 1.7rem; z-index: 3; }
+  .esc-meneses .m1 { left: 28px; animation: palmada 0.28s ease-in-out infinite alternate; }
+  .esc-meneses .m2 { right: 28px; animation: palmada 0.28s ease-in-out infinite alternate-reverse; }
+  .esc-meneses .ja { font-family: Georgia, serif; font-weight: bold; color: var(--vino); font-size: 1.05rem; opacity: 0; animation: sube 1.2s ease-out infinite; }
+  .esc-meneses .j1 { left: 14px; top: 60px; } .esc-meneses .j2 { right: 14px; top: 50px; animation-delay: 0.4s; } .esc-meneses .j3 { left: 40px; top: 20px; animation-delay: 0.8s; }
+  @keyframes risa { from { transform: rotate(-9deg) translateY(0); } to { transform: rotate(9deg) translateY(-4px); } }
+  @keyframes bote { from { transform: scale(1, 0.96); } to { transform: scale(1.06, 1.04); } }
+  @keyframes palmada { from { transform: translateY(-5px) rotate(-12deg); } to { transform: translateY(5px) rotate(12deg); } }
+  @keyframes sube { 0% { opacity: 0; transform: translateY(14px); } 30% { opacity: 1; } 100% { opacity: 0; transform: translateY(-24px); } }
+
+  /* 2 Lucas: feliz saltando, casi bailando */
+  .esc-lucas .cara { animation: salta 0.6s ease-in-out infinite; top: 60px; }
+  .esc-lucas .sombra-e { position: absolute; left: 50%; bottom: 20px; width: 60px; height: 12px; margin-left: -30px; border-radius: 50%; background: rgba(13, 43, 28, 0.25); animation: sombra 0.6s ease-in-out infinite; }
+  .esc-lucas .nota { font-size: 1.5rem; opacity: 0; animation: sube 1.4s ease-out infinite; }
+  .esc-lucas .n1 { left: 22px; top: 70px; } .esc-lucas .n2 { right: 22px; top: 60px; animation-delay: 0.5s; } .esc-lucas .n3 { left: 66px; top: 34px; animation-delay: 1s; }
+  @keyframes salta { 0% { transform: translate(-8px, 30px) scale(1.12, 0.88) rotate(-8deg); } 50% { transform: translate(8px, -22px) scale(0.94, 1.08) rotate(8deg); } 100% { transform: translate(-8px, 30px) scale(1.12, 0.88) rotate(-8deg); } }
+  @keyframes sombra { 0%, 100% { transform: scale(1); opacity: 0.35; } 50% { transform: scale(0.55); opacity: 0.15; } }
+
+  /* 3 Chávez: sobre una faja transportadora azul */
+  .esc-chavez .cara { top: 40px; animation: desliza 3.6s linear infinite; margin-left: -28px; }
+  .esc-chavez .banda-e { position: absolute; left: 0; right: 0; bottom: 34px; height: 34px; background: #1e6fd0; border-top: 3px solid #4aa0ff; border-bottom: 4px solid #0f4a99;
+    background-image: repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.3) 0 5px, transparent 5px 24px); animation: banda 0.6s linear infinite; }
+  .esc-chavez .rodillo { position: absolute; bottom: 26px; width: 18px; height: 18px; border-radius: 50%; background: #0f4a99; border: 3px solid #4aa0ff; }
+  .esc-chavez .r1 { left: -6px; } .esc-chavez .r2 { right: -6px; }
+  @keyframes desliza { 0% { left: -12%; } 100% { left: 92%; } }
+  @keyframes banda { to { background-position: 24px 0; } }
+
+  /* 4 Vilchez: se levanta luego de dormir */
+  .esc-vilchez .f1, .esc-vilchez .f2, .esc-vilchez .f3 { opacity: 0; top: 34px; }
+  .esc-vilchez .f1 { animation: fase 4s forwards; --a: 0%; --b: 30%; }
+  .esc-vilchez .f2 { animation: fase2 4s forwards; }
+  .esc-vilchez .f3 { animation: fase3 4s forwards; }
+  .esc-vilchez .zzz { font-size: 1.3rem; opacity: 0; animation: sube 1.2s ease-out 3 both; right: 32px; top: 40px; }
+  .esc-vilchez .sol { font-size: 1.8rem; right: 16px; top: 8px; opacity: 0; animation: sol 4s forwards; }
+  @keyframes fase { 0% { opacity: 1; transform: rotate(-14deg) translateY(30px); } 27% { opacity: 1; transform: rotate(-14deg) translateY(30px); } 30%, 100% { opacity: 0; } }
+  @keyframes fase2 { 0%, 27% { opacity: 0; } 30% { opacity: 1; transform: translateY(20px) scale(1, 1); } 45% { transform: translateY(0) scale(0.92, 1.18); } 62% { opacity: 1; transform: translateY(-4px) scale(0.92, 1.18); } 65%, 100% { opacity: 0; } }
+  @keyframes fase3 { 0%, 62% { opacity: 0; } 66% { opacity: 1; transform: scale(0.6); } 78%, 100% { opacity: 1; transform: scale(1.12); } }
+  @keyframes sol { 0%, 62% { opacity: 0; transform: scale(0.3) rotate(0); } 80%, 100% { opacity: 1; transform: scale(1) rotate(60deg); } }
+
+  /* 5 Carhuapoma: filmando con su cámara */
+  .esc-carhuapoma .cara { left: 34%; top: 40px; }
+  .esc-carhuapoma .camara { right: 22px; top: 50px; font-size: 2.8rem; animation: panea 1.6s ease-in-out infinite alternate; transform-origin: 20% 60%; }
+  .esc-carhuapoma .rec { position: absolute; left: 10px; top: 10px; font-family: Arial, sans-serif; font-weight: bold; font-size: 0.75rem; color: #d92b2b; animation: parpadeo 1s steps(2) infinite; }
+  .esc-carhuapoma .visor { position: absolute; inset: 8px; border: 2px dashed rgba(217, 43, 43, 0.5); border-radius: 12px; }
+  @keyframes panea { from { transform: rotate(-12deg); } to { transform: rotate(10deg); } }
+  @keyframes parpadeo { 50% { opacity: 0; } }
+
+  /* 6 Chirhuana: sombrero de vaquero sobre su caballito */
+  .esc-chirhuana .caballo-e { left: 50%; top: 62px; margin-left: -38px; font-size: 4.2rem; transform: scaleX(-1); animation: galopa 0.4s ease-in-out infinite alternate; }
+  .esc-chirhuana .jinete { left: 50%; top: 26px; margin-left: -22px; font-size: 2.6rem; z-index: 3; animation: galopa 0.4s ease-in-out infinite alternate; }
+  .esc-chirhuana .polvo { font-size: 1.4rem; opacity: 0; animation: polvo 0.9s linear infinite; top: 100px; }
+  .esc-chirhuana .p1 { left: 34px; } .esc-chirhuana .p2 { left: 12px; animation-delay: 0.45s; }
+  .esc-chirhuana .suelo-e { animation: banda2 0.5s linear infinite; }
+  @keyframes galopa { from { transform: translateY(0) rotate(-4deg) scaleX(var(--fx, 1)); } to { transform: translateY(-9px) rotate(4deg) scaleX(var(--fx, 1)); } }
+  .esc-chirhuana .caballo-e { --fx: -1; }
+  @keyframes polvo { 0% { opacity: 0.9; transform: translateX(10px) scale(0.6); } 100% { opacity: 0; transform: translateX(-20px) scale(1.3); } }
+  @keyframes banda2 { to { background-position: -36px 0; } }
+
+  /* 7 Soto: sobre un cañón de confeti que dispara */
+  .esc-soto .cara { top: 20px; margin-left: -38px; animation: rebota 1.1s ease-in-out infinite; }
+  .esc-soto .canon { position: absolute; left: 50%; bottom: 20px; margin-left: -34px; width: 68px; height: 60px; animation: retroceso 1.4s ease-out infinite; }
+  .esc-soto .tubo { position: absolute; left: 6px; top: 6px; width: 32px; height: 50px; border-radius: 6px 6px 3px 3px; transform: rotate(-24deg); transform-origin: 50% 100%;
+    background: repeating-linear-gradient(0deg, var(--vino) 0 8px, var(--dorado) 8px 14px); border: 2px solid var(--vino-oscuro); }
+  .esc-soto .rueda { position: absolute; bottom: -4px; width: 22px; height: 22px; border-radius: 50%; background: var(--verde); border: 3px solid var(--dorado); }
+  .esc-soto .rueda.w1 { left: 4px; } .esc-soto .rueda.w2 { left: 36px; }
+  .esc-soto .confeti { position: absolute; left: 34%; bottom: 62px; width: 7px; height: 11px; opacity: 0; animation: confeti 1.4s ease-out infinite; animation-delay: var(--d); background: var(--c); }
+  @keyframes rebota { 0%, 100% { transform: translateY(0) rotate(-6deg); } 50% { transform: translateY(-8px) rotate(6deg); } }
+  @keyframes retroceso { 0%, 8% { transform: translateX(0); } 14% { transform: translateX(6px); } 30%, 100% { transform: translateX(0); } }
+  @keyframes confeti { 0% { opacity: 0; transform: translate(0, 0) rotate(0); } 8% { opacity: 1; } 100% { opacity: 0; transform: translate(var(--x), var(--y)) rotate(var(--r)); } }
+
+  /* 8 Orihuela: comiendo su latita de durazno Dos Caballos */
+  .esc-orihuela .cara { left: 42%; top: 38px; animation: mastica 0.5s ease-in-out infinite alternate; }
+  .esc-orihuela .latita { position: absolute; width: 38px; height: 46px; border-radius: 6px; background: linear-gradient(90deg, #c8781f, #ffc65a 45%, #b8681a); border: 2px solid #8f5a17; display: flex; align-items: center; justify-content: center; animation: acerca 1.8s ease-in-out infinite; z-index: 3; }
+  .esc-orihuela .latita img { width: 24px; }
+  .esc-orihuela .trozo { font-size: 1.2rem; animation: trozo 1.8s ease-in infinite; z-index: 3; }
+  @keyframes mastica { from { transform: scale(1, 1); } to { transform: scale(1.06, 0.94); } }
+  @keyframes acerca { 0% { right: 8px; bottom: 26px; transform: rotate(0); } 45%, 60% { right: 52px; bottom: 60px; transform: rotate(-38deg); } 100% { right: 8px; bottom: 26px; transform: rotate(0); } }
+  @keyframes trozo { 0%, 40% { right: 40px; top: 96px; opacity: 0; } 46% { opacity: 1; right: 62px; top: 74px; } 70% { opacity: 1; right: 96px; top: 62px; transform: scale(0.8); } 80%, 100% { opacity: 0; right: 96px; top: 62px; transform: scale(0.2); } }
+
+  /* 9 Morales Morales: fútbol */
+  .esc-morales .cara { top: 44px; margin-left: -44px; z-index: 3; }
+  .esc-morales .balon { font-size: 1.9rem; left: 50%; margin-left: -12px; animation: cabecea 1.8s linear forwards; }
+  .esc-morales .arco { right: 6px; bottom: 26px; font-size: 3.4rem; }
+  .esc-morales .gol { left: 50%; top: 18px; margin-left: -44px; opacity: 0; animation: golpe 1.8s 1.6s forwards; font-size: 1.3rem; }
+  @keyframes cabecea {
+    0% { top: 4px; left: 44%; } 10% { top: 24px; } 20% { top: 4px; } 30% { top: 24px; } 40% { top: 4px; } 50% { top: 24px; left: 44%; }
+    62% { top: 70px; left: 44%; } 100% { top: 96px; left: 76%; transform: rotate(540deg); } }
+  @keyframes golpe { 0% { opacity: 0; transform: scale(0.3); } 20%, 100% { opacity: 1; transform: scale(1); } }
+
+  /* 10 Morales Yupanqui: saluda y manda un besito */
+  .esc-yupanqui .cara { left: 44%; top: 40px; animation: latido 1.2s ease-in-out infinite; }
+  .esc-yupanqui .saludo { right: 24px; top: 58px; font-size: 2.6rem; transform-origin: 70% 90%; animation: saluda 0.5s ease-in-out infinite alternate; }
+  .esc-yupanqui .corazon { font-size: 1.4rem; opacity: 0; animation: vuela 1.6s ease-out infinite; left: 54%; top: 60px; }
+  .esc-yupanqui .c2 { animation-delay: 0.5s; } .esc-yupanqui .c3 { animation-delay: 1s; }
+  @keyframes saluda { from { transform: rotate(-24deg); } to { transform: rotate(24deg); } }
+  @keyframes vuela { 0% { opacity: 0; transform: translate(0, 0) scale(0.5); } 20% { opacity: 1; } 100% { opacity: 0; transform: translate(50px, -60px) scale(1.3) rotate(20deg); } }
+
+  /* 11 Ramos: come su latita, se le cae y llora */
+  .esc-ramos .a1, .esc-ramos .a2 { top: 30px; left: 50%; margin-left: -34px; font-size: 3.4rem; opacity: 0; }
+  .esc-ramos .a1 { animation: caraA 4.2s forwards; } .esc-ramos .a2 { animation: caraB 4.2s forwards; }
+  .esc-ramos .latita { position: absolute; left: 50%; margin-left: 20px; top: 66px; width: 36px; height: 44px; border-radius: 6px; z-index: 3;
+    background: linear-gradient(90deg, #c8781f, #ffc65a 45%, #b8681a); border: 2px solid #8f5a17; display: flex; align-items: center; justify-content: center; animation: cae 4.2s forwards; }
+  .esc-ramos .latita img { width: 22px; }
+  .esc-ramos .lagrima { font-size: 1.3rem; opacity: 0; animation: llora 0.9s linear infinite; z-index: 3; top: 68px; }
+  .esc-ramos .l1 { left: 62px; animation-delay: 2.1s; } .esc-ramos .l2 { right: 62px; animation-delay: 2.5s; }
+  @keyframes caraA { 0% { opacity: 1; transform: scale(0.9); } 15% { transform: scale(1.06); } 30% { transform: scale(0.96); } 45% { transform: scale(1.06); } 47%, 100% { opacity: 0; } }
+  @keyframes caraB { 0%, 47% { opacity: 0; } 50%, 100% { opacity: 1; transform: translateX(0); } 70% { transform: translateX(-3px); } 85% { transform: translateX(3px); } }
+  @keyframes cae { 0%, 40% { transform: translate(0, 0) rotate(0); opacity: 1; } 60% { transform: translate(14px, 60px) rotate(120deg); } 66% { transform: translate(18px, 62px) rotate(200deg); } 100% { transform: translate(18px, 62px) rotate(200deg); opacity: 1; } }
+  @keyframes llora { 0% { opacity: 0; transform: translateY(0); } 20% { opacity: 1; } 100% { opacity: 0; transform: translateY(40px); } }
+
+  /* 12 Caqui: se tapa los ojos, se destapa y guiña */
+  .esc-caqui .b1, .esc-caqui .b2 { top: 30px; left: 50%; margin-left: -28px; font-size: 3.4rem; opacity: 0; }
+  .esc-caqui .b1 { animation: tapa 3.6s forwards; } .esc-caqui .b2 { animation: guino 3.6s forwards; }
+  .esc-caqui .manoL, .esc-caqui .manoR { font-size: 2.1rem; top: 46px; z-index: 3; }
+  .esc-caqui .manoL { left: 50%; margin-left: -34px; animation: destapaL 3.6s forwards; } .esc-caqui .manoR { left: 50%; margin-left: 6px; animation: destapaR 3.6s forwards; }
+  .esc-caqui .chispa { font-size: 1.6rem; left: 50%; margin-left: 14px; top: 34px; opacity: 0; animation: chispa 3.6s forwards; }
+  @keyframes tapa { 0% { opacity: 1; } 45% { opacity: 1; } 48%, 100% { opacity: 0; } }
+  @keyframes guino { 0%, 46% { opacity: 0; } 50%, 100% { opacity: 1; } }
+  @keyframes destapaL { 0%, 42% { transform: translate(0, 0) rotate(0); opacity: 1; } 60% { transform: translate(-26px, -10px) rotate(-40deg); opacity: 1; } 75%, 100% { transform: translate(-40px, -14px) rotate(-60deg); opacity: 0; } }
+  @keyframes destapaR { 0%, 42% { transform: translate(0, 0) rotate(0); opacity: 1; } 60% { transform: translate(26px, -10px) rotate(40deg); opacity: 1; } 75%, 100% { transform: translate(40px, -14px) rotate(60deg); opacity: 0; } }
+  @keyframes chispa { 0%, 62% { opacity: 0; transform: scale(0.2); } 75% { opacity: 1; transform: scale(1.3) rotate(20deg); } 100% { opacity: 1; transform: scale(1); } }
+
+  /* 13 Cisneros: saca un ramo de flores de la espalda */
+  .esc-cisneros .cara { left: 40%; top: 24px; z-index: 2; animation: rebota 1.4s ease-in-out infinite; }
+  .esc-cisneros .ramo { font-size: 3.2rem; left: 50%; top: 62px; margin-left: -20px; z-index: 1; opacity: 0; animation: ramo 2.6s forwards; }
+  .esc-cisneros .petalo { font-size: 1.1rem; opacity: 0; animation: cae2 2s linear infinite; top: 0; }
+  .esc-cisneros .p1 { left: 20px; animation-delay: 1.2s; } .esc-cisneros .p2 { left: 100px; animation-delay: 1.7s; } .esc-cisneros .p3 { right: 18px; animation-delay: 2.1s; }
+  @keyframes ramo { 0%, 30% { opacity: 0; transform: translate(-10px, 10px) scale(0.6); z-index: 1; } 34% { opacity: 1; } 65%, 100% { opacity: 1; transform: translate(34px, 22px) scale(1.1) rotate(12deg); z-index: 3; } }
+  @keyframes cae2 { 0% { opacity: 0; transform: translateY(0) rotate(0); } 15% { opacity: 1; } 100% { opacity: 0; transform: translateY(120px) rotate(200deg); } }
+
   /* ========== NOVEDADES ========== */
-  .blog-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; }
-  .post { overflow: hidden; transition: 0.3s; }
-  .post:hover { transform: translateY(-8px); }
-  .post-img {
-    height: 170px; display: flex; justify-content: center; align-items: center; font-size: 4rem;
-    background: var(--textura), linear-gradient(135deg, var(--verde), var(--verde-claro));
+  .novedades-sub { color: var(--verde); }
+
+  /* --- Datos curiosos --- */
+  .datos {
+    position: relative; max-width: 900px; margin: 0 auto; height: 500px; overflow: hidden;
+    background: var(--textura), linear-gradient(180deg, #fff4d6 0%, #f9e2b0 100%);
+    border: 2px solid var(--dorado); border-radius: 24px; box-shadow: 0 12px 30px rgba(13, 43, 28, 0.18);
   }
-  .post-content { padding: 1.5rem; }
-  .post .tag {
-    display: inline-block; background: var(--vino); color: var(--crema);
-    padding: 0.2rem 0.8rem; border-radius: 10px; font-size: 0.8rem; margin-bottom: 0.5rem;
+  .datos-suelo { position: absolute; left: 0; right: 0; bottom: 0; height: 20%; background: linear-gradient(180deg, #d9b56a, #c99e4c); border-top: 4px solid #b98a35; }
+  .lata-wrap { position: absolute; left: 50%; bottom: 13%; width: 150px; height: 172px; margin-left: -75px; cursor: pointer; z-index: 3; outline: none; }
+  .lata-wrap:focus-visible { filter: drop-shadow(0 0 8px var(--vino)); }
+  .lata { position: relative; width: 100%; height: 100%; }
+  .forzando .lata { animation: temblor 0.22s linear infinite; }
+  .lata-cuerpo {
+    position: absolute; left: 0; right: 0; bottom: 0; height: 150px; border-radius: 8px 8px 14px 14px; overflow: hidden;
+    background: linear-gradient(90deg, #c8781f 0%, #f2a93b 18%, #ffc65a 42%, #f2a93b 72%, #b8681a 100%); border: 2px solid #8f5a17;
+    display: flex; align-items: center; justify-content: center; box-shadow: 0 12px 20px rgba(0, 0, 0, 0.25);
   }
-  .post h3 { color: var(--verde); margin-bottom: 0.5rem; }
-  .post p { color: var(--texto-suave); }
-  .post .btn-leer { display: inline-block; margin-top: 1rem; color: var(--vino); font-weight: bold; text-decoration: none; }
-  .post .btn-leer:hover { color: var(--verde-claro); }
-  .novedades-sub { color: var(--verde); margin: 3rem 0 1.5rem; }
-  .testimonio {
-    padding: 2rem; margin-bottom: 1.5rem; border-left: 5px solid var(--dorado); position: relative;
+  .lata-cuerpo::before, .lata-cuerpo::after { content: ''; position: absolute; left: 0; right: 0; height: 12px; background: linear-gradient(90deg, #8a949c, #eef1f3 40%, #8a949c); }
+  .lata-cuerpo::before { top: 0; } .lata-cuerpo::after { bottom: 0; }
+  .lata-cuerpo img { width: 98px; filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.3)); }
+  .lata-boca { position: absolute; left: 0; right: 0; top: 12px; height: 26px; border-radius: 50%; background: radial-gradient(ellipse at 50% 40%, #ffb547, #d97b0e); border: 2px solid #8a949c; z-index: 2; }
+  .lata-tapa {
+    position: absolute; left: -3px; right: -3px; top: 10px; height: 30px; border-radius: 50%; z-index: 4;
+    background: radial-gradient(ellipse at 40% 35%, #f3f5f6, #aab3ba); border: 2px solid #8a949c; transform-origin: 90% 60%;
+    transition: transform 0.7s cubic-bezier(0.3, 1.2, 0.5, 1), opacity 0.6s 0.15s;
   }
-  .testimonio::before {
-    content: '"'; position: absolute; top: -20px; left: 15px;
-    font-size: 5rem; color: var(--dorado); font-family: Georgia, serif;
+  .lata-tapa::after { content: ''; position: absolute; left: 22px; top: 5px; width: 30px; height: 15px; border: 3px solid #7d8790; border-radius: 50%; }
+  .abierta .lata-tapa { transform: translate(-120px, -170px) rotate(-200deg); opacity: 0; }
+  .bebe { position: absolute; left: calc(50% - 250px); bottom: 13%; font-size: 6.6rem; line-height: 1; z-index: 3; transform-origin: 60% 90%; }
+  .bebe .esfuerzo {
+    position: absolute; left: 60%; top: -30px; white-space: nowrap; font-family: Georgia, serif; font-weight: bold; font-size: 1.05rem;
+    color: var(--vino); background: white; border: 2px solid var(--vino); border-radius: 14px; padding: 0.15rem 0.6rem; opacity: 0; transition: opacity 0.2s;
   }
-  .testimonio p { font-style: italic; margin-bottom: 1rem; }
-  .testimonio .autor { font-weight: bold; color: var(--verde); }
+  .forzando .bebe { animation: empuja 0.36s ease-in-out infinite alternate; }
+  .forzando .bebe .esfuerzo { opacity: 1; }
+  .abierta .bebe { animation: celebra 0.7s ease-in-out infinite alternate; }
+  @keyframes temblor { 0% { transform: translate(-2px, 0) rotate(-1deg); } 50% { transform: translate(2px, -2px) rotate(1deg); } 100% { transform: translate(-2px, 1px) rotate(-1deg); } }
+  @keyframes empuja { from { transform: translateX(0) rotate(0); } to { transform: translateX(14px) rotate(9deg); } }
+  @keyframes celebra { from { transform: translateY(0) rotate(-5deg); } to { transform: translateY(-14px) rotate(5deg); } }
+  .dato {
+    position: absolute; left: 50%; bottom: calc(13% + 150px); width: min(470px, 90%); z-index: 5;
+    background: var(--crema); border: 2px solid var(--dorado); border-radius: 18px; padding: 1rem 1.2rem;
+    display: grid; grid-template-columns: 96px 1fr; gap: 1rem; align-items: center; box-shadow: 0 14px 30px rgba(13, 43, 28, 0.28);
+    transform: translate(-50%, 170px) scale(0.2); opacity: 0; transform-origin: 50% 100%; pointer-events: none;
+    transition: transform 0.7s cubic-bezier(0.2, 1.4, 0.4, 1), opacity 0.35s;
+  }
+  .abierta .dato { transform: translate(-50%, 0) scale(1); opacity: 1; pointer-events: auto; }
+  .dato-texto .tag { display: inline-block; background: var(--vino); color: var(--crema); padding: 0.15rem 0.7rem; border-radius: 10px; font-size: 0.75rem; font-weight: bold; margin-bottom: 0.4rem; }
+  .dato-texto p { color: var(--texto); font-size: 0.93rem; line-height: 1.45; }
+  .dato-visual { width: 96px; height: 96px; position: relative; display: flex; align-items: center; justify-content: center; border-radius: 16px; background: white; border: 1px solid var(--dorado); overflow: hidden; }
+  .datos-nav { display: flex; justify-content: center; align-items: center; gap: 1rem; margin-top: 1.2rem; }
+  .datos-nav .btn { padding: 0.4rem 1rem; }
+  .puntos { display: flex; gap: 0.5rem; }
+  .punto { width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--dorado); background: transparent; cursor: pointer; padding: 0; transition: 0.3s; }
+  .punto.actual { background: var(--verde); border-color: var(--verde); transform: scale(1.25); }
+  /* visuales de cada dato */
+  .anillo-svg { width: 84px; height: 84px; transform: rotate(-90deg); }
+  .anillo-svg circle { fill: none; stroke-width: 4; }
+  .a-fondo { stroke: #eee3c6; } .a-valor { stroke: var(--vino); stroke-linecap: round; stroke-dasharray: 0 100; }
+  .abierta .a-valor { animation: anillo 1.5s 0.5s ease-out forwards; }
+  @keyframes anillo { to { stroke-dasharray: 70 100; } }
+  .vis-ciudad b { position: absolute; font-family: Georgia, serif; color: var(--vino); font-size: 1.15rem; }
+  .vis-carreta { overflow: hidden; align-items: flex-end; padding-bottom: 14px; }
+  .carreta { display: flex; align-items: flex-end; animation: recorre 3.2s linear infinite; gap: 0; }
+  .carreta .cab { font-size: 1.7rem; display: inline-block; transform: scaleX(-1); animation: trota 0.35s ease-in-out infinite alternate; }
+  .carreta .carro { position: relative; width: 34px; height: 20px; background: #a06a2c; border: 2px solid #6b4318; border-radius: 3px 3px 6px 6px; margin-right: 2px; margin-bottom: 4px; }
+  .carreta .carro b { position: absolute; bottom: -9px; width: 14px; height: 14px; border-radius: 50%; border: 3px solid #4a2f10; background: #d9b56a; animation: gira 0.5s linear infinite; }
+  .carreta .carro b:first-child { left: 2px; } .carreta .carro b:last-child { right: 2px; }
+  @keyframes recorre { from { transform: translateX(-90px); } to { transform: translateX(90px); } }
+  @keyframes trota { from { transform: scaleX(-1) translateY(0); } to { transform: scaleX(-1) translateY(-3px); } }
+  @keyframes gira { to { transform: rotate(360deg); } }
+  .calendario { text-align: center; font-family: Georgia, serif; color: var(--vino); }
+  .calendario small { display: block; font-family: Arial, sans-serif; font-size: 0.65rem; letter-spacing: 3px; color: var(--texto-suave); }
+  .calendario b { font-size: 2.1rem; }
+  .mundo { position: relative; width: 80px; height: 80px; display: flex; align-items: center; justify-content: center; }
+  .mundo .globo { font-size: 3rem; animation: latido 2.4s ease-in-out infinite; }
+  .mundo .orbita { position: absolute; inset: 0; animation: gira 3.4s linear infinite; }
+  .mundo .avion { position: absolute; left: 50%; top: -2px; margin-left: -10px; font-size: 1.3rem; }
+  .reloj { position: relative; width: 80px; height: 80px; border-radius: 50%; border: 4px solid var(--verde); background: white; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 12px; }
+  .reloj b { font-family: Georgia, serif; color: var(--vino); font-size: 1rem; z-index: 2; }
+  .reloj .aguja { position: absolute; left: 50%; top: 8px; width: 3px; height: 32px; margin-left: -1.5px; background: var(--vino); transform-origin: 50% 32px; border-radius: 2px; animation: gira 3s linear infinite; }
+  .sensor { position: relative; width: 90px; height: 90px; display: flex; align-items: center; justify-content: center; }
+  .sensor .s-emoji { font-size: 2.2rem; z-index: 2; }
+  .sensor .rayo { position: absolute; width: 30px; height: 30px; border: 3px solid var(--vino); border-radius: 50%; opacity: 0; animation: onda 1.8s ease-out infinite; }
+  .sensor .r2 { animation-delay: 0.6s; } .sensor .r3 { animation-delay: 1.2s; }
+  .sensor .s-durazno { position: absolute; bottom: 4px; font-size: 1.3rem; animation: pasa 2.4s linear infinite; }
+  @keyframes onda { 0% { transform: scale(0.5); opacity: 0.9; } 100% { transform: scale(2.6); opacity: 0; } }
+  @keyframes pasa { from { left: -20px; } to { left: 96px; } }
+  .termo { display: flex; align-items: flex-end; gap: 0.4rem; }
+  .termo .tubo { position: relative; width: 20px; height: 66px; border-radius: 10px; border: 3px solid var(--texto-suave); background: white; overflow: hidden; }
+  .termo .nivel { position: absolute; left: 0; right: 0; bottom: 0; height: 12%; background: linear-gradient(0deg, #c0392b, #f0704a); }
+  .abierta .termo .nivel { animation: sube-termo 2s 0.4s ease-out forwards; }
+  @keyframes sube-termo { to { height: 92%; } }
+  .termo b { font-family: Georgia, serif; font-size: 0.85rem; color: var(--vino); padding-bottom: 6px; }
+  .motor { position: relative; width: 84px; height: 70px; }
+  .motor .engranaje { position: absolute; font-size: 2.8rem; animation: gira 3s linear infinite; }
+  .motor .g1 { left: 2px; top: 4px; } .motor .g2 { right: 2px; bottom: 0; font-size: 2.2rem; animation-direction: reverse; }
+
+  /* --- Tutoriales: campo con faja azul --- */
+  .campo {
+    position: relative; height: 380px; border-radius: 24px; overflow: hidden; border: 2px solid var(--dorado);
+    background: linear-gradient(180deg, #bfe4f5 0%, #e8f6fc 34%, #a5d67f 34%, #79bb57 100%); box-shadow: 0 12px 30px rgba(13, 43, 28, 0.18);
+  }
+  .campo .sol-c { position: absolute; right: 44px; top: 18px; font-size: 2.4rem; animation: gira 40s linear infinite; }
+  .campo .nube { position: absolute; font-size: 2.2rem; opacity: 0.9; animation: nube 60s linear infinite; }
+  .campo .nube.n2 { top: 40px; animation-duration: 80s; animation-delay: -30s; }
+  @keyframes nube { from { transform: translateX(-120px); } to { transform: translateX(1300px); } }
+  .campo .arboles { position: absolute; left: 0; right: 0; top: 96px; display: flex; justify-content: space-around; font-size: 3rem; opacity: 0.95; }
+  .campo .hilera { position: absolute; left: 0; right: 0; top: 170px; display: flex; justify-content: space-around; font-size: 2.2rem; opacity: 0.9; }
+  .cinta-t { position: absolute; left: 0; right: 0; top: 268px; height: 40px; z-index: 2;
+    background: #1e6fd0; border-top: 4px solid #59aaff; border-bottom: 5px solid #0f4a99;
+    background-image: repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.3) 0 6px, transparent 6px 30px); animation: banda3 1s linear infinite; }
+  @keyframes banda3 { to { background-position: 30px 0; } }
+  .patas-t { position: absolute; left: 0; right: 0; top: 308px; height: 60px; z-index: 1; background:
+    linear-gradient(90deg, transparent 0 6%, #4a5b6c 6% 7.4%, transparent 7.4% 32%, #4a5b6c 32% 33.4%, transparent 33.4% 66%, #4a5b6c 66% 67.4%, transparent 67.4% 92%, #4a5b6c 92% 93.4%, transparent 93.4%); }
+  .maquina-t {
+    position: absolute; left: 0; top: 130px; width: 96px; height: 178px; z-index: 4; border-radius: 0 18px 18px 0;
+    background: linear-gradient(90deg, #6b7885, #a8b4c0 60%, #7f8c99); border: 3px solid #4a5b6c; border-left: 0;
+    display: flex; flex-direction: column; align-items: center; padding-top: 14px; font-size: 1.6rem; box-shadow: 6px 0 14px rgba(0, 0, 0, 0.25);
+  }
+  .maquina-t small { font-family: Arial, sans-serif; font-size: 0.6rem; font-weight: bold; letter-spacing: 2px; color: #24303c; margin-top: 4px; }
+  .maquina-t .luz { width: 14px; height: 14px; border-radius: 50%; background: #3ddc6b; box-shadow: 0 0 10px #3ddc6b; margin-top: 8px; animation: parpadeo 1.2s steps(2) infinite; }
+  .carril { position: absolute; bottom: 112px; left: 0; display: flex; width: max-content; z-index: 3; animation: marcha 34s linear infinite; }
+  .campo:hover .carril, .carril:focus-within { animation-play-state: paused; }
+  @keyframes marcha { from { transform: translateX(-50%); } to { transform: translateX(0); } }
+  .video-card {
+    position: relative; width: 210px; height: 150px; flex-shrink: 0; margin-right: 26px; border-radius: 12px; overflow: hidden; cursor: pointer; padding: 0;
+    border: 3px solid var(--dorado); background: var(--verde); color: var(--crema); font-family: inherit; text-align: left;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.28); transition: transform 0.25s;
+  }
+  .video-card:hover, .video-card:focus-visible { transform: translateY(-8px) scale(1.04); outline: none; }
+  .video-card .miniatura { position: absolute; inset: 0; background: var(--textura), linear-gradient(135deg, var(--verde-claro), var(--verde-oscuro)); background-size: cover; background-position: center; }
+  .video-card .play { position: absolute; left: 50%; top: 42%; width: 50px; height: 50px; margin: -25px 0 0 -25px; border-radius: 50%; background: rgba(247, 241, 226, 0.92); color: var(--vino); display: flex; align-items: center; justify-content: center; font-size: 1.3rem; padding-left: 4px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); }
+  .video-card .titulo-v { position: absolute; left: 0; right: 0; bottom: 0; padding: 0.4rem 0.6rem; font-size: 0.78rem; font-weight: bold; line-height: 1.25; background: linear-gradient(0deg, rgba(13, 43, 28, 0.95), rgba(13, 43, 28, 0.7)); }
+  .video-card .pronto { position: absolute; top: 8px; right: 8px; background: var(--vino); color: var(--crema); font-size: 0.65rem; font-weight: bold; padding: 0.15rem 0.5rem; border-radius: 8px; letter-spacing: 1px; }
+  .video-modal-box { aspect-ratio: 16 / 9; background: var(--verde-oscuro); border-radius: 12px; overflow: hidden; display: flex; align-items: center; justify-content: center; color: var(--crema); text-align: center; padding: 1rem; }
+  .video-modal-box iframe { width: 100%; height: 100%; border: 0; }
+  .campo-pista { text-align: center; color: var(--texto-suave); font-size: 0.9rem; margin-top: 0.8rem; }
+
+  /* --- Testimonios y opiniones --- */
+  .opiniones { display: grid; grid-template-columns: minmax(280px, 380px) 1fr; gap: 1.6rem; align-items: start; }
+  .op-form { padding: 1.4rem; }
+  .op-form h4 { color: var(--verde); font-size: 1.3rem; margin-bottom: 0.9rem; }
+  .op-form label { display: block; font-weight: bold; font-size: 0.85rem; color: var(--verde); margin: 0.7rem 0 0.25rem; }
+  .op-form input, .op-form textarea {
+    width: 100%; font-family: Arial, sans-serif; font-size: 0.95rem; padding: 0.6rem 0.8rem; color: var(--texto);
+    border: 2px solid var(--dorado); border-radius: 12px; background: white; transition: border-color 0.25s, box-shadow 0.25s;
+  }
+  .op-form input:focus, .op-form textarea:focus { outline: none; border-color: var(--verde-claro); box-shadow: 0 0 0 3px rgba(31, 107, 58, 0.2); }
+  .op-form textarea { min-height: 110px; resize: vertical; }
+  .op-cuenta { text-align: right; font-size: 0.78rem; color: var(--texto-suave); margin-top: 0.2rem; }
+  .op-error { margin-top: 0.7rem; padding: 0.6rem 0.8rem; border-radius: 10px; background: #fbe9ec; color: var(--vino-oscuro); border: 1px solid var(--vino); font-size: 0.88rem; }
+  .op-error[hidden] { display: none; }
+  .op-error.sacude { animation: sacude 0.4s; }
+  @keyframes sacude { 20% { transform: translateX(-8px); } 40% { transform: translateX(8px); } 60% { transform: translateX(-5px); } 80% { transform: translateX(5px); } }
+  .op-nota { font-size: 0.78rem; color: var(--texto-suave); margin-top: 0.8rem; }
+  .op-form .btn { margin-top: 0.9rem; width: 100%; justify-content: center; }
+  .rx-pagina { padding: 1.1rem; text-align: center; margin-bottom: 1rem; }
+  .rx-pagina h4 { color: var(--verde); margin-bottom: 0.5rem; font-size: 1.15rem; }
+  .rx-fila { display: flex; justify-content: center; gap: 1.6rem; flex-wrap: wrap; }
+  .rx-btn { background: none; border: none; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 0.15rem; font-family: inherit; color: var(--verde); padding: 0.2rem; border-radius: 16px; }
+  .rx-btn:focus-visible { outline: 3px solid var(--vino); }
+  .rx-btn svg { width: 74px; height: 74px; transition: transform 0.2s; animation: flota 3s ease-in-out infinite; overflow: visible; }
+  .rx-btn.rx-amor svg { animation-delay: -1.5s; }
+  .rx-btn:hover svg, .rx-btn:focus-visible svg { animation: rebote-rx 0.7s ease-in-out infinite; }
+  .rx-btn:active svg { transform: scale(0.85); }
+  .rx-btn b { font-size: 0.95rem; font-family: Georgia, serif; }
+  .rx-btn small { font-size: 0.72rem; color: var(--texto-suave); }
+  .rx-mini svg { width: 38px; height: 38px; }
+  .rx-mini b { font-size: 0.8rem; }
+  @keyframes flota { 0%, 100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-5px) rotate(2deg); } }
+  @keyframes rebote-rx { 0%, 100% { transform: translateY(0) scale(1); } 30% { transform: translateY(-10px) scale(1.12, 0.94); } 60% { transform: translateY(0) scale(0.95, 1.06); } }
+  .op-lista { display: grid; gap: 0.9rem; }
+  .op-item { padding: 1rem 1.2rem; border-left: 5px solid var(--dorado); position: relative; animation: aparece 0.4s ease; }
+  .op-item header { display: flex; justify-content: space-between; align-items: baseline; gap: 0.6rem; flex-wrap: wrap; }
+  .op-item .op-nombre { font-weight: bold; color: var(--verde); font-family: Georgia, serif; }
+  .op-item time { font-size: 0.75rem; color: var(--texto-suave); }
+  .op-item p { margin: 0.4rem 0 0.6rem; overflow-wrap: anywhere; white-space: pre-wrap; }
+  .op-item .op-pie { display: flex; align-items: center; gap: 0.8rem; }
+  .op-borrar { margin-left: auto; background: none; border: none; color: var(--texto-suave); font-size: 0.78rem; cursor: pointer; text-decoration: underline; }
+  .op-vacio { padding: 2rem 1.2rem; text-align: center; color: var(--texto-suave); }
+  .op-vacio .grande { font-size: 3rem; display: block; animation: flota 3s ease-in-out infinite; }
+  /* reacción a pantalla completa */
+  .rx-full { position: fixed; inset: 0; z-index: 20000; pointer-events: none; display: flex; align-items: center; justify-content: center; overflow: hidden;
+    background: radial-gradient(circle, rgba(255, 236, 214, 0.85), rgba(255, 236, 214, 0) 70%); animation: rx-fondo 2.5s forwards; }
+  .rx-grande { width: min(62vmin, 440px); height: min(62vmin, 440px); animation: rx-grande 2.3s cubic-bezier(0.2, 1.3, 0.4, 1) forwards; filter: drop-shadow(0 20px 30px rgba(110, 23, 35, 0.35)); overflow: visible; }
+  .rx-part { position: absolute; bottom: -80px; left: var(--x); width: var(--s); height: var(--s); opacity: 0; animation: rx-sube var(--t) ease-out var(--d) forwards; overflow: visible; }
+  @keyframes rx-fondo { 0% { opacity: 0; } 12% { opacity: 1; } 75% { opacity: 1; } 100% { opacity: 0; } }
+  @keyframes rx-grande { 0% { transform: scale(0.1) rotate(-25deg); opacity: 0; } 30% { transform: scale(1.12) rotate(6deg); opacity: 1; } 45% { transform: scale(0.96) rotate(-3deg); } 60%, 80% { transform: scale(1.04) rotate(2deg); opacity: 1; } 100% { transform: scale(1.3); opacity: 0; } }
+  @keyframes rx-sube { 0% { opacity: 0; transform: translateY(0) rotate(0); } 12% { opacity: 1; } 100% { opacity: 0; transform: translateY(-115vh) rotate(var(--g)); } }
 
   /* ========== FOOTER ========== */
   footer {
@@ -587,6 +933,20 @@
     .miembro h4 { font-size: 0.95rem; }
     .galeria { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
     .scroll-top { right: 16px; bottom: 16px; }
+    section { margin: 1rem 0.6rem; padding: 3rem 1.1rem; border-radius: 22px; }
+    .hero { margin-top: 5rem; padding: 2rem 1rem 3rem; min-height: auto; }
+    .mat-grid { grid-template-columns: repeat(2, 1fr); gap: 0.9rem; }
+    .datos { height: 520px; }
+    .bebe { left: calc(50% - 168px); font-size: 4.6rem; }
+    .lata-wrap { width: 130px; margin-left: -65px; }
+    .dato { grid-template-columns: 72px 1fr; padding: 0.8rem; gap: 0.7rem; width: 94%; bottom: calc(13% + 140px); }
+    .dato-visual { width: 72px; height: 72px; }
+    .dato-visual > * { transform: scale(0.78); }
+    .dato-texto p { font-size: 0.82rem; }
+    .campo { height: 360px; }
+    .maquina-t { width: 64px; }
+    .opiniones { grid-template-columns: 1fr; }
+    .escena-emoji { transform-origin: 50% 100%; }
   }
   @media (prefers-reduced-motion: reduce) {
     .caballo, .suelo { display: none; }
@@ -595,6 +955,8 @@
 </style>
 </head>
 <body class="bloqueado">
+
+<div class="fondo" aria-hidden="true"><i></i></div>
 
 <!-- ========== SPLASH: DOS CABALLOS ========== -->
 <div id="splash" role="dialog" aria-label="Bienvenida a Dos Caballos">
@@ -646,7 +1008,7 @@
   </div>
 
   <div class="stats reveal">
-    <div class="stat-card"><div class="stat-number" data-target="12">0</div><div class="stat-label">Integrantes</div></div>
+    <div class="stat-card"><div class="stat-number" data-target="13">0</div><div class="stat-label">Integrantes</div></div>
     <div class="stat-card"><div class="stat-number" data-target="4">0</div><div class="stat-label">Estaciones</div></div>
     <div class="stat-card"><div class="stat-number" data-target="10">0</div><div class="stat-label">Planos técnicos</div></div>
     <div class="stat-card"><div class="stat-number" data-target="25">0</div><div class="stat-label">Pruebas registradas</div></div>
@@ -736,16 +1098,8 @@
   <!-- MATERIALES -->
   <div id="materiales" class="subseccion">
     <h3 class="sub-titulo">Materiales e Insumos</h3>
-    <div class="materiales-grid">
-      <div class="material-card tarjeta"><div class="emoji">🍑</div><h4>Duraznos</h4><p>Fruta fresca seleccionada de primera calidad.</p></div>
-      <div class="material-card tarjeta"><div class="emoji">🥫</div><h4>Latas</h4><p>Envases metálicos herméticos de acero.</p></div>
-      <div class="material-card tarjeta"><div class="emoji">💧</div><h4>Almíbar</h4><p>Solución de azúcar y agua para conservación.</p></div>
-      <div class="material-card tarjeta"><div class="emoji">🏭</div><h4>Maquinaria</h4><p>Equipos de lavado, pelado y sellado.</p></div>
-      <div class="material-card tarjeta"><div class="emoji">🔥</div><h4>Sistema Térmico</h4><p>Para pasteurización y esterilización.</p></div>
-      <div class="material-card tarjeta"><div class="emoji">🏷️</div><h4>Etiquetas</h4><p>Identificación del producto final.</p></div>
-      <div class="material-card tarjeta"><div class="emoji">📦</div><h4>Empaques</h4><p>Cajas para distribución y venta.</p></div>
-      <div class="material-card tarjeta"><div class="emoji">🧪</div><h4>Control Calidad</h4><p>Instrumentos de medición y análisis.</p></div>
-    </div>
+    <p class="sub-intro">Haz clic en un material para verlo en grande.</p>
+    <div id="materialesCont"></div>
   </div>
 
   <!-- INFO COMPLETA -->
@@ -778,7 +1132,7 @@
       <div class="flip-cara flip-reverso">
         <span class="kicker">QUIÉNES SOMOS</span>
         <h4>Equipo INC12A – Grupo 2</h4>
-        <p>Somos un equipo de 12 estudiantes de Tecsup que analiza la línea de producción de conservas de durazno en almíbar de Dos Caballos. Diseñamos una faja transportadora automatizada con Arduino para el proceso de descarozado, aplicando lo aprendido a un caso real de la industria alimentaria.</p>
+        <p>Somos un equipo de 13 estudiantes de Tecsup que analiza la línea de producción de conservas de durazno en almíbar de Dos Caballos. Diseñamos una faja transportadora automatizada con Arduino para el proceso de descarozado, aplicando lo aprendido a un caso real de la industria alimentaria.</p>
         <span class="cinta">PROYECTO ACADÉMICO APLICADO</span>
       </div>
     </div>
@@ -815,8 +1169,8 @@
         <div class="hito-tarjeta tarjeta">
           <span class="hito-num">ESTACIÓN 1</span>
           <h4>Origen y Tradición</h4>
-          <p>Fundada por la familia Soler en el Valle del Maule. Todo empieza en el campo, con duraznos amarillos frescos que llegan directo de los huertos.</p>
-          <span class="hito-etiqueta">FAMILIA SOLER · VALLE DEL MAULE</span>
+          <p>Fundada en 1906 por el inmigrante alemán Ernesto Pentzke en el Valle del Aconcagua, en Chile. Todo empieza en el campo, con la fruta de los huertos de la zona.</p>
+          <span class="hito-etiqueta">FUNDADA EN 1906 · VALLE DEL ACONCAGUA</span>
         </div>
       </div>
       <div class="hito">
@@ -841,8 +1195,8 @@
         <div class="hito-icono">🥫</div>
         <div class="hito-tarjeta tarjeta">
           <span class="hito-num">ESTACIÓN 4</span>
-          <h4>Líder en Conservas de Durazno</h4>
-          <p>Latas terminadas con la icónica etiqueta rojo vino de los dos caballos, listas para el mercado y la exportación.</p>
+          <h4>Referente en Duraznos en Almíbar</h4>
+          <p>Latas terminadas con la icónica etiqueta de los dos caballos: conservas que llegaron a numerosos mercados de Latinoamérica y Europa.</p>
           <span class="hito-etiqueta">PRODUCTO FINAL</span>
         </div>
       </div>
@@ -870,58 +1224,81 @@
   </div>
 
   <!-- EQUIPO -->
-  <h3 class="bloque-titulo reveal">Nuestro Equipo · 12 integrantes</h3>
+  <h3 class="bloque-titulo reveal">Nuestro Equipo · 13 integrantes</h3>
   <div class="equipo" id="equipoGrid"></div>
 </section>
 
 <!-- ========== NOVEDADES ========== -->
 <section id="blog">
-  <h2 class="reveal">📰 Novedades y Blog</h2>
-  <p class="intro reveal">Tutoriales, guías, testimonios y todo lo nuevo sobre el proyecto.</p>
+  <h2 class="reveal">📰 Novedades</h2>
+  <p class="intro reveal">Datos curiosos, tutoriales y las opiniones de quienes visitan la página.</p>
 
-  <h3 class="novedades-sub reveal">📚 Tutoriales y Guías</h3>
-  <div class="blog-grid">
-    <div class="post tarjeta reveal">
-      <div class="post-img">🍑</div>
-      <div class="post-content">
-        <span class="tag">Tutorial</span>
-        <h3>Cómo seleccionar los mejores duraznos</h3>
-        <p>Aprende a identificar la fruta óptima para enlatado según color, textura y madurez.</p>
-        <a href="#" class="btn-leer">Leer más →</a>
+  <!-- DATOS CURIOSOS -->
+  <h3 class="bloque-titulo reveal">🍑 Datos Curiosos</h3>
+  <p class="sub-intro reveal">El bebé lucha con la lata… y cuando logra abrirla, sale un dato curioso. Toca la lata para pasar al siguiente.</p>
+  <div class="datos reveal" id="datos">
+    <div class="datos-suelo"></div>
+    <div class="bebe" aria-hidden="true">👶<span class="esfuerzo">¡ñnngh!</span></div>
+    <div class="lata-wrap" id="lataWrap" role="button" tabindex="0" aria-label="Abrir la lata y ver el siguiente dato curioso">
+      <div class="lata">
+        <div class="lata-tapa"></div>
+        <div class="lata-boca"></div>
+        <div class="lata-cuerpo"><img src="img/logo.webp" alt="" loading="lazy"></div>
       </div>
     </div>
-    <div class="post tarjeta reveal">
-      <div class="post-img">🥫</div>
-      <div class="post-content">
-        <span class="tag">Guía</span>
-        <h3>Preparación del almíbar perfecto</h3>
-        <p>Proporciones, temperaturas y tiempos para un almíbar de calidad profesional.</p>
-        <a href="#" class="btn-leer">Leer más →</a>
-      </div>
-    </div>
-    <div class="post tarjeta reveal">
-      <div class="post-img">🔥</div>
-      <div class="post-content">
-        <span class="tag">Tutorial</span>
-        <h3>Pasteurización paso a paso</h3>
-        <p>Todo sobre el tratamiento térmico para garantizar la inocuidad del producto.</p>
-        <a href="#" class="btn-leer">Leer más →</a>
-      </div>
-    </div>
+    <article class="dato" id="dato" aria-live="polite">
+      <div class="dato-visual" id="datoVisual" aria-hidden="true"></div>
+      <div class="dato-texto"><span class="tag" id="datoTag"></span><p id="datoTexto"></p></div>
+    </article>
+  </div>
+  <div class="datos-nav">
+    <button class="btn btn-borde" id="datoPrev" aria-label="Dato anterior">‹</button>
+    <div class="puntos" id="datoPuntos"></div>
+    <button class="btn btn-borde" id="datoNext" aria-label="Dato siguiente">›</button>
   </div>
 
-  <h3 class="novedades-sub reveal">💬 Testimonios</h3>
-  <div class="testimonio tarjeta reveal">
-    <p>Trabajar en este proyecto me enseñó mucho sobre trabajo en equipo y procesos industriales. ¡Una experiencia increíble!</p>
-    <div class="autor">— Integrante del equipo</div>
+  <!-- TUTORIALES Y GUÍAS -->
+  <h3 class="bloque-titulo reveal">🎬 Tutoriales y guías</h3>
+  <p class="sub-intro reveal">Los videos salen de la máquina y viajan por la faja. Pasa el cursor para detenerla y toca un video para verlo.</p>
+  <div class="campo reveal" id="campoTutoriales">
+    <span class="sol-c" aria-hidden="true">☀️</span>
+    <span class="nube" style="top:22px" aria-hidden="true">☁️</span>
+    <span class="nube n2" aria-hidden="true">☁️</span>
+    <div class="arboles" aria-hidden="true"><span>🌳</span><span>🍑</span><span>🌳</span><span>🍑</span><span>🌳</span><span>🍑</span><span>🌳</span></div>
+    <div class="hilera" aria-hidden="true"><span>🌿</span><span>🍑</span><span>🌿</span><span>🍑</span><span>🌿</span><span>🍑</span><span>🌿</span><span>🍑</span></div>
+    <div class="carril" id="carrilVideos"></div>
+    <div class="maquina-t" aria-hidden="true">📽️<small>VIDEOS</small><span class="luz"></span></div>
+    <div class="cinta-t" aria-hidden="true"></div>
+    <div class="patas-t" aria-hidden="true"></div>
   </div>
-  <div class="testimonio tarjeta reveal">
-    <p>Los duraznos enlatados tienen un sabor espectacular. Se nota la calidad del proceso.</p>
-    <div class="autor">— Cliente / Profesor</div>
-  </div>
-  <div class="testimonio tarjeta reveal">
-    <p>Me encantó aprender sobre conservación de alimentos. ¡Quiero seguir en la industria!</p>
-    <div class="autor">— Estudiante participante</div>
+
+  <!-- TESTIMONIOS Y OPINIONES -->
+  <h3 class="bloque-titulo reveal">💬 Testimonios y opiniones</h3>
+  <p class="sub-intro reveal">Cuéntanos qué te pareció el proyecto y reacciona con nuestros duraznitos.</p>
+  <div class="opiniones">
+    <div>
+      <form class="tarjeta op-form reveal" id="opForm" novalidate>
+        <h4>Deja tu opinión</h4>
+        <label for="opNombre">Tu nombre (opcional)</label>
+        <input id="opNombre" maxlength="30" autocomplete="nickname" placeholder="Ej.: Ana">
+        <label for="opTexto">Tu opinión</label>
+        <textarea id="opTexto" maxlength="300" placeholder="Escribe con respeto: no se permiten groserías ni enlaces." required></textarea>
+        <div class="op-cuenta"><span id="opContador">0</span>/300</div>
+        <div class="op-error" id="opError" role="alert" hidden></div>
+        <button class="btn btn-verde" type="submit">Publicar opinión 🍑</button>
+        <p class="op-nota">Las opiniones se guardan solo en este navegador; otras personas no las ven.</p>
+      </form>
+    </div>
+    <div>
+      <div class="tarjeta rx-pagina reveal">
+        <h4>¿Te gustó el proyecto?</h4>
+        <div class="rx-fila">
+          <button class="rx-btn rx-like" data-rx="like" aria-label="Me gusta"><svg viewBox="0 0 100 100" aria-hidden="true"><use href="#rx-like"/></svg><b data-cuenta="like">0</b><small>Me gusta</small></button>
+          <button class="rx-btn rx-amor" data-rx="amor" aria-label="Me encanta"><svg viewBox="0 0 100 100" aria-hidden="true"><use href="#rx-amor"/></svg><b data-cuenta="amor">0</b><small>Me encanta</small></button>
+        </div>
+      </div>
+      <div class="op-lista" id="opLista"></div>
+    </div>
   </div>
 </section>
 
@@ -964,6 +1341,8 @@
 <div class="modal modal-galeria" id="modalGaleria" role="dialog" aria-modal="true" aria-labelledby="galeriaTitulo">
   <div class="modal-caja">
     <button class="modal-x" onclick="cerrarGaleria()" aria-label="Cerrar">✕</button>
+    <button class="modal-nav prev" onclick="moverVisor(-1)" aria-label="Anterior">‹</button>
+    <button class="modal-nav next" onclick="moverVisor(1)" aria-label="Siguiente">›</button>
     <div class="modal-img" id="galeriaMedia">
       <img id="galeriaImg" alt="">
       <div class="img-pendiente">📷 Imagen pendiente</div>
@@ -971,6 +1350,61 @@
     <div class="galeria-texto">
       <h3 id="galeriaTitulo"></h3>
       <p id="galeriaDesc"></p>
+    </div>
+  </div>
+</div>
+
+<!-- ========== SÍMBOLOS: EMOJIS DE DURAZNITO ========== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <radialGradient id="rxg" cx="0.38" cy="0.3" r="0.85">
+      <stop offset="0" stop-color="#ffd9b0"/><stop offset="0.55" stop-color="#ffa584"/><stop offset="1" stop-color="#f0705e"/>
+    </radialGradient>
+    <symbol id="rx-like" viewBox="0 0 100 100">
+      <path d="M50 24 C46 16 48 10 54 5" stroke="#6b4a2b" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+      <path d="M52 20 C60 4 78 4 86 12 C78 26 62 28 52 20Z" fill="#5fae4a"/>
+      <path d="M52 20 C62 14 72 12 82 12" stroke="#3f8a35" stroke-width="1.6" fill="none"/>
+      <path d="M50 24 C22 12 6 40 12 62 C18 86 38 94 50 90 C62 94 82 86 88 62 C94 40 78 12 50 24Z" fill="url(#rxg)"/>
+      <path d="M50 26 C43 46 43 68 50 88" stroke="#e8825f" stroke-width="2" fill="none" opacity="0.55"/>
+      <ellipse cx="26" cy="62" rx="9" ry="6" fill="#ff6b8a" opacity="0.5"/><ellipse cx="66" cy="62" rx="9" ry="6" fill="#ff6b8a" opacity="0.5"/>
+      <ellipse cx="34" cy="50" rx="5.5" ry="7" fill="#3e2723"/><ellipse cx="58" cy="50" rx="5.5" ry="7" fill="#3e2723"/>
+      <circle cx="36" cy="47" r="2" fill="#fff"/><circle cx="60" cy="47" r="2" fill="#fff"/>
+      <path d="M38 63 Q46 72 54 63" stroke="#7a2f2f" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <g transform="translate(58 56)">
+        <rect x="0" y="14" width="30" height="24" rx="7" fill="#ffd86b" stroke="#c98a1c" stroke-width="2.2"/>
+        <path d="M7 14 L11 3 Q15 -3 19 3 L19 14Z" fill="#ffd86b" stroke="#c98a1c" stroke-width="2.2" stroke-linejoin="round"/>
+        <path d="M6 24 H26 M6 31 H26" stroke="#c98a1c" stroke-width="1.6" opacity="0.6"/>
+      </g>
+    </symbol>
+    <symbol id="rx-amor" viewBox="0 0 100 100">
+      <path d="M50 20 C46 12 48 7 54 2" stroke="#6b4a2b" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+      <path d="M52 16 C60 0 78 0 86 8 C78 22 62 24 52 16Z" fill="#5fae4a"/>
+      <path d="M50 20 C22 8 6 34 12 54 C18 76 38 84 50 80 C62 84 82 76 88 54 C94 34 78 8 50 20Z" fill="url(#rxg)"/>
+      <ellipse cx="25" cy="52" rx="9" ry="6" fill="#ff6b8a" opacity="0.6"/><ellipse cx="67" cy="52" rx="9" ry="6" fill="#ff6b8a" opacity="0.6"/>
+      <path d="M27 42 Q34 33 41 42" stroke="#3e2723" stroke-width="3.4" fill="none" stroke-linecap="round"/>
+      <path d="M51 42 Q58 33 65 42" stroke="#3e2723" stroke-width="3.4" fill="none" stroke-linecap="round"/>
+      <path d="M36 54 Q46 66 56 54 Z" fill="#7a2f2f"/>
+      <path d="M39 59 Q46 64 53 59" fill="#ff8fa0"/>
+      <g>
+        <path d="M50 96 C36 88 30 80 30 73 C30 66 37 63 42 66 C46 68 48 71 50 73 C52 71 54 68 58 66 C63 63 70 66 70 73 C70 80 64 88 50 96Z" fill="#e0334f" stroke="#a51d35" stroke-width="1.6"/>
+        <path d="M38 71 Q40 68 44 69" stroke="#ff9aa8" stroke-width="2" fill="none" stroke-linecap="round"/>
+      </g>
+      <path d="M14 58 C14 78 30 92 46 90" stroke="#ffc79a" stroke-width="10" fill="none" stroke-linecap="round"/>
+      <path d="M78 58 C78 78 66 92 54 90" stroke="#ffc79a" stroke-width="10" fill="none" stroke-linecap="round"/>
+      <path d="M14 58 C14 78 30 92 46 90" stroke="#f2a878" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.6"/>
+      <circle cx="47" cy="90" r="6" fill="#ffc79a"/><circle cx="53" cy="90" r="6" fill="#ffc79a"/>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- ========== MODAL VIDEO (TUTORIALES) ========== -->
+<div class="modal modal-galeria" id="modalVideo" role="dialog" aria-modal="true" aria-labelledby="videoTitulo">
+  <div class="modal-caja">
+    <button class="modal-x" onclick="cerrarVideo()" aria-label="Cerrar">✕</button>
+    <div class="video-modal-box" id="videoModalBox"></div>
+    <div class="galeria-texto">
+      <h3 id="videoTitulo"></h3>
+      <p id="videoDesc"></p>
     </div>
   </div>
 </div>
@@ -1170,52 +1604,110 @@
   reiniciarLoop();
 
   // ========== GALERÍA ==========
-  // Para agregar fotos: sube img/galeria/01.jpg … 12.jpg y edita aquí el título y el texto de cada una.
+  // Cada tarjeta lee img/galeria/NN.jpg (grande) e img/galeria/NN-mini.jpg (miniatura), con NN = 01 … 12.
+  // Para agregar una foto: súbela con esos nombres y cambia `img: false` por `img: true` en su tarjeta.
   const galeria = [
-    { titulo: 'Diseño de la faja', texto: 'Descripción pendiente.' },
-    { titulo: 'Armado de la estructura', texto: 'Descripción pendiente.' },
-    { titulo: 'Motor y ruedas', texto: 'Descripción pendiente.' },
-    { titulo: 'Sensores infrarrojos', texto: 'Descripción pendiente.' },
-    { titulo: 'Programación en Arduino', texto: 'Descripción pendiente.' },
-    { titulo: 'Pruebas de la faja', texto: 'Descripción pendiente.' },
-    { titulo: 'Estación de selección', texto: 'Descripción pendiente.' },
-    { titulo: 'Estación de corte', texto: 'Descripción pendiente.' },
-    { titulo: 'Estación de revisión', texto: 'Descripción pendiente.' },
-    { titulo: 'Estación de pelado', texto: 'Descripción pendiente.' },
-    { titulo: 'Trabajo en equipo', texto: 'Descripción pendiente.' },
-    { titulo: 'Presentación final', texto: 'Descripción pendiente.' }
+    { titulo: 'Diseño de la faja', img: true, texto: 'Plano de conjunto de la faja transportadora, con sus vistas y la lista de piezas.' },
+    { titulo: 'Armado de la estructura', img: true, texto: 'La estructura de la faja armada y puesta a prueba al aire libre.' },
+    { titulo: 'Motor y ruedas', img: true, texto: 'El motor amarillo TT con las ruedas que dan movimiento a la faja.' },
+    { titulo: 'Sensores infrarrojos', img: true, texto: 'Sensores infrarrojos montados sobre la faja: detectan el paso del durazno en cada estación.' },
+    { titulo: 'Programación en Arduino', img: true, texto: 'Circuito con pantalla LCD y el código del Arduino que controla las estaciones.' },
+    { titulo: 'Pruebas de la faja', img: false, texto: 'Descripción pendiente.' },
+    { titulo: 'Estación de selección', img: true, texto: 'La pantalla LCD indica «Seleccionando · Tiempo: 4 s» durante la primera estación.' },
+    { titulo: 'Estación de corte', img: true, texto: '«Corte Carozo · Tiempo: 8 s»: la faja se detiene mientras se corta el durazno y se retira el carozo.' },
+    { titulo: 'Estación de revisión', img: true, texto: '«Revisando · Tiempo: 7 s»: pausa para revisar que no queden restos.' },
+    { titulo: 'Estación de pelado', img: true, texto: '«Pelado 105C · Tiempo: 9 s»: la faja se detiene durante el pelado térmico.' },
+    { titulo: 'Trabajo en equipo', img: false, texto: 'Descripción pendiente.' },
+    { titulo: 'Presentación final', img: false, texto: 'Descripción pendiente.' }
   ];
-  const rutaGaleria = i => `img/galeria/${String(i + 1).padStart(2, '0')}.jpg`;
+  const rutaGaleria = (i, mini) => `img/galeria/${String(i + 1).padStart(2, '0')}${mini ? '-mini' : ''}.jpg`;
   const galeriaGrid = document.getElementById('galeriaGrid');
   galeriaGrid.innerHTML = galeria.map((g, i) => `
     <button class="galeria-item" data-i="${i}">
-      <div class="galeria-media">
-        <img src="${rutaGaleria(i)}" alt="${g.titulo}" loading="lazy">
+      <div class="galeria-media${g.img ? '' : ' sin-imagen'}">
+        ${g.img ? `<img src="${rutaGaleria(i, true)}" alt="${g.titulo}" loading="lazy">` : ''}
         <div class="img-pendiente">📷 Imagen pendiente</div>
       </div>
       <h4>${g.titulo}</h4>
     </button>`).join('');
+  const listaGaleria = galeria.map((g, i) => ({ titulo: g.titulo, texto: g.texto, src: g.img ? rutaGaleria(i) : null }));
   galeriaGrid.querySelectorAll('.galeria-item').forEach(item => {
+    const g = galeria[+item.dataset.i];
     const media = item.querySelector('.galeria-media');
-    item.querySelector('img').addEventListener('error', () => media.classList.add('sin-imagen'));
-    item.addEventListener('click', () => abrirGaleria(+item.dataset.i, media.classList.contains('sin-imagen')));
+    const img = item.querySelector('img');
+    if (img) img.addEventListener('error', () => media.classList.add('sin-imagen'));
+    item.addEventListener('click', () => abrirVisor(listaGaleria, +item.dataset.i));
   });
-  function abrirGaleria(i, sinImagen) {
-    const g = galeria[i];
+
+  // Visor ampliado (lo usan Galería y Materiales)
+  let visorLista = [], visorIdx = 0;
+  function pintarVisor() {
+    const { titulo, texto, src } = visorLista[visorIdx];
     const media = document.getElementById('galeriaMedia');
     const img = document.getElementById('galeriaImg');
-    media.classList.toggle('sin-imagen', sinImagen);
-    if (!sinImagen) { img.src = rutaGaleria(i); img.alt = g.titulo; }
-    document.getElementById('galeriaTitulo').textContent = g.titulo;
-    document.getElementById('galeriaDesc').textContent = g.texto;
+    media.classList.toggle('sin-imagen', !src);
+    if (src) { img.onerror = () => media.classList.add('sin-imagen'); img.src = src; img.alt = titulo; }
+    document.getElementById('galeriaTitulo').textContent = titulo;
+    document.getElementById('galeriaDesc').textContent = texto;
+    document.querySelectorAll('#modalGaleria .modal-nav').forEach(b => { b.hidden = visorLista.length < 2; });
+  }
+  function abrirVisor(lista, idx) {
+    visorLista = lista; visorIdx = idx;
+    pintarVisor();
     document.getElementById('modalGaleria').classList.add('activo');
     bloquear(true);
+  }
+  function moverVisor(d) {
+    visorIdx = (visorIdx + d + visorLista.length) % visorLista.length;
+    pintarVisor();
   }
   function cerrarGaleria() {
     document.getElementById('modalGaleria').classList.remove('activo');
     bloquear(false);
   }
   document.getElementById('modalGaleria').addEventListener('click', e => { if (e.target.id === 'modalGaleria') cerrarGaleria(); });
+
+  // ========== MATERIALES ==========
+  // Cada material lee img/materiales/NN.jpg (NN = número de la tarjeta).
+  const gruposMateriales = ['Componentes de control y conexión', 'Herramientas y consumibles de armado'];
+  const materiales = [
+    { n: 1, g: 0, t: 'Molex 3 pines', d: 'Conector de 3 pines para conectar de forma ordenada y segura sensores y módulos a la placa.' },
+    { n: 2, g: 1, t: 'Pela cable', d: 'Herramienta para retirar el aislante de los cables sin dañar el conductor.' },
+    { n: 3, g: 0, t: 'Foco 220V', d: 'Foco que funciona con la corriente alterna de 220 V de la red.' },
+    { n: 4, g: 0, t: 'Interruptor 4P', d: 'Interruptor termomagnético de 4 polos para proteger y cortar el circuito.' },
+    { n: 5, g: 0, t: 'Resistencia 10K', d: 'Resistencia de 10 kΩ; limita la corriente que circula por el circuito.' },
+    { n: 6, g: 0, t: 'Potenciómetro 10K', d: 'Resistencia variable de 10 kΩ que se ajusta girando su eje.' },
+    { n: 7, g: 0, t: 'Fuente', d: 'Módulo de alimentación para protoboard, con entrada de corriente y salida USB.' },
+    { n: 8, g: 0, t: 'Placas', d: 'Protoboards (placas de pruebas) para armar y probar circuitos sin soldar.' },
+    { n: 9, g: 0, t: 'Shield Arduino Uno', d: 'Shield de sensores para Arduino Uno que facilita conectar sensores y módulos.' },
+    { n: 10, g: 0, t: 'Motores', d: 'Motores amarillos TT con reductor, que dan movimiento a la faja.' },
+    { n: 11, g: 1, t: 'Estaño', d: 'Aleación con fundente que se derrite para soldar las conexiones electrónicas.' },
+    { n: 12, g: 0, t: 'Molex 2 pines', d: 'Conector de 2 pines para conexiones sencillas, como la alimentación.' },
+    { n: 13, g: 0, t: 'Molex 4 pines', d: 'Conector de 4 pines para módulos que necesitan más conexiones.' },
+    { n: 14, g: 0, t: 'Bornera 4P', d: 'Bornera de 4 terminales con tornillo para unir cables sin soldar.' },
+    { n: 15, g: 1, t: 'Metros de cable', d: 'Cables de colores para las conexiones eléctricas del circuito.' },
+    { n: 16, g: 1, t: 'Esponja de soldar', d: 'Esponja metálica para limpiar la punta del cautín mientras se suelda.' },
+    { n: 17, g: 1, t: 'Malla de soldar', d: 'Malla de cobre que absorbe el estaño para desoldar y corregir uniones.' },
+    { n: 18, g: 0, t: 'Resistencia 330 Ω', d: 'Resistencia de 330 Ω, usada para limitar la corriente de los LED.' },
+    { n: 19, g: 0, t: 'Perillas', d: 'Perillas de colores para girar los potenciómetros con comodidad.' },
+    { n: 20, g: 1, t: 'Cable negro mate', d: 'Cable delgado negro para conexiones internas del circuito.' },
+    { n: 21, g: 1, t: 'Cable silver', d: 'Alambre plateado en rollo para conexiones y fijaciones.' },
+    { n: 22, g: 0, t: 'Módulo relay 5V 2 canales', d: 'Módulo de 2 relés que permite encender y apagar cargas de mayor potencia desde la placa.' }
+  ];
+  const rutaMaterial = m => `img/materiales/${String(m.n).padStart(2, '0')}.jpg`;
+  document.getElementById('materialesCont').innerHTML = gruposMateriales.map((nombre, gi) => `
+    <h4 class="mat-grupo">${nombre}</h4>
+    <div class="mat-grid">${materiales.filter(m => m.g === gi).map(m => `
+      <button class="mat-card tarjeta" data-n="${m.n}">
+        <div class="mat-img"><img src="${rutaMaterial(m)}" alt="${m.t}" loading="lazy"></div>
+        <div class="mat-info"><span class="mat-num">MATERIAL ${String(m.n).padStart(2, '0')}</span><h4>${m.t}</h4></div>
+      </button>`).join('')}
+    </div>`).join('');
+  const ordenMateriales = gruposMateriales.flatMap((_, gi) => materiales.filter(m => m.g === gi));
+  const listaMateriales = ordenMateriales.map(m => ({ titulo: m.t, texto: m.d, src: rutaMaterial(m) }));
+  document.querySelectorAll('.mat-card').forEach(b => b.addEventListener('click', () => {
+    abrirVisor(listaMateriales, ordenMateriales.findIndex(x => x.n === +b.dataset.n));
+  }));
 
   // ========== NOSOTROS: TARJETA VOLTEABLE ==========
   const flip = document.getElementById('flipCard');
@@ -1229,30 +1721,336 @@
 
   // ========== NOSOTROS: EQUIPO (orden alfabético) ==========
   const equipo = [
-    { foto: 'caqui', apellidos: 'Caqui Broncano', nombres: 'Angelina Yoli' },
-    { foto: 'carampoma', apellidos: 'Carampoma Yahuana', nombres: 'Pablo Jesús' },
-    { foto: 'chavez', apellidos: 'Chavez Santiago', nombres: 'Alinder' },
-    { foto: 'chirhuana', apellidos: 'Chirhuana Carbajal', nombres: 'Jhon' },
-    { foto: 'cisneros', apellidos: 'Cisneros Livia', nombres: 'Luis Miguel' },
-    { foto: 'lucas', apellidos: 'Lucas Pillaca', nombres: 'Sonaly Clarita' },
-    { foto: 'meneses', apellidos: 'Meneses Condori', nombres: 'Charlyn' },
-    { foto: 'morales', apellidos: 'Morales Morales', nombres: 'Pool' },
-    { foto: 'orihuela', apellidos: 'Orihuela Perez', nombres: 'Angela Mariel' },
-    { foto: 'ramos', apellidos: 'Ramos Escarrache', nombres: 'Ruth' },
-    { foto: 'soto', apellidos: 'Soto Hualpa', nombres: 'Rosa Marina' },
-    { foto: 'vilchez', apellidos: 'Vilchez Castillo', nombres: 'Anthony Williams' }
+    { foto: 'caqui', apellidos: 'Caqui Broncano', nombres: 'Angelina Yoli', esc: 'caqui' },
+    { foto: 'carhuapoma', apellidos: 'Carhuapoma Yahuana', nombres: 'Pablo Jesús', esc: 'carhuapoma' },
+    { foto: 'chavez', apellidos: 'Chavez Santiago', nombres: 'Alinder', esc: 'chavez' },
+    { foto: 'chirhuana', apellidos: 'Chirhuana Carbajal', nombres: 'Jhon', esc: 'chirhuana' },
+    { foto: 'cisneros', apellidos: 'Cisneros Livia', nombres: 'Luis Miguel', esc: 'cisneros' },
+    { foto: 'lucas', apellidos: 'Lucas Pillaca', nombres: 'Sonaly Clarita', esc: 'lucas' },
+    { foto: 'meneses', apellidos: 'Meneses Condori', nombres: 'Charlyn', esc: 'meneses' },
+    { foto: 'morales', apellidos: 'Morales Morales', nombres: 'Pool', esc: 'morales' },
+    { foto: 'yupanqui', apellidos: 'Morales Yupanqui', nombres: 'Yarumi', esc: 'yupanqui' },
+    { foto: 'orihuela', apellidos: 'Orihuela Perez', nombres: 'Angela Mariel', esc: 'orihuela' },
+    { foto: 'ramos', apellidos: 'Ramos Escarrache', nombres: 'Ruth', esc: 'ramos' },
+    { foto: 'soto', apellidos: 'Soto Hualpa', nombres: 'Rosa Marina', esc: 'soto' },
+    { foto: 'vilchez', apellidos: 'Vilchez Castillo', nombres: 'Anthony Williams', esc: 'vilchez' }
   ];
-  document.getElementById('equipoGrid').innerHTML = equipo.map(m => `
-    <div class="miembro tarjeta reveal">
-      <img src="img/equipo/${m.foto}.jpg" alt="${m.nombres} ${m.apellidos}" loading="lazy">
+  document.getElementById('equipoGrid').innerHTML = equipo.map((m, i) => `
+    <div class="miembro tarjeta reveal" data-i="${i}">
+      <button class="foto-btn" aria-label="Toca para ver la reacción de ${m.nombres}">
+        <img src="img/equipo/${m.foto}.jpg" alt="${m.nombres} ${m.apellidos}" loading="lazy">
+        <span class="foto-pista" aria-hidden="true">😀</span>
+      </button>
       <h4>${m.nombres}</h4>
       <p>${m.apellidos}</p>
     </div>`).join('');
 
+  // Escena animada de cada integrante (aparece al tocar su foto)
+  const confeti = Array.from({ length: 22 }, (_, k) => {
+    const colores = ['#c9a24b', '#8f2130', '#1f6b3a', '#e6cd8f', '#ff6b8a', '#4aa0ff'];
+    const x = Math.round(-60 + Math.random() * 150), y = -Math.round(20 + Math.random() * 100);
+    return `<i class="confeti" style="--x:${x}px;--y:${y}px;--r:${Math.round(Math.random() * 720)}deg;--c:${colores[k % colores.length]};--d:${(k % 6) * 0.05 + (k > 10 ? 0.7 : 0)}s"></i>`;
+  }).join('');
+  const escenas = {
+    meneses: () => `<span class="e barriga"></span><span class="e cara">🤣</span><span class="e mano m1">🤚</span><span class="e mano m2">🤚</span><span class="e ja j1">JA</span><span class="e ja j2">JA</span><span class="e ja j3">JAJA</span>`,
+    lucas: () => `<span class="suelo-e"></span><span class="sombra-e"></span><span class="e cara">😄</span><span class="e nota n1">🎵</span><span class="e nota n2">🎶</span><span class="e nota n3">✨</span>`,
+    chavez: () => `<span class="e cara">😎</span><i class="banda-e"></i><i class="rodillo r1"></i><i class="rodillo r2"></i>`,
+    vilchez: () => `<span class="e cara f1">😴</span><span class="e cara f2">🥱</span><span class="e cara f3">😄</span><span class="e zzz">💤</span><span class="e sol">☀️</span>`,
+    carhuapoma: () => `<span class="visor"></span><span class="rec">● REC</span><span class="e cara">😎</span><span class="e camara">🎥</span>`,
+    chirhuana: () => `<span class="suelo-e"></span><span class="e polvo p1">💨</span><span class="e polvo p2">💨</span><span class="e caballo-e">🐎</span><span class="e jinete">🤠</span>`,
+    soto: () => `<span class="suelo-e"></span><span class="e cara">🥳</span><div class="canon"><i class="tubo"></i><i class="rueda w1"></i><i class="rueda w2"></i></div>${confeti}`,
+    orihuela: () => `<span class="suelo-e"></span><span class="e cara">😋</span><div class="latita"><img src="img/logo.webp" alt=""></div><span class="e trozo">🍑</span>`,
+    morales: () => `<span class="suelo-e"></span><span class="e cara">😎</span><span class="e balon">⚽</span><span class="e arco">🥅</span><span class="e texto-e gol">¡GOL!</span>`,
+    yupanqui: () => `<span class="e cara">😘</span><span class="e saludo">👋</span><span class="e corazon c1">❤️</span><span class="e corazon c2">💗</span><span class="e corazon c3">💖</span>`,
+    ramos: () => `<span class="suelo-e"></span><span class="e a1">😋</span><span class="e a2">😭</span><div class="latita"><img src="img/logo.webp" alt=""></div><span class="e lagrima l1">💧</span><span class="e lagrima l2">💧</span>`,
+    caqui: () => `<span class="e b1">😊</span><span class="e b2">😉</span><span class="e manoL">🤚</span><span class="e manoR">🤚</span><span class="e chispa">✨</span>`,
+    cisneros: () => `<span class="e ramo">💐</span><span class="e cara">🥰</span><span class="e petalo p1">🌸</span><span class="e petalo p2">🌸</span><span class="e petalo p3">🌸</span>`
+  };
+  const duracionEscena = { vilchez: 4300, ramos: 4500, caqui: 3900, morales: 3900, cisneros: 3600, soto: 3800 };
+  let escenaActual = null, escenaTimer;
+  function cerrarEscena(rapido) {
+    clearTimeout(escenaTimer);
+    if (!escenaActual) return;
+    const { caja, tarjeta } = escenaActual;
+    escenaActual = null;
+    if (rapido) { caja.remove(); tarjeta.classList.remove('activo'); return; }
+    caja.classList.add('saliendo');
+    setTimeout(() => { caja.remove(); tarjeta.classList.remove('activo'); }, 300);
+  }
+  function mostrarEscena(tarjeta) {
+    cerrarEscena(true);
+    const m = equipo[+tarjeta.dataset.i];
+    const caja = document.createElement('div');
+    caja.className = `escena-emoji esc-${m.esc}`;
+    caja.setAttribute('aria-hidden', 'true');
+    caja.innerHTML = escenas[m.esc]();
+    tarjeta.appendChild(caja);
+    tarjeta.classList.add('activo');
+    escenaActual = { caja, tarjeta };
+    caja.addEventListener('click', e => { e.stopPropagation(); cerrarEscena(); });
+    escenaTimer = setTimeout(() => cerrarEscena(), reducirMovimiento ? 2500 : (duracionEscena[m.esc] || 4200));
+  }
+  document.querySelectorAll('.miembro').forEach(t => t.querySelector('.foto-btn').addEventListener('click', e => { e.stopPropagation(); mostrarEscena(t); }));
+  document.addEventListener('click', e => { if (escenaActual && !escenaActual.tarjeta.contains(e.target)) cerrarEscena(); });
+
+  // ========== NOVEDADES: DATOS CURIOSOS ==========
+  const datos = [
+    { tag: 'La empresa', vis: 'ciudad', texto: 'Cerca del 70 % de los habitantes de la ciudad de San Felipe trabajó en ella en algún momento de sus vidas.' },
+    { tag: 'Leyenda', vis: 'carreta', texto: 'Una versión popular de la región dice que el logotipo y el nombre de Dos Caballos hacían honor al medio de transporte original de don Ernesto Pentzke, a principios del siglo XX: se cuenta que recorría los campos del Valle del Aconcagua en una carreta tirada por dos robustos caballos.' },
+    { tag: 'Historia', vis: 'anio', texto: 'La empresa fue fundada en 1906 por el inmigrante alemán Ernesto Pentzke, en el Valle del Aconcagua, en Chile.' },
+    { tag: 'La marca', vis: 'mundo', texto: 'Sus conservas llegaron a numerosos mercados de Latinoamérica y Europa.' },
+    { tag: 'Nuestra faja', vis: 'reloj', texto: 'El ciclo completo de nuestra faja dura 51 segundos, y el 70.6 % de ese tiempo es valor agregado (según 25 pruebas registradas).' },
+    { tag: 'Nuestra faja', vis: 'sensor', texto: 'Sensores infrarrojos detectan el paso del durazno en cada estación, detienen la faja el tiempo necesario y la reactivan solos.' },
+    { tag: 'Nuestra faja', vis: 'termo', texto: 'En el pelado térmico, una solución caliente (cercana a los 100 °C) desprende la piel del durazno sin dañar la pulpa.' },
+    { tag: 'Nuestra faja', vis: 'motor', texto: 'Un motor TT de doble eje, el amarillo de los planos, es el que mueve la faja transportadora.' }
+  ];
+  const visuales = {
+    ciudad: () => `<div class="vis-ciudad" style="position:relative;display:flex;align-items:center;justify-content:center"><svg class="anillo-svg" viewBox="0 0 42 42"><circle class="a-fondo" cx="21" cy="21" r="15.9"/><circle class="a-valor" cx="21" cy="21" r="15.9" pathLength="100"/></svg><b>70 %</b></div>`,
+    carreta: () => `<div class="vis-carreta" style="position:absolute;inset:0;display:flex;align-items:flex-end;justify-content:center;padding-bottom:14px;overflow:hidden"><div class="carreta"><i class="carro"><b></b><b></b></i><span class="cab">🐎</span><span class="cab">🐎</span></div></div>`,
+    anio: () => `<div class="calendario"><small>AÑO</small><b data-count="1906">1000</b></div>`,
+    mundo: () => `<div class="mundo"><span class="globo">🌍</span><div class="orbita"><span class="avion">✈️</span></div></div>`,
+    reloj: () => `<div class="reloj"><i class="aguja"></i><b>51 s</b></div>`,
+    sensor: () => `<div class="sensor"><i class="rayo"></i><i class="rayo r2"></i><i class="rayo r3"></i><span class="s-emoji">📡</span><span class="s-durazno">🍑</span></div>`,
+    termo: () => `<div class="termo"><i class="tubo"><i class="nivel"></i></i><b>≈100 °C</b></div>`,
+    motor: () => `<div class="motor"><span class="engranaje g1">⚙️</span><span class="engranaje g2">⚙️</span></div>`
+  };
+  const datosEl = document.getElementById('datos');
+  const puntosEl = document.getElementById('datoPuntos');
+  puntosEl.innerHTML = datos.map((_, i) => `<button class="punto" aria-label="Dato ${i + 1}" data-i="${i}"></button>`).join('');
+  let datoIdx = 0, datoTimer, datosActivos = false;
+  function contarHasta(el) {
+    const fin = +el.dataset.count, ini = 1000, t0 = performance.now();
+    (function paso(t) {
+      const p = Math.min(1, (t - t0) / 1400);
+      el.textContent = Math.round(ini + (fin - ini) * (1 - Math.pow(1 - p, 3)));
+      if (p < 1) requestAnimationFrame(paso);
+    })(t0);
+  }
+  function mostrarDato(i) {
+    clearTimeout(datoTimer);
+    datoIdx = (i + datos.length) % datos.length;
+    puntosEl.querySelectorAll('.punto').forEach((p, k) => p.classList.toggle('actual', k === datoIdx));
+    datosEl.classList.remove('abierta');
+    datosEl.classList.add('forzando');
+    datoTimer = setTimeout(() => {
+      const d = datos[datoIdx];
+      document.getElementById('datoVisual').innerHTML = visuales[d.vis]();
+      document.getElementById('datoTag').textContent = d.tag;
+      document.getElementById('datoTexto').textContent = d.texto;
+      datosEl.classList.remove('forzando');
+      datosEl.classList.add('abierta');
+      const c = datosEl.querySelector('[data-count]'); if (c) contarHasta(c);
+      const largo = d.texto.length > 150;
+      datoTimer = setTimeout(() => { if (datosActivos) mostrarDato(datoIdx + 1); }, largo ? 12000 : 8000);
+    }, reducirMovimiento ? 100 : 2300);
+  }
+  document.getElementById('datoPrev').addEventListener('click', () => mostrarDato(datoIdx - 1));
+  document.getElementById('datoNext').addEventListener('click', () => mostrarDato(datoIdx + 1));
+  puntosEl.addEventListener('click', e => { const b = e.target.closest('.punto'); if (b) mostrarDato(+b.dataset.i); });
+  const lataWrap = document.getElementById('lataWrap');
+  lataWrap.addEventListener('click', () => mostrarDato(datoIdx + 1));
+  lataWrap.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); mostrarDato(datoIdx + 1); } });
+  let datosIniciado = false;
+  new IntersectionObserver(entradas => {
+    datosActivos = entradas[0].isIntersecting;
+    if (datosActivos && !datosIniciado) { datosIniciado = true; mostrarDato(0); }
+    else if (datosActivos) mostrarDato(datoIdx);
+    else clearTimeout(datoTimer);
+  }, { threshold: 0.35 }).observe(datosEl);
+
+  // ========== NOVEDADES: TUTORIALES (FAJA AZUL) ==========
+  // Para publicar un video: pega el código de YouTube en `id` (lo que va después de "v=" o de "youtu.be/").
+  const tutoriales = [
+    { titulo: 'Presentación del proyecto (video pitch)', desc: 'Video pitch de la versión anterior del proyecto.', id: 'S8RxMJvEdBI' },
+    { titulo: 'Armado de la faja transportadora', desc: 'Cómo se ensambla la estructura, la banda y el motor.', id: null },
+    { titulo: 'Conexión de los sensores infrarrojos', desc: 'Cómo conectar los sensores a la placa Arduino.', id: null },
+    { titulo: 'Programación de las 4 estaciones', desc: 'El código que detiene y reactiva la faja en cada estación.', id: null },
+    { titulo: 'Cómo leer los planos técnicos', desc: 'Vistas, cotas y lista de piezas de cada plano.', id: null }
+  ];
+  const carril = document.getElementById('carrilVideos');
+  const tarjetaVideo = (t, k, copia) => `
+    <button class="video-card" data-k="${k}" ${copia ? 'aria-hidden="true" tabindex="-1"' : ''} aria-label="Ver video: ${t.titulo}">
+      <span class="miniatura"${t.id ? ` style="background-image:url('https://i.ytimg.com/vi/${t.id}/hqdefault.jpg')"` : ''}></span>
+      ${t.id ? '' : '<span class="pronto">PRONTO</span>'}
+      <span class="play">▶</span>
+      <span class="titulo-v">${t.titulo}</span>
+    </button>`;
+  carril.innerHTML = tutoriales.map((t, k) => tarjetaVideo(t, k, false)).join('') + tutoriales.map((t, k) => tarjetaVideo(t, k, true)).join('');
+  carril.addEventListener('click', e => { const b = e.target.closest('.video-card'); if (b) abrirVideo(tutoriales[+b.dataset.k]); });
+  function abrirVideo(t) {
+    const caja = document.getElementById('videoModalBox');
+    caja.innerHTML = '';
+    if (t.id) {
+      const f = document.createElement('iframe');
+      f.src = `https://www.youtube-nocookie.com/embed/${t.id}?autoplay=1&rel=0`;
+      f.title = t.titulo; f.allowFullscreen = true;
+      f.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+      caja.appendChild(f);
+    } else {
+      caja.innerHTML = '<p style="font-size:1.1rem">🎬 Este video estará disponible muy pronto.</p>';
+    }
+    document.getElementById('videoTitulo').textContent = t.titulo;
+    document.getElementById('videoDesc').textContent = t.desc;
+    document.getElementById('modalVideo').classList.add('activo');
+    bloquear(true);
+  }
+  function cerrarVideo() {
+    document.getElementById('modalVideo').classList.remove('activo');
+    document.getElementById('videoModalBox').innerHTML = '';
+    bloquear(false);
+  }
+  document.getElementById('modalVideo').addEventListener('click', e => { if (e.target.id === 'modalVideo') cerrarVideo(); });
+
+  // ========== NOVEDADES: TESTIMONIOS Y OPINIONES ==========
+  // Filtro de lenguaje: normaliza el texto (tildes, números por letras, letras repetidas o separadas)
+  // y compara palabra por palabra, para no bloquear palabras normales como "computadora".
+  const PROHIBIDAS = ('puta puto putas putos putazo putear mierda mierdas mrd carajo carajos pendejo pendeja pendejos pendejas cabron cabrona cabrones ' +
+    'chingar chingado chingada chingadera verga vergas vrg pinga pija conchatumadre conchetumare conchesumadre ctm ctmr ctmre huevon huevona huevones ' +
+    'weon weona webon webona imbecil imbeciles idiota idiotas estupido estupida estupidos estupidas retrasado retrasada mongolo subnormal maricon maricones ' +
+    'marica cojudo cojuda cojudos cojudez joder jodete jodido jodida mamahuevo hdp hijueputa hijoeputa malparido malparida gonorrea culo culos cagada cagar ' +
+    'caga cagado zorra zorras chucha chuchas chuchamadre pichula pichulas follar porno lameculos tarado tarada pajero pajera negrata sudaca ' +
+    'fuck fucking fucker shit bitch asshole dick cunt slut whore nigger').split(' ');
+  const colapsa = s => s.replace(/(.)\1+/g, '$1');
+  const SET_PROHIBIDAS = new Set(PROHIBIDAS.flatMap(p => [p, colapsa(p)]));
+  function normalizarTexto(s) {
+    return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
+      .replace(/@/g, 'a').replace(/\$/g, 's').replace(/0/g, 'o').replace(/1/g, 'i').replace(/3/g, 'e')
+      .replace(/4/g, 'a').replace(/5/g, 's').replace(/7/g, 't').replace(/!/g, 'i')
+      .replace(/[^a-z\s]/g, ' ').replace(/\s+/g, ' ').trim();
+  }
+  function esInapropiado(texto) {
+    const n = normalizarTexto(texto);
+    const palabras = n.split(' ').filter(Boolean);
+    const candidatas = new Set();
+    palabras.forEach(p => { candidatas.add(p); candidatas.add(colapsa(p)); candidatas.add(p.replace(/s$/, '')); });
+    // letras sueltas seguidas: "p u t a" -> "puta"
+    let corrida = '', n_ = 0;
+    [...palabras, ''].forEach(p => {
+      if (p.length === 1) { corrida += p; n_++; }
+      else { if (n_ >= 3) { candidatas.add(corrida); candidatas.add(colapsa(corrida)); } corrida = ''; n_ = 0; }
+    });
+    for (const c of candidatas) if (SET_PROHIBIDAS.has(c)) return true;
+    return /\b(concha|conchesu|conchetu)\w* ?(de )?(tu|su) ?(madre|mare)\b/.test(n) || /\bmal ?parid[oa]s?\b/.test(n) || /\bhij[oa] ?(de|e) ?(la )?(gran )?put/.test(n);
+  }
+  const tieneEnlaces = t => /(https?:\/\/|www\.|\b[a-z0-9-]+\.(com|net|org|pe|cl|es|io|xyz|ru|cc|me|gg|ly)\b|@[a-z0-9_.]{3,}|(\d[\s.-]?){8,})/i.test(t);
+
+  const CLAVE_OP = 'dc_opiniones_v1', CLAVE_RX = 'dc_reacciones_v1';
+  const leerLS = (clave, defecto) => { try { const v = JSON.parse(localStorage.getItem(clave)); return v == null ? defecto : v; } catch { return defecto; } };
+  const guardarLS = (clave, v) => { try { localStorage.setItem(clave, JSON.stringify(v)); } catch {} };
+  let opiniones = leerLS(CLAVE_OP, []);
+  if (!Array.isArray(opiniones)) opiniones = [];
+  opiniones = opiniones.filter(o => o && typeof o.texto === 'string').slice(0, 100);
+  let reaccionesPagina = leerLS(CLAVE_RX, { like: 0, amor: 0 });
+  if (!reaccionesPagina || typeof reaccionesPagina !== 'object') reaccionesPagina = { like: 0, amor: 0 };
+  ['like', 'amor'].forEach(k => { reaccionesPagina[k] = Number.isFinite(+reaccionesPagina[k]) ? +reaccionesPagina[k] : 0; });
+
+  // Reacción a pantalla completa
+  function explosionReaccion(tipo) {
+    const cont = document.createElement('div');
+    cont.className = 'rx-full';
+    cont.setAttribute('aria-hidden', 'true');
+    let particulas = '';
+    const n = reducirMovimiento ? 0 : 26;
+    for (let i = 0; i < n; i++) {
+      const s = 30 + Math.random() * 56;
+      particulas += `<svg class="rx-part" viewBox="0 0 100 100" style="--x:${Math.round(Math.random() * 96)}%;--s:${s}px;--t:${(1.6 + Math.random() * 1.2).toFixed(2)}s;--d:${(Math.random() * 0.9).toFixed(2)}s;--g:${Math.round(-200 + Math.random() * 400)}deg"><use href="#rx-${tipo}"/></svg>`;
+    }
+    cont.innerHTML = `<svg class="rx-grande" viewBox="0 0 100 100"><use href="#rx-${tipo}"/></svg>${particulas}`;
+    document.body.appendChild(cont);
+    setTimeout(() => cont.remove(), 2600);
+  }
+  function reaccionarPagina(tipo) {
+    reaccionesPagina[tipo]++;
+    guardarLS(CLAVE_RX, reaccionesPagina);
+    pintarReaccionesPagina();
+    explosionReaccion(tipo);
+  }
+  function pintarReaccionesPagina() {
+    document.querySelectorAll('[data-cuenta]').forEach(b => { b.textContent = reaccionesPagina[b.dataset.cuenta]; });
+  }
+  document.querySelectorAll('.rx-pagina .rx-btn').forEach(b => b.addEventListener('click', () => reaccionarPagina(b.dataset.rx)));
+  pintarReaccionesPagina();
+
+  // Lista de opiniones (se construye con textContent: nada de lo escrito se interpreta como HTML)
+  const opLista = document.getElementById('opLista');
+  function botonReaccion(op, tipo, etiqueta) {
+    const b = document.createElement('button');
+    b.className = `rx-btn rx-mini rx-${tipo}`;
+    b.type = 'button';
+    b.setAttribute('aria-label', etiqueta);
+    b.innerHTML = `<svg viewBox="0 0 100 100" aria-hidden="true"><use href="#rx-${tipo}"/></svg><b></b>`;
+    b.querySelector('b').textContent = (op.rx && op.rx[tipo]) || 0;
+    b.addEventListener('click', () => {
+      op.rx = op.rx || { like: 0, amor: 0 };
+      op.rx[tipo] = (op.rx[tipo] || 0) + 1;
+      guardarLS(CLAVE_OP, opiniones);
+      b.querySelector('b').textContent = op.rx[tipo];
+      explosionReaccion(tipo);
+    });
+    return b;
+  }
+  function pintarOpiniones() {
+    opLista.textContent = '';
+    if (!opiniones.length) {
+      const v = document.createElement('div');
+      v.className = 'tarjeta op-vacio';
+      v.innerHTML = '<span class="grande">🍑</span>Aún no hay opiniones. ¡Sé la primera persona en dejar la suya!';
+      opLista.appendChild(v);
+      return;
+    }
+    opiniones.forEach(op => {
+      const it = document.createElement('article'); it.className = 'tarjeta op-item';
+      const h = document.createElement('header');
+      const nom = document.createElement('span'); nom.className = 'op-nombre'; nom.textContent = op.nombre || 'Anónimo';
+      const t = document.createElement('time'); t.textContent = new Date(op.fecha).toLocaleDateString('es-PE', { day: 'numeric', month: 'short', year: 'numeric' });
+      h.append(nom, t);
+      const p = document.createElement('p'); p.textContent = op.texto;
+      const f = document.createElement('div'); f.className = 'op-pie';
+      const borrar = document.createElement('button'); borrar.type = 'button'; borrar.className = 'op-borrar'; borrar.textContent = 'Eliminar';
+      borrar.addEventListener('click', () => { opiniones = opiniones.filter(x => x.id !== op.id); guardarLS(CLAVE_OP, opiniones); pintarOpiniones(); });
+      f.append(botonReaccion(op, 'like', 'Me gusta esta opinión'), botonReaccion(op, 'amor', 'Me encanta esta opinión'), borrar);
+      it.append(h, p, f);
+      opLista.appendChild(it);
+    });
+  }
+  pintarOpiniones();
+
+  const opForm = document.getElementById('opForm'), opTexto = document.getElementById('opTexto'), opNombre = document.getElementById('opNombre');
+  const opError = document.getElementById('opError'), opContador = document.getElementById('opContador');
+  let ultimaOpinion = 0;
+  function mostrarErrorOp(msg) {
+    opError.textContent = msg; opError.hidden = false;
+    opError.classList.remove('sacude'); void opError.offsetWidth; opError.classList.add('sacude');
+  }
+  opTexto.addEventListener('input', () => { opContador.textContent = opTexto.value.length; opError.hidden = true; });
+  opNombre.addEventListener('input', () => { opError.hidden = true; });
+  opForm.addEventListener('submit', e => {
+    e.preventDefault();
+    const nombre = opNombre.value.trim().slice(0, 30), texto = opTexto.value.trim().slice(0, 300);
+    if (texto.length < 5) return mostrarErrorOp('Escribe al menos 5 caracteres para publicar tu opinión.');
+    if (tieneEnlaces(nombre + ' ' + texto)) return mostrarErrorOp('No se permiten enlaces ni datos de contacto (teléfonos, correos, redes).');
+    if (esInapropiado(nombre + ' ' + texto)) return mostrarErrorOp('Tu mensaje contiene lenguaje que no está permitido. Por favor, escríbelo de forma respetuosa.');
+    if (Date.now() - ultimaOpinion < 10000) return mostrarErrorOp('Espera unos segundos antes de publicar otra opinión.');
+    ultimaOpinion = Date.now();
+    opiniones.unshift({ id: String(Date.now()) + Math.random().toString(36).slice(2, 6), nombre, texto, fecha: new Date().toISOString(), rx: { like: 0, amor: 0 } });
+    opiniones = opiniones.slice(0, 100);
+    guardarLS(CLAVE_OP, opiniones);
+    opForm.reset(); opContador.textContent = '0'; opError.hidden = true;
+    pintarOpiniones();
+    explosionReaccion('amor');
+  });
+
   // ========== TECLADO (modales) ==========
   document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') cerrarEscena();
+    if (document.getElementById('modalVideo').classList.contains('activo')) {
+      if (e.key === 'Escape') cerrarVideo();
+      return;
+    }
     if (document.getElementById('modalGaleria').classList.contains('activo')) {
       if (e.key === 'Escape') cerrarGaleria();
+      if (e.key === 'ArrowLeft') moverVisor(-1);
+      if (e.key === 'ArrowRight') moverVisor(1);
       return;
     }
     if (!document.getElementById('modalPlano').classList.contains('activo')) return;
