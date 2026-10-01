@@ -254,8 +254,6 @@
   .modal-info p { color: var(--texto-suave); max-width: 640px; margin: 0 auto; }
   .modal-acciones { display: flex; gap: 0.7rem; justify-content: center; flex-wrap: wrap; margin-top: 1.2rem; }
   .modal-acciones .btn { padding: 0.6rem 1.3rem; font-size: 0.95rem; }
-  .btn-cerrar { background: var(--vino); color: var(--crema); }
-  .btn-cerrar:hover { background: var(--vino-oscuro); }
   .modal-x {
     position: absolute; top: 12px; right: 12px; z-index: 2;
     width: 42px; height: 42px; border-radius: 50%; border: 2px solid var(--dorado);
@@ -357,8 +355,8 @@
     display: flex; flex-direction: column; justify-content: flex-start; transition: transform 0.3s;
   }
   .galeria-item:hover { transform: translateY(-6px); }
-  .galeria-media { border-radius: 14px; overflow: hidden; box-shadow: 0 5px 15px var(--sombra); }
-  .galeria-media img { width: 100%; aspect-ratio: 1; object-fit: cover; }
+  .galeria-media { border-radius: 14px; overflow: hidden; box-shadow: 0 5px 15px var(--sombra); background: var(--crema); border: 1px solid var(--dorado); }
+  .galeria-media img { display: block; width: 100%; aspect-ratio: 1; object-fit: contain; object-position: center; background: var(--crema); }
   .galeria-media .img-pendiente { aspect-ratio: 1; border-radius: 14px; }
   .galeria-item h4 { color: var(--verde); font-size: 1rem; margin-top: 0.6rem; }
   .modal-galeria .modal-caja { max-width: 760px; padding: 1.2rem; }
@@ -380,17 +378,18 @@
   .mat-grupo { color: var(--verde); font-size: 1.5rem; text-align: center; margin: 2.6rem 0 1.4rem; }
   .mat-grupo:first-of-type { margin-top: 0; }
   .mat-grupo::after { content: ''; display: block; width: 60px; height: 3px; background: var(--dorado); margin: 0.7rem auto 0; border-radius: 2px; }
-  .mat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 1.3rem; }
+  .mat-grid { display: grid; grid-template-columns: repeat(auto-fill, 220px); gap: 1.3rem; justify-content: center; }
   .mat-card {
-    padding: 0; overflow: hidden; cursor: pointer; text-align: center; font-family: inherit; color: inherit;
+    width: 220px; height: 300px; padding: 0; overflow: hidden; cursor: pointer; text-align: center; font-family: inherit; color: inherit;
     display: flex; flex-direction: column; transition: transform 0.3s, box-shadow 0.3s;
   }
   .mat-card:hover, .mat-card:focus-visible { transform: translateY(-6px); box-shadow: 0 14px 30px rgba(13, 43, 28, 0.2); outline: none; }
-  .mat-img { background: white; aspect-ratio: 1; display: flex; justify-content: center; align-items: center; border-bottom: 1px solid var(--dorado); padding: 0.6rem; }
-  .mat-img img { max-width: 100%; max-height: 100%; object-fit: contain; }
-  .mat-info { padding: 0.8rem 0.9rem 1rem; }
-  .mat-num { font-size: 0.72rem; font-weight: bold; letter-spacing: 2px; color: var(--vino); }
-  .mat-info h4 { color: var(--verde); font-size: 1.05rem; margin-top: 0.15rem; }
+  .mat-img { flex: none; width: 220px; height: 220px; background: white; border-bottom: 1px solid var(--dorado); }
+  .mat-img img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center; }
+  .mat-info { flex: none; height: 80px; padding: 0.4rem 0.6rem; display: flex; flex-direction: column; justify-content: center; overflow: hidden; }
+  .mat-num { font-size: 0.7rem; font-weight: bold; letter-spacing: 2px; color: var(--vino); }
+  .mat-info h4 { color: var(--verde); font-size: 1rem; line-height: 1.15; margin-top: 0.15rem; max-height: 2.3em; overflow: hidden; }
+  .mat-info h4.largo { font-size: 0.85rem; }
 
   /* ========== NOSOTROS: TARJETA VOLTEABLE ========== */
   .flip { perspective: 1400px; max-width: 620px; height: 400px; margin: 0 auto; cursor: pointer; outline: none; }
@@ -450,10 +449,14 @@
 
   /* ========== NOSOTROS: HISTORIA (CAMINO DE LA CONSERVA) ========== */
   .historia { position: relative; max-width: 1100px; margin: 0 auto; padding-bottom: 1rem; }
-  .historia-camino { position: absolute; left: 0; top: 0; width: 100%; height: 200px; z-index: 0; }
-  .historia-camino .banda { fill: none; stroke: #5d6d7e; stroke-width: 22; stroke-linecap: round; }
-  .historia-camino .linea { fill: none; stroke: #3d6a9e; stroke-width: 4; stroke-dasharray: 14 12; animation: avanza 1.5s linear infinite; }
-  @keyframes avanza { to { stroke-dashoffset: -26; } }
+  .historia-camino { position: absolute; left: 0; top: 0; width: 100%; height: auto; z-index: 0; }
+  .historia-camino use { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+  .rio-orilla { stroke: #86c25f; stroke-width: 42; opacity: 0.6; }
+  .rio-agua { stroke: #2f8fe0; stroke-width: 28; }
+  .rio-ola { stroke: #bfe4ff; stroke-width: 3; stroke-dasharray: 16 24; opacity: 0.85; animation: corre 1.8s linear infinite; }
+  .rio-brillo { stroke: #ffffff; stroke-width: 6; stroke-dasharray: 2 38; opacity: 0.55; animation: corre 3.2s linear infinite reverse; }
+  @keyframes corre { to { stroke-dashoffset: -80; } }
+  .flotantes text { filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.3)); }
   .hitos { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.2rem; position: relative; z-index: 1; }
   .hito { display: flex; flex-direction: column; align-items: center; text-align: center; }
   .hito:nth-child(even) { margin-top: 80px; }
@@ -462,10 +465,11 @@
     font-size: 2.2rem; background: var(--verde-oscuro); border: 4px solid var(--dorado);
     box-shadow: 0 6px 16px var(--sombra); transition: 0.3s;
   }
-  .hito-tarjeta { margin-top: 1rem; padding: 1.2rem; transition: 0.3s; height: 100%; }
+  .hito-tarjeta { margin-top: 1rem; padding: 0.9rem 0.9rem 1.2rem; transition: 0.3s; height: 100%; }
+  .hito-img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; border-radius: 10px; border: 1px solid var(--dorado); margin-bottom: 0.7rem; }
   .hito:hover .hito-icono { transform: scale(1.1) rotate(-5deg); }
   .hito:hover .hito-tarjeta { transform: translateY(-5px); box-shadow: 0 14px 30px rgba(13, 43, 28, 0.2); }
-  .hito-num { font-size: 0.75rem; font-weight: bold; letter-spacing: 2px; color: var(--vino); }
+  
   .hito h4 { color: var(--verde); font-size: 1.15rem; margin: 0.2rem 0 0.5rem; }
   .hito p { color: var(--texto-suave); font-size: 0.92rem; }
   .hito-etiqueta {
@@ -695,7 +699,8 @@
   }
   .lata-tapa::after { content: ''; position: absolute; left: 22px; top: 5px; width: 30px; height: 15px; border: 3px solid #7d8790; border-radius: 50%; }
   .abierta .lata-tapa { transform: translate(-120px, -170px) rotate(-200deg); opacity: 0; }
-  .bebe { position: absolute; left: calc(50% - 250px); bottom: 13%; font-size: 6.6rem; line-height: 1; z-index: 3; transform-origin: 60% 90%; }
+  .bebe { position: absolute; left: calc(50% - 250px); bottom: 13%; width: 7rem; height: 7rem; z-index: 3; transform-origin: 60% 90%; }
+  .bebe svg { width: 100%; height: 100%; overflow: visible; display: block; filter: drop-shadow(0 6px 6px rgba(110, 23, 35, 0.25)); }
   .bebe .esfuerzo {
     position: absolute; left: 60%; top: -30px; white-space: nowrap; font-family: Georgia, serif; font-weight: bold; font-size: 1.05rem;
     color: var(--vino); background: white; border: 2px solid var(--vino); border-radius: 14px; padding: 0.15rem 0.6rem; opacity: 0; transition: opacity 0.2s;
@@ -891,8 +896,10 @@
     .historia-camino { display: none; }
     .historia::before {
       content: ''; position: absolute; left: 49px; top: 20px; bottom: 20px; width: 16px; border-radius: 8px;
-      background: repeating-linear-gradient(180deg, #5d6d7e 0 14px, #3d6a9e 14px 20px);
+      background: repeating-linear-gradient(180deg, #2f8fe0 0 16px, #7cc0f5 16px 32px); background-size: 100% 32px;
+      box-shadow: 0 0 0 5px rgba(134, 194, 95, 0.55); animation: rio-vertical 0.9s linear infinite;
     }
+    @keyframes rio-vertical { to { background-position: 0 32px; } }
     .hito, .hito:nth-child(even) { flex-direction: row; align-items: flex-start; gap: 1rem; margin-top: 0; text-align: left; }
     .hito-icono { width: 64px; height: 64px; font-size: 1.8rem; }
     .hito-tarjeta { margin-top: 0; flex: 1; }
@@ -935,9 +942,15 @@
     .scroll-top { right: 16px; bottom: 16px; }
     section { margin: 1rem 0.6rem; padding: 3rem 1.1rem; border-radius: 22px; }
     .hero { margin-top: 5rem; padding: 2rem 1rem 3rem; min-height: auto; }
-    .mat-grid { grid-template-columns: repeat(2, 1fr); gap: 0.9rem; }
+    .mat-grid { grid-template-columns: repeat(auto-fill, 160px); gap: 0.7rem; }
+    .mat-card { width: 160px; height: 220px; }
+    .mat-img { width: 160px; height: 160px; }
+    .mat-info { height: 60px; padding: 0.25rem 0.4rem; }
+    .mat-num { font-size: 0.6rem; letter-spacing: 1px; }
+    .mat-info h4 { font-size: 0.85rem; }
+    .mat-info h4.largo { font-size: 0.72rem; }
     .datos { height: 520px; }
-    .bebe { left: calc(50% - 168px); font-size: 4.6rem; }
+    .bebe { left: calc(50% - 168px); width: 4.8rem; height: 4.8rem; }
     .lata-wrap { width: 130px; margin-left: -65px; }
     .dato { grid-template-columns: 72px 1fr; padding: 0.8rem; gap: 0.7rem; width: 94%; bottom: calc(13% + 140px); }
     .dato-visual { width: 72px; height: 72px; }
@@ -950,7 +963,8 @@
   }
   @media (prefers-reduced-motion: reduce) {
     .caballo, .suelo { display: none; }
-    .faja, .historia-camino .linea { animation: none; }
+    .faja, .rio-ola, .rio-brillo, .historia::before { animation: none; }
+    .flotantes { display: none; }
   }
 </style>
 </head>
@@ -1159,15 +1173,23 @@
   <h3 class="bloque-titulo reveal">Nuestra Historia · Empresa Dos Caballos</h3>
   <p class="sub-intro reveal">El camino de la conserva: un proceso en movimiento.</p>
   <div class="historia reveal">
-    <svg class="historia-camino" viewBox="0 0 1000 200" preserveAspectRatio="none" aria-hidden="true">
-      <path class="banda" vector-effect="non-scaling-stroke" d="M0,40 L125,40 C250,40 250,120 375,120 C500,120 500,40 625,40 C750,40 750,120 875,120 L1000,120"/>
-      <path class="linea" vector-effect="non-scaling-stroke" d="M0,40 L125,40 C250,40 250,120 375,120 C500,120 500,40 625,40 C750,40 750,120 875,120 L1000,120"/>
+    <svg class="historia-camino" viewBox="0 0 1000 200" preserveAspectRatio="xMidYMin meet" aria-hidden="true">
+      <defs><path id="rioRuta" fill="none" d="M0,40 L125,40 C250,40 250,120 375,120 C500,120 500,40 625,40 C750,40 750,120 875,120 L1000,120"/></defs>
+      <use href="#rioRuta" class="rio-orilla"/>
+      <use href="#rioRuta" class="rio-agua"/>
+      <use href="#rioRuta" class="rio-ola"/>
+      <use href="#rioRuta" class="rio-brillo"/>
+      <g class="flotantes" font-size="22" text-anchor="middle">
+        <text dy="8">🍑<animateMotion dur="18s" begin="0s" repeatCount="indefinite"><mpath href="#rioRuta"/></animateMotion></text>
+        <text dy="8">🍃<animateMotion dur="18s" begin="-6s" repeatCount="indefinite"><mpath href="#rioRuta"/></animateMotion></text>
+        <text dy="8">🍑<animateMotion dur="18s" begin="-12s" repeatCount="indefinite"><mpath href="#rioRuta"/></animateMotion></text>
+      </g>
     </svg>
     <div class="hitos">
       <div class="hito">
         <div class="hito-icono">🚚</div>
         <div class="hito-tarjeta tarjeta">
-          <span class="hito-num">ESTACIÓN 1</span>
+          <img class="hito-img" src="img/historia/1-origen.jpg" alt="Huerto de duraznos al atardecer" loading="lazy">
           <h4>Origen y Tradición</h4>
           <p>Fundada en 1906 por el inmigrante alemán Ernesto Pentzke en el Valle del Aconcagua, en Chile. Todo empieza en el campo, con la fruta de los huertos de la zona.</p>
           <span class="hito-etiqueta">FUNDADA EN 1906 · VALLE DEL ACONCAGUA</span>
@@ -1176,7 +1198,7 @@
       <div class="hito">
         <div class="hito-icono">🧪</div>
         <div class="hito-tarjeta tarjeta">
-          <span class="hito-num">ESTACIÓN 2</span>
+          <img class="hito-img" src="img/historia/2-calidad.jpg" alt="Planta de producción con operarios con cofia" loading="lazy">
           <h4>Calidad e Inocuidad</h4>
           <p>La certificación HACCP respalda los controles de calidad e inocuidad aplicados en cada etapa del proceso.</p>
           <span class="hito-etiqueta">CERTIFICACIÓN HACCP</span>
@@ -1185,7 +1207,7 @@
       <div class="hito">
         <div class="hito-icono">⚙️</div>
         <div class="hito-tarjeta tarjeta">
-          <span class="hito-num">ESTACIÓN 3</span>
+          <img class="hito-img" src="img/historia/3-maquinaria.jpg" alt="Máquina descarozadora con mitades de durazno" loading="lazy">
           <h4>Maquinaria y Operarios</h4>
           <p>Máquinas semiautomatizadas de corte y descarozado trabajan junto a operarios que inspeccionan la fruta en cada estación.</p>
           <span class="hito-etiqueta">CORTE Y DESCAROZADO</span>
@@ -1194,7 +1216,7 @@
       <div class="hito">
         <div class="hito-icono">🥫</div>
         <div class="hito-tarjeta tarjeta">
-          <span class="hito-num">ESTACIÓN 4</span>
+          <img class="hito-img" src="img/historia/4-lata.jpg" alt="Lata de duraznos en almíbar Dos Caballos" loading="lazy">
           <h4>Referente en Duraznos en Almíbar</h4>
           <p>Latas terminadas con la icónica etiqueta de los dos caballos: conservas que llegaron a numerosos mercados de Latinoamérica y Europa.</p>
           <span class="hito-etiqueta">PRODUCTO FINAL</span>
@@ -1235,10 +1257,10 @@
 
   <!-- DATOS CURIOSOS -->
   <h3 class="bloque-titulo reveal">🍑 Datos Curiosos</h3>
-  <p class="sub-intro reveal">El bebé lucha con la lata… y cuando logra abrirla, sale un dato curioso. Toca la lata para pasar al siguiente.</p>
+  <p class="sub-intro reveal">Descubre datos curiosos de la empresa y sobre nosotros. Toca la lata para pasar al siguiente.</p>
   <div class="datos reveal" id="datos">
     <div class="datos-suelo"></div>
-    <div class="bebe" aria-hidden="true">👶<span class="esfuerzo">¡ñnngh!</span></div>
+    <div class="bebe" aria-hidden="true"><svg viewBox="0 0 100 100"><use href="#rx-feliz"/></svg><span class="esfuerzo">¡ñnngh!</span></div>
     <div class="lata-wrap" id="lataWrap" role="button" tabindex="0" aria-label="Abrir la lata y ver el siguiente dato curioso">
       <div class="lata">
         <div class="lata-tapa"></div>
@@ -1322,17 +1344,14 @@
 <!-- ========== MODAL PLANOS ========== -->
 <div class="modal modal-plano" id="modalPlano" role="dialog" aria-modal="true" aria-labelledby="planoTitulo">
   <div class="modal-caja">
+    <button class="modal-x" onclick="cerrarPlano()" aria-label="Cerrar">×</button>
+    <button class="modal-nav prev" onclick="cambiarPlano(-1)" aria-label="Plano anterior">‹</button>
+    <button class="modal-nav next" onclick="cambiarPlano(1)" aria-label="Plano siguiente">›</button>
     <div class="modal-img"><img id="planoImg" alt=""></div>
     <div class="modal-info">
       <span class="plano-num" id="planoNum"></span>
       <h3 id="planoTitulo"></h3>
       <p id="planoDesc"></p>
-      <div class="modal-acciones">
-        <button class="btn btn-borde" onclick="cambiarPlano(-1)" aria-label="Plano anterior">‹ Anterior</button>
-        <a class="btn btn-dorado" id="planoDescargar" download>⬇ Descargar plano</a>
-        <button class="btn btn-cerrar" onclick="cerrarPlano()">Cerrar</button>
-        <button class="btn btn-borde" onclick="cambiarPlano(1)" aria-label="Plano siguiente">Siguiente ›</button>
-      </div>
     </div>
   </div>
 </div>
@@ -1375,6 +1394,17 @@
         <path d="M7 14 L11 3 Q15 -3 19 3 L19 14Z" fill="#ffd86b" stroke="#c98a1c" stroke-width="2.2" stroke-linejoin="round"/>
         <path d="M6 24 H26 M6 31 H26" stroke="#c98a1c" stroke-width="1.6" opacity="0.6"/>
       </g>
+    </symbol>
+    <symbol id="rx-feliz" viewBox="0 0 100 100">
+      <path d="M50 24 C46 16 48 10 54 5" stroke="#6b4a2b" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+      <path d="M52 20 C60 4 78 4 86 12 C78 26 62 28 52 20Z" fill="#5fae4a"/>
+      <path d="M52 20 C62 14 72 12 82 12" stroke="#3f8a35" stroke-width="1.6" fill="none"/>
+      <path d="M50 24 C22 12 6 40 12 62 C18 86 38 94 50 90 C62 94 82 86 88 62 C94 40 78 12 50 24Z" fill="url(#rxg)"/>
+      <path d="M50 26 C43 46 43 68 50 88" stroke="#e8825f" stroke-width="2" fill="none" opacity="0.55"/>
+      <ellipse cx="24" cy="62" rx="9" ry="6" fill="#ff6b8a" opacity="0.55"/><ellipse cx="76" cy="62" rx="9" ry="6" fill="#ff6b8a" opacity="0.55"/>
+      <path d="M29 51 Q36 41 43 51" stroke="#3e2723" stroke-width="3.6" fill="none" stroke-linecap="round"/>
+      <path d="M57 51 Q64 41 71 51" stroke="#3e2723" stroke-width="3.6" fill="none" stroke-linecap="round"/>
+      <path d="M36 62 Q50 82 64 62 Z" fill="#7a2f2f"/><path d="M41 71 Q50 77 59 71 Q50 66 41 71Z" fill="#ff8fa0"/>
     </symbol>
     <symbol id="rx-amor" viewBox="0 0 100 100">
       <path d="M50 20 C46 12 48 7 54 2" stroke="#6b4a2b" stroke-width="3.5" fill="none" stroke-linecap="round"/>
@@ -1516,9 +1546,6 @@
     document.getElementById('planoNum').textContent = `PLANO ${n}`;
     document.getElementById('planoTitulo').textContent = p.titulo;
     document.getElementById('planoDesc').textContent = p.desc;
-    const a = document.getElementById('planoDescargar');
-    a.href = `img/planos/plano-${n}.jpg`;
-    a.setAttribute('download', `Plano-${n}-${p.titulo.replace(/\s+/g, '-')}.jpg`);
   }
   document.getElementById('modalPlano').addEventListener('click', e => { if (e.target.id === 'modalPlano') cerrarPlano(); });
 
@@ -1694,13 +1721,13 @@
     { n: 21, g: 1, t: 'Cable silver', d: 'Alambre plateado en rollo para conexiones y fijaciones.' },
     { n: 22, g: 0, t: 'Módulo relay 5V 2 canales', d: 'Módulo de 2 relés que permite encender y apagar cargas de mayor potencia desde la placa.' }
   ];
-  const rutaMaterial = m => `img/materiales/${String(m.n).padStart(2, '0')}.jpg`;
+  const rutaMaterial = (m, tarjeta) => `img/materiales/${String(m.n).padStart(2, '0')}${tarjeta ? '-card' : ''}.jpg`;
   document.getElementById('materialesCont').innerHTML = gruposMateriales.map((nombre, gi) => `
     <h4 class="mat-grupo">${nombre}</h4>
     <div class="mat-grid">${materiales.filter(m => m.g === gi).map(m => `
       <button class="mat-card tarjeta" data-n="${m.n}">
-        <div class="mat-img"><img src="${rutaMaterial(m)}" alt="${m.t}" loading="lazy"></div>
-        <div class="mat-info"><span class="mat-num">MATERIAL ${String(m.n).padStart(2, '0')}</span><h4>${m.t}</h4></div>
+        <div class="mat-img"><img src="${rutaMaterial(m, true)}" alt="${m.t}" loading="lazy"></div>
+        <div class="mat-info"><span class="mat-num">MATERIAL ${String(m.n).padStart(2, '0')}</span><h4${m.t.length > 18 ? ' class="largo"' : ''}>${m.t}</h4></div>
       </button>`).join('')}
     </div>`).join('');
   const ordenMateriales = gruposMateriales.flatMap((_, gi) => materiales.filter(m => m.g === gi));
@@ -1861,11 +1888,14 @@
   // ========== NOVEDADES: TUTORIALES (FAJA AZUL) ==========
   // Para publicar un video: pega el código de YouTube en `id` (lo que va después de "v=" o de "youtu.be/").
   const tutoriales = [
+    { titulo: 'Elaboración de melocotón en almíbar', desc: 'Cómo se elabora el melocotón (durazno) en almíbar. Video de MadeInAragon.', id: 'xvFjTj2O09I' },
     { titulo: 'Presentación del proyecto (video pitch)', desc: 'Video pitch de la versión anterior del proyecto.', id: 'S8RxMJvEdBI' },
-    { titulo: 'Armado de la faja transportadora', desc: 'Cómo se ensambla la estructura, la banda y el motor.', id: null },
-    { titulo: 'Conexión de los sensores infrarrojos', desc: 'Cómo conectar los sensores a la placa Arduino.', id: null },
-    { titulo: 'Programación de las 4 estaciones', desc: 'El código que detiene y reactiva la faja en cada estación.', id: null },
-    { titulo: 'Cómo leer los planos técnicos', desc: 'Vistas, cotas y lista de piezas de cada plano.', id: null }
+    { titulo: 'Diseño técnico · AutoCAD Tecsup', desc: 'Laboratorio de dibujo y diseño de Tecsup. Video de Ruben Jose Layme Sinsaya.', id: 'BtzjhtPXFRg' },
+    { titulo: 'Idea de un panel de control en Tinkercad', desc: 'Idea de un panel de control con Arduino simulado en Tinkercad.', id: '_kD3nIm8RyA' },
+    { titulo: 'Tutorial para principiantes · Tinkercad', desc: 'LEDs y protoboards con Arduino en Tinkercad. Video de Autodesk Tinkercad.', id: 'MojSo7OtF9w' },
+    { titulo: 'Tutorial · Impresión en 3D', desc: 'Cómo se prepara una impresión en 3D.', id: 'EAwWFbl8To0' },
+    { titulo: 'Cómo hacer una faja transportadora', desc: 'Cinta transportadora casera, fácil de hacer. Video de Muy Fácil De Hacer.', id: '7UsmJgHU6wk' },
+    { titulo: 'Tutorial · Tinkercad desde cero', desc: 'Arduino con Tinkercad desde cero (capítulo 1: salida digital). Video de DomoLab.', id: 'DDPnvmlLNq4' }
   ];
   const carril = document.getElementById('carrilVideos');
   const tarjetaVideo = (t, k, copia) => `
@@ -1875,6 +1905,7 @@
       <span class="play">▶</span>
       <span class="titulo-v">${t.titulo}</span>
     </button>`;
+  carril.style.animationDuration = `${tutoriales.length * 7}s`;
   carril.innerHTML = tutoriales.map((t, k) => tarjetaVideo(t, k, false)).join('') + tutoriales.map((t, k) => tarjetaVideo(t, k, true)).join('');
   carril.addEventListener('click', e => { const b = e.target.closest('.video-card'); if (b) abrirVideo(tutoriales[+b.dataset.k]); });
   function abrirVideo(t) {
